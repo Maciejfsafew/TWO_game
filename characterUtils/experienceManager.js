@@ -1,7 +1,7 @@
 /**
- * Created by student on 2014-11-03.
+ * Class for adding experience and leveling up character.
  */
-
+    
 var experiencePerLevel = [100, 500, 1500, 3000, 4500, 7000, 10000];
 
 function addExperience(character, monster) {
@@ -13,7 +13,7 @@ function addExperience(character, monster) {
 }
 
 function countExperienceFromMonster(monster) {
-    return (monster.strength + monster.dexterity)*10 + monster.maxHP;
+    return (monster.strength + monster.dexterity)*10 + monster.maxhp;
 }
 
 function addExperienceToCharacter(character, expToAdd) {
@@ -28,8 +28,8 @@ function addExperienceToCharacter(character, expToAdd) {
 
 function levelUpCharacter(character) {
     character.level++;
-    character.maxHP += 20;
-    character.HP = character.maxHP;
+    character.maxhp += 20;
+    character.hp = character.maxhp;
     character.strength += 2;
     character.dexterity += 2;
 }
