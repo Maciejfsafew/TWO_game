@@ -16,7 +16,7 @@ app.use('/public', express.static(__dirname + '/public'));
 app.set('view engine', 'ejs');
 
 // serve client-side library
-primus.save(__dirname + '/public/lib/primus/primus.js');
+primus.save(__dirname + '/public/lib/primus.js');
 
 // index page (please note, that views is the root folder of all template files!)
 app.get('/', function(req, res) {
