@@ -1,4 +1,13 @@
-var config = [
+function Monster(monsterConfiguration) {
+    this.name = monsterConfiguration.name;
+    this.description = monsterConfiguration.description;
+    this.strength = monsterConfiguration.strength;
+    this.dexterity = monsterConfiguration.dexterity;
+    this.hp = monsterConfiguration.hp;
+    this.maxhp = monsterConfiguration.maxhp;
+    this.items = monsterConfiguration.items.slice(0);
+}
+var monsterConfig = [
     {
         name: "Tank",
         description: "Tough but slow.",
@@ -18,6 +27,7 @@ var config = [
         items: []
     }
 ];
-function generateMonster(user, hero) {
-
+function generateMonster(hero, map) {
+    //hero - zeby wiedziec gdzie wszedl, map - zeby wiedziec czy pole jest puste
+    return new Monster(monsterConfig[Math.floor(Math.random() * monsterConfig.length)]);
 }
