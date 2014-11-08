@@ -3,11 +3,29 @@
   <head>
     <meta charset="UTF-8">
     <title><%= title %></title>
+    <link href='http://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.2/underscore-min.js"></script>
     <script src="/public/lib/primus.js"OB></script>
     <script src="/public/js/index.js"></script>
+    <script src="/public/js/josh.js/killring.js"></script>
+    <script src="/public/js/josh.js/history.js"></script>
+    <script src="/public/js/josh.js/readline.js"></script>
+    <script src="/public/js/josh.js/shell.js"></script>
+    <script src="/public/js/josh.js/pathhandler.js"></script>
+    <script src="/public/js/cli.js"></script>
+    <link rel="stylesheet" type="text/css" href="/public/stylesheets/style.css">
   </head>
 
   <body>
     Hej!
+    <div class="wrapper">
+    <div id="shell-panel" tabindex="0">
+      <div>Welcome to TWO MUD!<br>
+      </div>
+      <div id="shell-view"></div>
+    </div>
   </body>
 </html>
