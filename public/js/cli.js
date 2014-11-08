@@ -1,9 +1,3 @@
-// TODO
-// 1. Unrecognized command handleer
-// 2. API, parameterized PROMPT (with str, hp, mana etc)
-// 3. colors (+API)
-// 4. MOTD in API
-
 (function(root, $, _) {
   Josh.Example = (function(root, $, _) {
 
@@ -21,17 +15,36 @@
     var n = date.toDateString();
     var time = date.toLocaleTimeString();
     shell.onNewPrompt(function(callback) {
-        callback("[" + n+ " " + time + "] $ ");
+        callback("[" + n + " " + time + "] $ ");
     });
 
+    // Example of defining commands. When REST api will be ready
+    // all communication will happen here.
+    // Commands defined in cli-commands.js
+    Commands.forEach(function(entry) {
+      var name = entry.name;
+      var rest = entry.rest;
+      var msg = entry.msg;
+      var alias = entry.alias;
 
-    // North command
-    // TODO aliases, extract commands to diffrent file
-    shell.setCommandHandler("north", {
-      exec: function(cmd, args, callback) {
-	response = "You're going north";
-        callback(response);
+      var handler = {
+        exec: function(cmd, args, callback) {
+          var response = "";
+          if(rest) {
+            $.get(rest, function(data) {
+              response += data;
+            });
+          }
+          response += msg;
+          callback(response);
+        }
+      };
+
+      shell.setCommandHandler(name, handler);
+      if(alias) {
+        shell.setCommandHandler(alias, handler);
       }
+
     });
 
     $(root).ready(function() {
@@ -45,7 +58,7 @@
           return;
         }
 
-	shell.activate();
+	      shell.activate();
       });
     });
 
