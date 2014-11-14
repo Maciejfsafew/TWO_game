@@ -2,8 +2,9 @@
   "name": "TWO_game",
   "version": "0.0.1",
   "description": "RPG Game created as a project for TWO classes",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
+    "start": "node ./bin/www",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -19,5 +20,11 @@
   "bugs": {
     "url": "https://github.com/Maciejfsafew/TWO_game/issues"
   },
-  "homepage": "https://github.com/Maciejfsafew/TWO_game"
+  "homepage": "https://github.com/Maciejfsafew/TWO_game",
+  "dependencies": {
+    "ejs": "^1.0.0",
+    "engine.io": "^1.4.2",
+    "express": "^4.10.1",
+    "primus": "^2.4.10"
+  }
 }
