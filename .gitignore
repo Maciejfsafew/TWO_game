@@ -1,6 +1,7 @@
 *~
 node_modules
 node_modules/*
+public/lib/primus.js
 
 # Created by .gitignore support plugin (hsz.mobi)
 ### JetBrains template
