@@ -16,7 +16,7 @@ app.use('/public', express.static(__dirname + '/public'));
 var person = new Person("Hero");
 var monster = new Monster("Bad Boy");
 
-console.log((battle(this, person, monster, true, null) ? person.name : monster.name) + ' win!!!');
+console.log((battle(person, monster, true, null) ? person.name : monster.name) + ' win!!!');
 
 // set the view engine to ejs
 app.set('view engine', 'ejs');
