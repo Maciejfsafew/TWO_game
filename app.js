@@ -26,7 +26,7 @@ app.get('/', function (req, res) {
 });
 
 // index page (please note, that views is the root folder of all template files!)
-app.get('/main', function (req, res) {
+app.get('/game', function (req, res) {
     res.render('index.html.ejs', {
         'title': "Gra RPG"
     });
