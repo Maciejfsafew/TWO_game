@@ -7,7 +7,7 @@ var app = express();
 var server = http.createServer(app);
 var Primus = require("primus");
 
-var primus = new Primus(server, { transformer: "engine.io" });
+var primus = new Primus(server, {transformer: "engine.io"});
 
 // static assets
 app.use('/public', express.static(__dirname + '/public'));
@@ -19,7 +19,14 @@ app.set('view engine', 'ejs');
 primus.save(__dirname + '/public/lib/primus.js');
 
 // index page (please note, that views is the root folder of all template files!)
-app.get('/', function(req, res) {
+app.get('/', function (req, res) {
+    res.render('login.html.ejs', {
+        'title': "Gra RPG - Login page"
+    });
+});
+
+// index page (please note, that views is the root folder of all template files!)
+app.get('/main', function (req, res) {
     res.render('index.html.ejs', {
         'title': "Gra RPG"
     });
@@ -32,5 +39,5 @@ primus.on("connection", function (spark) {
     });
 })
 
-server.listen(8080);
+server.listen(8081);
 console.log('8080 is where the magic happens');
