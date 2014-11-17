@@ -28,6 +28,9 @@ app.get('/', function(req, res) {
 primus.on("connection", function (spark) {
     spark.write({'message': 'ping'});
     spark.on('data', function message(data) {
+        if(data.command === "move") {
+            spark.write("MOVE:" + data.msg);
+        }
         console.log(data);
     });
 })

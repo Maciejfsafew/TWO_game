@@ -7,7 +7,7 @@ primus.on("open", function () {
     console.log("Connected!");
 })
 
-primus.on("data", function (data) {
-    console.log("Recieved:", data);
-    primus.write(data['message'] + " pong!");
-})
+//primus.on("data", function (data) {
+//    console.log("Recieved:", data);
+//    primus.write(data['message'] + " pong!");
+//})
