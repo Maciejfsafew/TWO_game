@@ -7,16 +7,9 @@ var app = express();
 var server = http.createServer(app);
 var Primus = require("primus");
 var primus = new Primus(server, {transformer: "engine.io"});
-var Person = require("./public/js/person");
-var Monster = require("./public/js/monster");
-var battle = require("./public/js/battle");
+
 // static assets
 app.use('/public', express.static(__dirname + '/public'));
-
-var person = new Person("Hero");
-var monster = new Monster("Bad Boy");
-
-console.log((battle(person, monster, true, null) ? person.name : monster.name) + ' win!!!');
 
 // set the view engine to ejs
 app.set('view engine', 'ejs');
