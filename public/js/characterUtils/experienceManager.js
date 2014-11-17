@@ -1,5 +1,7 @@
 /**
  * Class for adding experience and leveling up character.
+ * Exports: addExperience(character, monster)
+ *          levelDownCharacter(character)
  */
     
 var experiencePerLevel = [100, 500, 1500, 3000, 4500, 7000, 10000];
@@ -34,13 +36,14 @@ function levelUpCharacter(character) {
     character.dexterity += 2;
 }
 
-function leveDownCharacter(character) {
+function levelDownCharacter(character) {
+    if (character.level == 1) return;
     character.level--;
     var experience;
     if (character.level - 1 < 0) {
         experience = 0;
     } else {
-        experience = experiencePerLevel[level - 2];
+        experience = experiencePerLevel[character.level - 2];
     }
     character.experience = experience;
     character.maxhp -= 20;
@@ -48,3 +51,6 @@ function leveDownCharacter(character) {
     character.strength -= 2;
     character.dexterity -= 2;
 }
+
+exports.addExperience = addExperience;
+exports.levelDownCharacter = levelDownCharacter;
