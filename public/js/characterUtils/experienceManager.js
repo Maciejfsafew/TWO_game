@@ -33,3 +33,18 @@ function levelUpCharacter(character) {
     character.strength += 2;
     character.dexterity += 2;
 }
+
+function leveDownCharacter(character) {
+    character.level--;
+    var experience;
+    if (character.level - 1 < 0) {
+        experience = 0;
+    } else {
+        experience = experiencePerLevel[level - 2];
+    }
+    character.experience = experience;
+    character.maxhp -= 20;
+    character.hp = character.maxhp;
+    character.strength -= 2;
+    character.dexterity -= 2;
+}
