@@ -1,8 +1,8 @@
 module.exports = function battle(hero, monster, first_run, hero_next_turn) {
-    if (hero.health <= 0) {
+    if (hero.hp <= 0) {
         return false;
     }
-    if (monster.health <= 0) {
+    if (monster.hp <= 0) {
         return true;
     }
     var damage;
@@ -11,15 +11,15 @@ module.exports = function battle(hero, monster, first_run, hero_next_turn) {
         if (rand == 1) {
             damage = get_damage(hero);
             print_on_console(hero, monster, damage);
-            monster.health -= damage;
-            check_health(monster);
+            monster.hp -= damage;
+            check_hp(monster);
             return battle(hero, monster, false, false);
         }
         else {
             damage = get_damage(monster);
             print_on_console(monster, hero, damage);
-            hero.health -= damage;
-            check_health(hero);
+            hero.hp -= damage;
+            check_hp(hero);
             return battle(hero, monster, false, true);
         }
     }
@@ -27,15 +27,15 @@ module.exports = function battle(hero, monster, first_run, hero_next_turn) {
         if (hero_next_turn) {
             damage = get_damage(hero);
             print_on_console(hero, monster, damage);
-            monster.health -= damage;
-            check_health(monster);
+            monster.hp -= damage;
+            check_hp(monster);
             return battle(hero, monster, false, false);
         }
         else {
             damage = get_damage(monster);
             print_on_console(monster, hero, damage);
-            hero.health -= damage;
-            check_health(hero);
+            hero.hp -= damage;
+            check_hp(hero);
             return battle(hero, monster, false, true);
         }
     }
@@ -45,11 +45,11 @@ module.exports = function battle(hero, monster, first_run, hero_next_turn) {
 };
 
 function get_damage(person) {
-    return person.skill * 0.5 + person.power * 0.5
+    return person.dexterity * 0.5 + person.strength * 0.5
 }
 
-function check_health(person) {
-    person.health = person.health < 0 ? 0 : person.health;
+function check_hp(person) {
+    person.hp = person.hp < 0 ? 0 : person.hp;
 }
 
 function print_on_console(attacker, damaged, hp) {
@@ -58,5 +58,5 @@ function print_on_console(attacker, damaged, hp) {
 }
 
 function get_attributes(person) {
-    return ' (health: ' + person.health + ', power: ' + person.power + ', skill: ' + person.skill + ')';
+    return ' (hp: ' + person.hp + ', strength: ' + person.strength + ', dexterity: ' + person.dexterity + ')';
 }
