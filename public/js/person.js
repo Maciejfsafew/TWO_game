@@ -3,7 +3,6 @@ var Person = function Person(name) {
     this.strength = 100;
     this.dexterity = 100;
     this.hp = 100;
-    this.description = '';
     this.level = 1;
     this.maxhp = this.hp;
     this.items = [];
