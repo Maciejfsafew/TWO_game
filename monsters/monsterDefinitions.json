@@ -1,0 +1,32 @@
+[
+  {
+    "name": "Tank",
+    "description": "Tough but slow.",
+    "level": 7,
+    "strength": 10,
+    "dexterity": 2,
+    "hp": 100,
+    "maxhp": 100,
+    "items": []
+  },
+  {
+    "name": "Rogue",
+    "description": "Fast but small hp pool.",
+    "level": 2,
+    "strength": 2,
+    "dexterity": 10,
+    "hp": 30,
+    "maxhp": 30,
+    "items": []
+  },
+  {
+    "name": "Troll",
+    "description": "Not very strong, but can take a beating",
+    "level": 5,
+    "strength": 4,
+    "dexterity": 5,
+    "hp": 130,
+    "maxhp": 130,
+    "items": []
+  }
+]
