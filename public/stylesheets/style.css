@@ -1,0 +1,16 @@
+#shell-panel {
+  height: 800px;
+  width: 95%;
+  background-color: #002f05;
+  color: #00fe00;
+  padding: 20px 20px 20px 20px;
+  font-family: 'Source Code Pro';
+  overflow: scroll;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  border: 1px dashed #E6EBE0;
+}
+
+#shell-cli .prompt {
+  font-weight: bold;
+}

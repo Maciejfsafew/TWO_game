@@ -12,7 +12,8 @@ var Path = require("./path")
 
 function parsePlayfield(text) {
     var playfield = [[]];
-    var lines = text.split("\n");
+    var os = require('os');
+    var lines = text.split(os.EOL);
     for(var i = 0; i < lines.length; i++) {
         if(lines[i].trim().length == 0) {
             continue; //ignore empty lines
