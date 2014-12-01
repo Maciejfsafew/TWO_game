@@ -3,6 +3,8 @@
  * @type {exports}
  */
 var experienceManager = require("./experienceManager");
+var Person = require("../person");
+var generateMonster = require("../../../monsters/monsters");
 
 var Monster = function Monster(name) {
     this.name = name;
@@ -12,25 +14,22 @@ var Monster = function Monster(name) {
     this.maxhp = this.hp + 20;
 };
 
-
-var Person = function Person(name) {
-    this.name = name;
-    this.strength = 100;
-    this.dexterity = 100;
-    this.hp = 100;
-    this.maxhp = 120;
-    this.experience = 0;
-    this.level = 1;
-};
-
 var person = new Person("bohater");
-var monster = new Monster("potwor");
+//var monster = new Monster("potwor");
+person.currentField = FieldType.MONSTER;
+
+var monster = generateMonster(person, 1);
+
+
+console.log("~~~~ Init: ")
 console.log("Character level: " + person.level);
 console.log("Character's experience: " + person.experience);
 experienceManager.addExperience(person, monster);
+console.log("~~~~ After won fight with the monster: ")
 console.log("Character level: " + person.level);
 console.log("Character's experience: " + person.experience);
 experienceManager.levelDownCharacter(person);
+console.log("~~~~ After leveling down: ")
 console.log("Character level: " + person.level);
 console.log("Character's experience: " + person.experience);
 
