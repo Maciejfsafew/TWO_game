@@ -4,19 +4,9 @@
  */
 var experienceManager = require("./experienceManager");
 var Person = require("../person");
-var generateMonster = require("../../../monsters/monsters");
-
-var Monster = function Monster(name) {
-    this.name = name;
-    this.strength = Math.floor((Math.random() * 100) + 1);
-    this.dexterity = Math.floor((Math.random() * 100) + 1);
-    this.hp = Math.floor((Math.random() * 1000) + 1);
-    this.maxhp = this.hp + 20;
-};
+var generateMonster = require("../../../monsters/monsters").generateMonster;
 
 var person = new Person("bohater");
-//var monster = new Monster("potwor");
-person.currentField = FieldType.MONSTER;
 
 var monster = generateMonster(person, 1);
 
