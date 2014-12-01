@@ -1,3 +1,5 @@
+var FieldType = require("./fieldTypes");
+
 var Person = function Person(name) {
     this.name = name;
     this.strength = 100;
@@ -7,6 +9,7 @@ var Person = function Person(name) {
     this.level = 1;
     this.experience = 0;
     this.items = [];
+    this.currentField = { type:FieldType.MONSTER };
 };
 
 module.exports = Person;
