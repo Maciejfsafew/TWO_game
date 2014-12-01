@@ -4,10 +4,12 @@
 var express = require('express');
 var http = require('http');
 var app = express();
-var server = http.createServer(app);
 var Primus = require("primus");
+var Emitter = require('primus-emitter');
+var server = http.createServer(app);
 
-var primus = new Primus(server, { transformer: "engine.io" });
+var primus = new Primus(server, { transformer: "engine.io", parser: 'JSON' });
+primus.use('emitter', Emitter);
 
 // static assets
 app.use('/public', express.static(__dirname + '/public'));
@@ -26,12 +28,12 @@ app.get('/', function(req, res) {
 });
 
 primus.on("connection", function (spark) {
-    spark.write({'message': 'ping'});
-    spark.on('data', function message(data) {
-        if(data.command === "move") {
-            spark.write("MOVE:" + data.msg);
+    spark.on('move', function (data, fn) {
+        try {
+            fn(data);
+        } catch (err) {
+            console.log("Communication error");
         }
-        console.log(data);
     });
 })
 

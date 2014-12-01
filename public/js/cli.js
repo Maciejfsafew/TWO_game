@@ -17,19 +17,16 @@
     shell.onNewPrompt(function(callback) {
         callback("[" + n + " " + time + "] $ ");
     });
-
-    // Example of defining commands. When REST api will be ready
     // all communication will happen here.
     // Commands defined in cli-commands.js
     Commands = [
         {
             name: "move",
-            rest: "rest",
             msg: "",
             alias: "mv",
             args_handler: function(args) {
               var msg = { success: false, msg: "Bad argument! Use N/S/E/W direction." };
-              
+              console.log(args);
               if(args.length == 1) {
                  var arg = args[0].toUpperCase();
                   if(arg === "N" || arg === "E" || arg === "S" || arg === "W") {
@@ -43,7 +40,6 @@
 
     Commands.forEach(function(entry) {
       var name = entry.name;
-      var rest = entry.rest;
       var msg = entry.msg;
       var alias = entry.alias;
       var args_handler = entry.args_handler;
@@ -53,17 +49,15 @@
           var response = "";
           
           var status = args_handler(args);
+          //If command valid
           if (status.success === true) {
-              primus.write({ command: "move", msg: status.msg });
-              console.log("SENDING:");
-              console.log(status);
-              primus.on("data", function(data) {
-                  console.log("RECEIVED on move:");
-                  console.log(data);
+              console.log("SENDING");
+              primus.send("move", status.msg, function(data) {
                   msg = data;
                   response += msg;
                   callback(response);
               });
+          //If command invalid e.g. typo in command:
           } else {
               msg = status.msg;
               response += msg;
@@ -73,7 +67,7 @@
       };
 
       shell.setCommandHandler(name, handler);
-      if(alias) {
+      if (alias) {
         shell.setCommandHandler(alias, handler);
       }
 
