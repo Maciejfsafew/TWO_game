@@ -7,6 +7,8 @@ var app = express();
 var server = http.createServer(app);
 var Primus = require("primus");
 var primus = new Primus(server, {transformer: "engine.io"});
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost/test');
 
 // static assets
 app.use('/public', express.static(__dirname + '/public'));
