@@ -57,7 +57,7 @@ exports.readFieldDefinition = function(filepath) {
     var data = fs.readFileSync(filepath, 'utf8');
     return parsePlayfield(data);
 
-}
+};
 
 
 

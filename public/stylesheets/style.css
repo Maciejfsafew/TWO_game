@@ -14,3 +14,15 @@
 #shell-cli .prompt {
   font-weight: bold;
 }
+
+#high-scores {
+  /*color: #12A312;*/
+  text-align: center;
+  text-shadow:
+                /*-1px -1px 1px #00fe00,*/
+                /*1px -1px 1px #00fe00,*/
+                /*1px 1px 1px #00fe00,*/
+                /*-1px 1px 1px #00fe00,*/
+                0px 0px 2px #00fe00;
+  font-size: 200%
+}

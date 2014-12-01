@@ -31,6 +31,12 @@ app.get('/game', function (req, res) {
     });
 });
 
+app.get('/highscores', function (req, res) {
+    res.render('highscores.html.ejs', {
+        'title': "Gra RPG - High scores"
+    });
+});
+
 primus.on("connection", function (spark) {
     spark.write({'message': 'ping'});
     spark.on('data', function message(data) {

@@ -10,9 +10,9 @@
     <script type="text/javascript">
         $(function () {
             if ($.cookie("name") != null) {
-                var data = "<b>Hej, " + $.cookie("name") + "!</b>";
-                $("#name").html(data)
-                $("#body_elements").attr('style', 'display: block');
+//                var data = "<b>Hej, " + $.cookie("name") + "!</b>";
+//                $("#name").html(data)
+//                $("#body_elements").attr('style', 'display: block');
 //                $.removeCookie("name");
             }
             else {
@@ -20,6 +20,7 @@
             }
         });
     </script>
+
     <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.2/underscore-min.js"></script>
     <script src="/public/lib/primus.js" OB></script>
@@ -31,21 +32,21 @@
     <script src="/public/js/josh.js/pathhandler.js"></script>
     <script src="/public/js/cli-commands.js"></script>
     <script src="/public/js/cli.js"></script>
+    <script src="/public/js/highscores.js"></script>
     <link rel="stylesheet" type="text/css" href="/public/stylesheets/style.css">
 </head>
 
-<body id="body_elements" style="display: none;">
+<body id="body_elements">
 <table>
     <tr>
-        <td id="name">test</td>
+        <td id="name"></td>
     </tr>
 </table>
 <div class="wrapper">
     <div id="shell-panel" tabindex="0">
-        <div>Welcome to TWO MUD!<br>
-        </div>
-        <div id="shell-view"></div>
+        <div id="high-scores">HIGH SCORES<br></div>
     </div>
+
 </div>
 </body>
 </html>
