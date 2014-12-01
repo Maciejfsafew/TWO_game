@@ -41,3 +41,7 @@ primus.on("connection", function (spark) {
 
 server.listen(8080);
 console.log('8080 is where the magic happens');
+
+
+var map = require("./public/js/map");
+console.log(map.readFieldDefinition("public/assets/test.field"))
