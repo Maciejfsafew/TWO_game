@@ -13,7 +13,6 @@
                 var data = "<b>Hej, " + $.cookie("name") + "!</b>";
                 $("#name").html(data)
                 $("#body_elements").attr('style', 'display: block');
-                $.removeCookie("name");
             }
             else {
                 window.open('/', "_self")
@@ -38,8 +37,17 @@
 <table>
     <tr>
         <td id="name">test</td>
+        <td id="logout">
+            <button onclick="logout()">Logout</button>
+        </td>
     </tr>
 </table>
+<script>
+    function logout() {
+        $.removeCookie("name");
+        window.open('/', "_self");
+    }
+</script>
 <div class="wrapper">
     <div id="shell-panel" tabindex="0">
         <div>Welcome to TWO MUD!<br>
