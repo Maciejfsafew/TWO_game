@@ -1,0 +1,23 @@
+[
+  {
+    "question": "Do you like computer science?",
+    "answers": [
+      {
+        "answerText": "Yes",
+        "correct": true
+      },
+      {
+        "answerText": "Of course",
+        "correct": true
+      },
+      {
+        "answerText": "No, I'm a filthy peasant.",
+        "correct": false
+      },
+      {
+        "answerText": "Definitely",
+        "correct": true
+      }
+    ]
+  }
+]
