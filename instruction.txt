@@ -1,0 +1,5 @@
+1. Install MongoDB http://www.mongodb.org/downloads
+2. npm install mongoose -> in the project folder
+3. mongod --dbpath data\db\ -> in the project folder
+4. Run the project
+5. Read docs http://mongoosejs.com/docs/index.html
