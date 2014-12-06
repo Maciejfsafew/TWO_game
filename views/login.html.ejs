@@ -21,11 +21,12 @@
 </h1>
 
 <div style="width: 100%;text-align: center">
-    Username &nbsp&nbsp&nbsp<input type="text" id="txtName"/>
+    Username <input type="text" id="txtName"/>
     <br>
     <br>
-    <input type="submit" onclick="check(this.form)" value="Login" id="button"/>
-    <input type="reset" value="Reset"/>
+    Password &nbsp<input type="password" id="txtPass"/>
+    <br>
+    <br><input type="submit" onclick="check(this.form)" value="Login" id="button"/>
 </div>
 
 <script>
@@ -38,13 +39,14 @@
 
 <script language="javascript">
     function check(form)/*TODO function to check if user is logged currently*/ {
-        var val = $("#txtName").val();
-        if (val != null && val != '') {
-            $.cookie("name", val);
+        var username = $("#txtName").val();
+        var password = $("#txtPass").val();
+        if (username != null && username != ''/* && password != null && password != ''*/) {
+            $.cookie("name", username);
             window.open('game', "_self")
         }
         else {
-            window.alert("Please, fill in name field");
+            window.alert("Please, fill in username and password field");
         }
     }
 </script>
