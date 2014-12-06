@@ -26,8 +26,17 @@
     <br>
     Password &nbsp<input type="password" id="txtPass"/>
     <br>
-    <br><input type="submit" onclick="check(this.form)" value="Login"/>
+    <br><input type="submit" onclick="check(this.form)" value="Login" id="button"/>
 </div>
+
+<script>
+    document.getElementById('txtName').addEventListener('keypress', function(event) {
+        if (event.keyCode == 13 || event.keyCode == 10) {
+            $("#button").click();
+        }
+    });
+</script>
+
 <script language="javascript">
     function check(form)/*TODO function to check if user is logged currently*/ {
         var username = $("#txtName").val();
