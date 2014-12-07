@@ -19,10 +19,10 @@
                         window.open('/', "_self")
                     }
                     else if (get_person_answer === 'success') {
-                        var person = data.person;
-                        console.log(person);
-                        var data = "<b>Hej, " + $.cookie("name") + "!</b>";
-                        $("#name").html(data);
+                        window.person = data.person;
+                        console.log(window.person);
+                        var data_name = "<b>Hej, " + $.cookie("name") + "!</b>";
+                        $("#name").html(data_name);
                         $("#body_elements").attr('style', 'display: block');
                     }
                 });
