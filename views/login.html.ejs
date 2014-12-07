@@ -52,7 +52,7 @@
         var u = $("#txtName").val();
         var p = $("#txtPass").val();
         if (u != null && u != '' && p != null && p != '') {
-            var primus = new Primus('http://localhost:8080/');
+            var primus = Primus.connect();
             primus.write({'u': u, 'p': CryptoJS.SHA256(p).toString(CryptoJS.enc.Hex)});
             primus.on('data', function message(data) {
                 var login_answer = data.login_answer;

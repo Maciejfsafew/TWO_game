@@ -59,6 +59,9 @@ primus.on("connection", function (spark) {
                 }
             });
         }
+        else if (data = 'pause') {
+            spark.write('pause_answer');
+        }
         else {
             spark.write({'login_answer': 'error'});
         }
