@@ -6,6 +6,8 @@
       }
     };
 
+    var primus = Primus.connect();
+
     var history = Josh.History();
     var readline = new Josh.ReadLine({history: history, console: _console });
     var shell = Josh.Shell({readline: readline, history: history, console: _console});
@@ -21,18 +23,23 @@
     // Example of defining commands. When REST api will be ready
     // all communication will happen here.
     // Commands defined in cli-commands.js
+
     Commands.forEach(function(entry) {
       var name = entry.name;
-      var rest = entry.rest;
+      var api = entry.api;
       var msg = entry.msg;
       var alias = entry.alias;
+      var customCallback = entry.customCallback;
 
       var handler = {
         exec: function(cmd, args, callback) {
           var response = "";
-          if(rest) {
-            $.get(rest, function(data) {
-              response += data;
+          if(api) {
+            primus.write(api);
+            primus.on('data', function(data) {
+              if(customCallback) {
+                response += customCallback(data);
+              }
             });
           }
           response += msg;

@@ -1,3 +1,5 @@
+var FieldType = require("../public/js/fieldTypes");
+
 function Monster(monsterConfiguration) {
     this.name = monsterConfiguration.name;
     this.description = monsterConfiguration.description;
@@ -27,5 +29,5 @@ exports.generateMonster = function (hero, probability) {
 
 
 function containsMonster(field) {
-    return field.monster && field.type === FieldType.MONSTER; // field should probably be able do contain a monster object
+    return field && (field.type === FieldType.MONSTER) && field.monster; // field should probably be able do contain a monster object
 }
