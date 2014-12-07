@@ -9,7 +9,7 @@ var Person = function Person(name) {
     this.level = 1;
     this.experience = 0;
     this.items = [];
-    this.currentField = {type: FieldType.MONSTER};
+    this.currentField = {type: FieldType.START};
     this.levelDown = function () {
         if (this.level != 1)
             this.level--;

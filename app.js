@@ -8,6 +8,7 @@ var server = http.createServer(app);
 var Primus = require("primus");
 var primus = new Primus(server, {transformer: "engine.io"});
 var db_user = require('./public/js/db_user');
+var Person = require("./public/js/person");
 // static assets
 app.use('/public', express.static(__dirname + '/public'));
 
@@ -48,7 +49,8 @@ primus.on("connection", function (spark) {
                     }
                 }
                 else {
-                    var us = new db_user({username: data.u, password: data.p});
+                    var new_person = new Person(data.u);
+                    var us = per2us(data, new_person);
                     us.save(function (err, us) {
                         if (err) {
                             spark.write({'login_answer': 'error'});
@@ -56,6 +58,23 @@ primus.on("connection", function (spark) {
                         }
                         spark.write({'login_answer': 'success'});
                     });
+                }
+            });
+        }
+        else if (data === 'pause') {
+            spark.write('pause_answer');
+        }
+        else if (data.action === 'get_person') {
+            db_user.findOne({'username': data.u}, function (err, user) {
+                if (err) {
+                    spark.write({'get_person_answer': 'error'});
+                    return console.error(err);
+                }
+                if (user != null) {
+                    spark.write({'get_person_answer': 'success', 'person': us2per(user)});
+                }
+                else {
+                    spark.write({'get_person_answer': 'error'});
                 }
             });
         }
@@ -71,3 +90,31 @@ console.log('8080 is where the magic happens');
 
 var map = require("./public/js/map");
 console.log(map.readFieldDefinition("public/assets/test.field"))
+
+function us2per(user) {
+    var person = new Person(user.username);
+    person.strength = user.strength;
+    person.dexterity = user.dexterity;
+    person.hp = user.hp;
+    person.maxhp = user.maxhp;
+    person.level = user.level;
+    person.experience = user.experience;
+    person.items = user.items;
+    person.currentField = user.currentField;
+    return person;
+}
+
+function per2us(data, person) {
+    return new db_user({
+        username: data.u,
+        password: data.p,
+        strength: person.strength,
+        dexterity: person.dexterity,
+        hp: person.hp,
+        maxhp: person.maxhp,
+        level: person.level,
+        experience: person.experience,
+        items: person.items,
+        currentField: person.currentField
+    });
+}
