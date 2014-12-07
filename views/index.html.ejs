@@ -10,9 +10,22 @@
     <script type="text/javascript">
         $(function () {
             if ($.cookie("name") != null) {
-                var data = "<b>Hej, " + $.cookie("name") + "!</b>";
-                $("#name").html(data)
-                $("#body_elements").attr('style', 'display: block');
+                var primus = Primus.connect();
+                primus.write({'action': 'get_person', 'u': $.cookie("name")});
+                primus.on('data', function message(data) {
+                    var get_person_answer = data.get_person_answer;
+                    if (get_person_answer === 'error') {
+                        window.alert('Error');
+                        window.open('/', "_self")
+                    }
+                    else if (get_person_answer === 'success') {
+                        var person = data.person;
+                        console.log(person);
+                        var data = "<b>Hej, " + $.cookie("name") + "!</b>";
+                        $("#name").html(data);
+                        $("#body_elements").attr('style', 'display: block');
+                    }
+                });
             }
             else {
                 window.open('/', "_self")
