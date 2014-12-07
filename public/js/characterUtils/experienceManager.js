@@ -40,7 +40,7 @@ function levelDownCharacter(character) {
     if (character.level == 1) return;
     character.level--;
     var experience;
-    if (character.level - 1 < 0) {
+    if (character.level - 1 <= 0) {
         experience = 0;
     } else {
         experience = experiencePerLevel[character.level - 2];
