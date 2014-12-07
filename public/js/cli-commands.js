@@ -2,7 +2,10 @@
 var Commands = [
   {
     name: "map",
-    rest: "/api/map/get",
+    api: "map",
+    customCallback: function(data) {
+      return 'map will be drawed here from ' + data;
+    }
   },
   {
     name: "north",
