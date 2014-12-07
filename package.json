@@ -25,6 +25,8 @@
     "ejs": "^1.0.0",
     "engine.io": "^1.4.2",
     "express": "^4.10.1",
-    "primus": "^2.4.10"
+    "primus": "^2.4.10",
+    "underscore":"*",
+    "jasmine-node":"*"
   }
 }
