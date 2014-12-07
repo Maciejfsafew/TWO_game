@@ -1,5 +1,5 @@
-(function(root, $, _, primus) {
-  Josh.Example = (function(root, $, _, primus) {
+(function(root, $, _) {
+  Josh.Example = (function(root, $, _) {
 
     var _console = (Josh.Debug && root.console) ? root.console : {
       log: function() {
@@ -52,7 +52,7 @@
           //If command valid
           if (status.success === true) {
               console.log("SENDING");
-              primus.send("move", status.msg, function(data) {
+              primus.send(name, status.msg, function(data) {
                   msg = data;
                   response += msg;
                   callback(response);
@@ -62,7 +62,7 @@
               msg = status.msg;
               response += msg;
               callback(response);
-          }          
+          }
         }
       };
 
