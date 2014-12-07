@@ -42,35 +42,35 @@ primus.on("connection", function (spark) {
             console.log("Communication error");
         }
     });
-    spark.on('data', function message(data) {
+    spark.on('login', function (data, fn) {
         if (data.u != null && data.p != null) {
             db_user.findOne({'username': data.u}, function (err, user) {
                 if (err) {
-                    spark.write({'login_answer': 'error'});
+                    fn({'login_answer': 'error'});
                     return console.error(err);
                 }
                 if (user != null) {
                     if (data.p === user.password) {
-                        spark.write({'login_answer': 'success'});
+                        fn({'login_answer': 'success'});
                     }
                     else {
-                        spark.write({'login_answer': 'bad'});
+                        fn({'login_answer': 'bad'});
                     }
                 }
                 else {
                     var us = new db_user({username: data.u, password: data.p});
                     us.save(function (err, us) {
                         if (err) {
-                            spark.write({'login_answer': 'error'});
+                            fn({'login_answer': 'error'});
                             return console.error(err);
                         }
-                        spark.write({'login_answer': 'success'});
+                        fn({'login_answer': 'success'});
                     });
                 }
             });
         }
         else {
-            spark.write({'login_answer': 'error'});
+            fn({'login_answer': 'error'});
         }
     });
 });

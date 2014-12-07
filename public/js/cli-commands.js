@@ -1,9 +1,25 @@
 // Example commands
 var Commands = [
   {
+    name: "move",
+    msg: "",
+    alias: "mv",
+    args_handler: function(args) {
+      var msg = { success: false, msg: "Bad argument! Use N/S/E/W direction." };
+      console.log(args);
+      if(args.length == 1) {
+        var arg = args[0].toUpperCase();
+        if(arg === "N" || arg === "E" || arg === "S" || arg === "W") {
+          msg = { success: true, msg: {move: arg} }
+        }
+      }
+      return msg;
+    }
+  },
+  {
     name: "map",
     api: "map",
-    customCallback: function(data) {
+    args_handler: function(data) {
       return 'map will be drawed here from ' + data;
     }
   },
