@@ -19,5 +19,183 @@
         "correct": true
       }
     ]
+  },
+  {
+    "question": "Najbardziej prymitywnym systemem liczbowym jest",
+    "answers": [
+      {
+        "answerText": "dwójkowy system liczbowy",
+        "correct": false
+      },
+      {
+        "answerText": "jedynkowy system liczbowy",
+        "correct": true
+      },
+      {
+        "answerText": "szesnastkowy system liczbowy",
+        "correct": false
+      }
+    ]
+  },
+  {
+    "question": "WDI Wartość 5/16 ma postać w systemie binarnym",
+    "answers": [
+      {
+        "answerText": "0.1011",
+        "correct": false
+      },
+      {
+        "answerText": "0.0101",
+        "correct": true
+      },
+      {
+        "answerText": "0.1010",
+        "correct": false
+      }
+    ]
+  },
+  {
+    "question": " WDI Wartość 1/10 ma postać w systemie binarnym",
+    "answers": [
+      {
+        "answerText": "0.1010",
+        "correct": false
+      },
+      {
+        "answerText": "0.0(0011)",
+        "correct": true
+      },
+      {
+        "answerText": "0.(1010)",
+        "correct": false
+      },
+      {
+        "answerText": "0.0(1010)",
+        "correct": false
+      }
+    ]
+  },
+  {
+    "question": "Najbardziej prymitywnym systemem liczbowym jest",
+    "answers": [
+      {
+        "answerText": "dwójkowy system liczbowy",
+        "correct": false
+      },
+      {
+        "answerText": "jedynkowy system liczbowy",
+        "correct": true
+      },
+      {
+        "answerText": "szesnastkowy system liczbowy",
+        "correct": false
+      }
+    ]
+  },
+  {
+    "question": "WDI Ile informacji zawiera 8 znakowe słowo którego każdy znak jest jedną z liter a, b. Prawdopodobieństwo pojawienia się (na każdej pozycji samogłoski jest dwukrotnie większe od prawdopodobieństwa pojawienia się spółgłoski.",
+    "answers": [
+      {
+        "answerText": "8 bajtów",
+        "correct": false
+      },
+      {
+        "answerText": "7.34637 bajta",
+        "correct": true
+      }
+    ]
+  },
+  {
+    "question": "Cechami kodu uzupełnień do dwóch są",
+    "answers": [
+      {
+        "answerText": "Podwójna reprezentacja 0",
+        "correct": false
+      },
+      {
+        "answerText": "Pojedyncza reprezentacja 0",
+        "correct": true
+      },
+      {
+        "answerText": "Symetryczny zakres liczb",
+        "correct": false
+      },
+      {
+        "answerText": "Asymetryczny zakres liczb",
+        "correct": true
+      }
+    ]
+  },
+  {
+    "question": "WDI Jaka jest minimalna liczba bitów aby reprezentować liczby zmiennopozycyjne z zakresu -106 ... 106 z dokładnością do 2 miejsc znaczących.",
+    "answers": [
+      {
+        "answerText": "8 bitów",
+        "correct": false
+      },
+      {
+        "answerText": "12 bitów",
+        "correct": true
+      },
+      {
+        "answerText": "inna odpowiedź",
+        "correct": false
+      }
+    ]
+  },
+  {
+    "question": "W standardzie IEEE 754 liczby zmiennopozycyjne podwójnej precyzji",
+    "answers": [
+      {
+        "answerText": "mantysa zawiera 52 bity łącznie z bitem znaku",
+        "correct": false
+      },
+      {
+        "answerText": "mantysa zawiera 53 bity łącznie z bitem znaku",
+        "correct": true
+      },
+      {
+        "answerText": "wykładnik zawiera 11 bitów",
+        "correct": true
+      },
+      {
+        "answerText": "wykładnik zawiera 12 bitów",
+        "correct": false
+      }
+    ]
+  },
+  {
+    "question": "Bramki wykonują operacje na",
+    "answers": [
+      {
+        "answerText": "słowach",
+        "correct": false
+      },
+      {
+        "answerText": "wartościach logicznych",
+        "correct": true
+      }
+    ]
+  },
+  {
+    "question": "Jaki paradygmat programowania jest realizowany w języku C",
+    "answers": [
+      {
+        "answerText": "Aplikatywny",
+        "correct": false
+      },
+      {
+        "answerText": "Imperatywny",
+        "correct": true
+      },
+      {
+        "answerText": "Żaden z wymienionych",
+        "correct": false
+      },
+      {
+        "answerText": "Strukturalny",
+        "correct": true
+      }
+    ]
   }
 ]
