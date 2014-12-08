@@ -1,4 +1,5 @@
 var Items = require("./public/js/items");
+var Map = require("./public/js/")
 // Example commands
 var Commands = [
   {
@@ -11,7 +12,14 @@ var Commands = [
       if(args.length == 1) {
         var arg = args[0].toUpperCase();
         if(arg === "N" || arg === "E" || arg === "S" || arg === "W") {
-          msg = { success: true, msg: {move: arg} }
+          var moveResult = map.movePerson(window.person, arg)
+          if(moveResult.status === true) {
+            msg = { success: true, msg: {move: moveResult.field.toString} }
+            window.person.currentLocation = moveResult.location
+          }else {
+            msg = { success: false, msg: {move: "You cannot move there!"} }
+          }
+
         }
       }
       return msg;
