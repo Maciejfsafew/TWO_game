@@ -35,6 +35,10 @@ app.get('/game', function (req, res) {
     });
 });
 
+var map = require("./public/js/map");
+//console.log(map.readFieldDefinition())
+var playfield = map.readFieldDefinition("public/assets/test.field");
+
 primus.on("connection", function (spark) {
     spark.on('move', function (data, fn) {
         try {
@@ -80,7 +84,8 @@ primus.on("connection", function (spark) {
             if (err) {
                 fn({'get_person_answer': 'error'});
             }else if (user != null) {
-                fn({'get_person_answer': 'success', 'person': us2per(user)});
+                fn({'get_person_answer': 'success', 'person': us2per(user),
+                    map: playfield});
             }
             else {
                 fn({'get_person_answer': 'error'});
@@ -95,6 +100,8 @@ console.log('8080 is where the magic happens');
 
 var map = require("./public/js/map");
 console.log(map.readFieldDefinition("public/assets/test.field"))
+
+
 
 function us2per(user) {
     var person = new Person(user.username);

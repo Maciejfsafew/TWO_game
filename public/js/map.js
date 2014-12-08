@@ -48,17 +48,63 @@ function parsePlayfield(text) {
         }
     }
     return playfield;
-
 }
+
+exports.getStartField = function(playfield) {
+    for(var i = 0; i < playfield.length; i++) {
+        var line = playfield[i];
+        for(var k = 0; k < playfield.length; k++) {
+            if(playfield[i][k].type == FieldType.START) {
+                return [i, k];
+            }
+        }
+    }
+}
+
+
+
+
 
 exports.readFieldDefinition = function(filepath) {
     fs = require('fs');
 
     var data = fs.readFileSync(filepath, 'utf8');
     return parsePlayfield(data);
+};
 
+exports.movePerson = function(person, direction) {
+    var newLocation = person.currentLocation;
+    if (direction === "W") {
+        newLocation.x -= 1;
+    } else if (direction === "E") {
+        newLocation.x += 1;
+    } else if (direction === "S") {
+        newLocation.y += 1;
+    } else if (direction === "N") {
+        newLocation.y -= 1;
+    }
+
+    var status = true;
+    if (newLocation.x < 0 || newLocation.x >= person.playfield[0].length) {
+        status = false;
+    }
+    if (newLocation.y < 0 || newLocation.y >= person.playfield.length) {
+        status = false;
+    }
+
+
+    if (status) {
+        var newField = person.playfield[newLocation.x][newLocation.y];
+
+        if(newField.type != FieldType.FORBIDDEN) {
+            return {field: newField, location: newLocation, status: status};
+        } else {
+            return {status: false};
+        }
+
+    } else {
+        return {status: false}
+    }
 }
-
-
 
 
