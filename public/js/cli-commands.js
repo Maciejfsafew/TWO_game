@@ -1,4 +1,6 @@
 // Example commands
+var primus = Primus.connect();
+
 var Commands = [
     {
         name: "map",
@@ -47,4 +49,31 @@ var Commands = [
             }
         }
     },
-]
+    {
+        name: "sleep",
+        api: "sleep",
+        msg: "Your hp is growing up now. Type 'wakeup' to wake up",
+        customCallback: function (data) {
+            primus.write({'action': 'sleep_person', 'person': window.person});
+            primus.on('data', function message(data) {
+                var sleep_person_answer = data.sleep_person_answer;
+                if (sleep_person_answer === 'error') {
+                    window.alert('Sleep error');
+                }
+                else if (sleep_person_answer === 'success') {
+                    //ignore
+                }
+            });
+        }
+    },
+    {
+        name: "wakeup",
+        api: "wakeup",
+        msg: 'You can do whatever you want again',
+        customCallback: function (data) {
+            if (confirm("Do you want to exit?")) {
+                logout();
+            }
+        }
+    }
+];

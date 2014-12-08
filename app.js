@@ -64,6 +64,9 @@ primus.on("connection", function (spark) {
         else if (data === 'pause') {
             spark.write('pause_answer');
         }
+        else if (data === 'sleep') {
+            spark.write('sleep_answer');
+        }
         else if (data.action === 'get_person') {
             db_user.findOne({'username': data.u}, function (err, user) {
                 if (err) {
@@ -93,6 +96,7 @@ primus.on("connection", function (spark) {
                     user.experience = data.person.experience;
                     user.items = data.person.items;
                     user.currentField = data.person.currentField;
+                    user.sleep = data.person.sleep;
                     user.save(function (err, us) {
                         if (err) {
                             spark.write({'update_person_answer': 'error'});
@@ -129,6 +133,7 @@ function us2per(user) {
     person.experience = user.experience;
     person.items = user.items;
     person.currentField = user.currentField;
+    person.sleep = user.sleep;
     return person;
 }
 
@@ -143,6 +148,7 @@ function per2us(data, person) {
         level: person.level,
         experience: person.experience,
         items: person.items,
-        currentField: person.currentField
+        currentField: person.currentField,
+        sleep: person.sleep
     });
 }

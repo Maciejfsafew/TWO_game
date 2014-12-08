@@ -10,13 +10,14 @@ var Person = function Person(name) {
     this.experience = 0;
     this.items = [];
     this.currentField = {type: FieldType.START};
+    this.sleep = false;
     this.levelDown = function () {
         if (this.level != 1)
             this.level--;
-    }
+    };
     this.levelUp = function () {
         this.level++;
-    }
+    };
     this.die = function () {
         this.levelDown();
         this.items = [];

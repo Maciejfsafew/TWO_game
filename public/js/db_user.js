@@ -17,7 +17,8 @@ var userSchema = mongoose.Schema({
     level: Number,
     experience: Number,
     items: Array,
-    currentField: Number
+    currentField: Number,
+    sleep: Boolean
 });
 
 var User = mongoose.model('User', userSchema);
