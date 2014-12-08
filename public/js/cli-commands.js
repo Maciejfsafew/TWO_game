@@ -54,14 +54,33 @@ var Commands = [
         api: "sleep",
         msg: "Your hp is growing up now. Type 'wakeup' to wake up",
         customCallback: function (data) {
-            primus.write({'action': 'sleep_person', 'person': window.person});
+            if (window.person.sleep === true) {
+                window.alert('You are already sleep');
+                return;
+            }
+            window.person.sleep = true;
+            primus.write({'action': 'update_person', 'person': window.person});
             primus.on('data', function message(data) {
-                var sleep_person_answer = data.sleep_person_answer;
-                if (sleep_person_answer === 'error') {
+                var update_person_answer = data.update_person_answer;
+                if (update_person_answer === 'error') {
                     window.alert('Sleep error');
                 }
-                else if (sleep_person_answer === 'success') {
-                    //ignore
+                else if (update_person_answer === 'success') {
+                    window.myInterval = setInterval(function () {
+                        if (window.person.hp + 5 <= window.person.maxhp) {
+                            window.person.hp += 5;
+                        }
+                        primus.write({'action': 'update_person', 'person': window.person});
+                        primus.on('data', function message(data) {
+                            var update_person_answer = data.update_person_answer;
+                            if (update_person_answer === 'error') {
+                                window.alert('Sleep error');
+                            }
+                            else if (update_person_answer === 'success') {
+                                //ignore
+                            }
+                        });
+                    }, 5000);
                 }
             });
         }
@@ -71,9 +90,21 @@ var Commands = [
         api: "wakeup",
         msg: 'You can do whatever you want again',
         customCallback: function (data) {
-            if (confirm("Do you want to exit?")) {
-                logout();
+            if (window.person.sleep === false) {
+                window.alert('You are already awake');
+                return;
             }
+            window.person.sleep = false;
+            primus.write({'action': 'update_person', 'person': window.person});
+            primus.on('data', function message(data) {
+                var update_person_answer = data.update_person_answer;
+                if (update_person_answer === 'error') {
+                    window.alert('Wake up error');
+                }
+                else if (update_person_answer === 'success') {
+                    clearInterval(window.myInterval);
+                }
+            });
         }
     }
 ];

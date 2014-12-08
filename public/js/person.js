@@ -15,7 +15,6 @@ var Person = function Person(name) {
     this.levelDown = function () {
         expMan.levelDownCharacter(this);
     };
-
     this.die = function () {
         this.levelDown();
         this.items = [];

@@ -67,6 +67,9 @@ primus.on("connection", function (spark) {
         else if (data === 'sleep') {
             spark.write('sleep_answer');
         }
+        else if (data === 'wakeup') {
+            spark.write('wakeup_answer');
+        }
         else if (data.action === 'get_person') {
             db_user.findOne({'username': data.u}, function (err, user) {
                 if (err) {
