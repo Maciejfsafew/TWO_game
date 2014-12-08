@@ -1,4 +1,9 @@
-C, P, M, X
-B, M, X, C
-X, P, M, P
-X, X, X,  S
+X, X, X, X, X, X, X, X, X, X, X, X
+X, S, P, M, P, P, M, X, M, C, X, X
+X, X, M, X, X, M, M, X, P, X, X, X
+X, C, P, X, C, P, P, M, M, P, M, X
+X, X, X, X, X, M, X, X, X, X, M, X
+X, X, M, P, P, M, X, C, M, P, P, X
+X, C, M, X, X, X, X, M, X, M, X, X
+X, X, P, M, M, M, P, B, P, M, C, X
+X, X, X, X, X, X, X, X, X, X, X, X
