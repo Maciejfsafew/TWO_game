@@ -1,4 +1,5 @@
 var FieldType = require("./fieldTypes");
+var expMan = require('./characterUtils/experienceManager');
 
 var Person = function Person(name) {
     this.name = name;
@@ -11,12 +12,8 @@ var Person = function Person(name) {
     this.items = [];
     this.currentField = {type: FieldType.START};
     this.levelDown = function () {
-        if (this.level != 1)
-            this.level--;
-    }
-    this.levelUp = function () {
-        this.level++;
-    }
+        expMan.levelDownCharacter(this);
+    };
     this.die = function () {
         this.levelDown();
         this.items = [];
