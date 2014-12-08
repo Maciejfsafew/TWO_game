@@ -53,4 +53,14 @@ var Commands = [
     alias: "d",
     msg: "You're going down."
   },
+  {
+    name: "pause",
+    api: "pause",
+    msg: 'Please, answer the alert',
+    args_handler: function (data) {
+      if (confirm("Do you want to exit?")) {
+        logout();
+      }
+    }
+  }
 ]

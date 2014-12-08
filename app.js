@@ -11,6 +11,7 @@ var server = http.createServer(app);
 var primus = new Primus(server, { transformer: "engine.io", parser: 'JSON' });
 primus.use('emitter', Emitter);
 var db_user = require('./public/js/db_user');
+var Person = require("./public/js/person");
 // static assets
 app.use('/public', express.static(__dirname + '/public'));
 
@@ -58,7 +59,8 @@ primus.on("connection", function (spark) {
                     }
                 }
                 else {
-                    var us = new db_user({username: data.u, password: data.p});
+                    var new_person = new Person(data.u);
+                    var us = per2us(data, new_person);
                     us.save(function (err, us) {
                         if (err) {
                             fn({'login_answer': 'error'});
@@ -69,9 +71,21 @@ primus.on("connection", function (spark) {
                 }
             });
         }
-        else {
-            fn({'login_answer': 'error'});
-        }
+    });
+    spark.on('pause', function(data, fn) {
+        fn("pause_answer");
+    });
+    spark.on('get_person', function (data, fn) {
+        db_user.findOne({'username': data.u}, function (err, user) {
+            if (err) {
+                fn({'get_person_answer': 'error'});
+            }else if (user != null) {
+                fn({'get_person_answer': 'success', 'person': us2per(user)});
+            }
+            else {
+                fn({'get_person_answer': 'error'});
+            }
+        });
     });
 });
 
@@ -81,3 +95,31 @@ console.log('8080 is where the magic happens');
 
 var map = require("./public/js/map");
 console.log(map.readFieldDefinition("public/assets/test.field"))
+
+function us2per(user) {
+    var person = new Person(user.username);
+    person.strength = user.strength;
+    person.dexterity = user.dexterity;
+    person.hp = user.hp;
+    person.maxhp = user.maxhp;
+    person.level = user.level;
+    person.experience = user.experience;
+    person.items = user.items;
+    person.currentField = user.currentField;
+    return person;
+}
+
+function per2us(data, person) {
+    return new db_user({
+        username: data.u,
+        password: data.p,
+        strength: person.strength,
+        dexterity: person.dexterity,
+        hp: person.hp,
+        maxhp: person.maxhp,
+        level: person.level,
+        experience: person.experience,
+        items: person.items,
+        currentField: person.currentField
+    });
+}

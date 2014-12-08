@@ -29,7 +29,7 @@
       var handler = {
         exec: function(cmd, args, callback) {
           var response = "";
-          
+
           var status = args_handler(args);
           //If command valid
           if (status.success === true) {
