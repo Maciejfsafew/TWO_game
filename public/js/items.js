@@ -44,3 +44,25 @@ exports.showBag = function (hero){
         console.log("+"+it.value +" " +it.attribute+"\n");
     });
 }
+
+//as parameter give hero or monster to add stats from items
+exports.updateStats = function (hero){
+    if(!hero.description){
+        hero.strength = 2;
+        hero.dexterity = 2;
+        hero.hp = 100;
+        hero.maxhp = hero.hp;
+    }
+    hero.items.forEach(function (it){
+        if (it.attribute === "hp"){
+            hero.hp += it.value;
+            hero.maxhp += it.value;
+        }
+        else if(it.attribute === "strength"){
+            hero.strength += it.value;
+        }
+        else if(it.attribute === "dexterity"){
+            hero.dexterity += it.value;
+        }
+    });
+}
