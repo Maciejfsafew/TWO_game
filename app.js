@@ -78,6 +78,34 @@ primus.on("connection", function (spark) {
                 }
             });
         }
+        else if (data.action === 'update_person') {
+            db_user.findOne({'username': data.person.name}, function (err, user) {
+                if (err) {
+                    spark.write({'update_person_answer': 'error'});
+                    return console.error(err);
+                }
+                if (user != null) {
+                    user.strength = data.person.strength;
+                    user.dexterity = data.person.dexterity;
+                    user.hp = data.person.hp;
+                    user.maxhp = data.person.maxhp;
+                    user.level = data.person.level;
+                    user.experience = data.person.experience;
+                    user.items = data.person.items;
+                    user.currentField = data.person.currentField;
+                    user.save(function (err, us) {
+                        if (err) {
+                            spark.write({'update_person_answer': 'error'});
+                            return console.error(err);
+                        }
+                        spark.write({'update_person_answer': 'success'});
+                    });
+                }
+                else {
+                    spark.write({'update_person_answer': 'error'});
+                }
+            });
+        }
         else {
             spark.write({'login_answer': 'error'});
         }

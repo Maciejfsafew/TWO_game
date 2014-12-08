@@ -20,7 +20,6 @@
                     }
                     else if (get_person_answer === 'success') {
                         window.person = data.person;
-                        console.log(window.person);
                         var data_name = "<b>Hej, " + $.cookie("name") + "!</b>";
                         $("#name").html(data_name);
                         $("#body_elements").attr('style', 'display: block');
@@ -57,8 +56,18 @@
 </table>
 <script>
     function logout() {
-        $.removeCookie("name");
-        window.open('/', "_self");
+        var primus = Primus.connect();
+        primus.write({'action': 'update_person', 'person': window.person});
+        primus.on('data', function message(data) {
+            var update_person_answer = data.update_person_answer;
+            if (update_person_answer === 'error') {
+                window.alert('Update error');
+            }
+            else if (update_person_answer === 'success') {
+                $.removeCookie("name");
+                window.open('/', "_self");
+            }
+        });
     }
 </script>
 <div class="wrapper">
