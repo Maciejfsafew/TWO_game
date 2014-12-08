@@ -48,8 +48,22 @@ function parsePlayfield(text) {
         }
     }
     return playfield;
-
 }
+
+exports.getStartField = function(playfield) {
+    for(var i = 0; i < playfield.length; i++) {
+        var line = playfield[i];
+        for(var k = 0; k < playfield.length; k++) {
+            if(playfield[i][k].type == FieldType.START) {
+                return [i, k];
+            }
+        }
+    }
+}
+
+
+
+
 
 exports.readFieldDefinition = function(filepath) {
     fs = require('fs');
