@@ -1,3 +1,4 @@
+var Items = require("./public/js/items");
 // Example commands
 var Commands = [
   {
@@ -61,6 +62,14 @@ var Commands = [
       if (confirm("Do you want to exit?")) {
         logout();
       }
+    }
+  },
+  {
+    name: "bag",
+    alias: "b",
+    msg: "",
+    args_handler: function (args) {
+        return { success: true, msg: Items.showBag(window.Person) }
     }
   }
 ]
