@@ -1,4 +1,4 @@
-var Person = require("./public/js/person");
+var Person = require("./public/js/Person");
 var Items = require("./public/js/items");
 var Monster = require("./monsters/monsters");
 

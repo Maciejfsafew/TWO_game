@@ -13,7 +13,7 @@ primus.use('emitter', Emitter);
 
 //our modules
 var db_user = require('./backend/db_user');
-var person = require("./backend/person");
+var Person = require("./backend/person");
 var map = require("./backend/map");
 
 // static assets
@@ -82,7 +82,7 @@ primus.on("connection", function (spark) {
                     }
                 }
                 else {
-                    var new_person = new person(data.u);
+                    var new_person = new Person(data.u);
                     var us = per2us(data, new_person);
                     us.save(function (err, us) {
                         if (err) {
@@ -117,13 +117,8 @@ server.listen(8080);
 console.log('8080 is where the magic happens');
 
 
-var map = require("./backend/map");
-console.log(map.readFieldDefinition("public/assets/test.field"))
-
-
-
 function us2per(user) {
-    var person = new person(user.username);
+    var person = new Person(user.username);
     person.strength = user.strength;
     person.dexterity = user.dexterity;
     person.hp = user.hp;
