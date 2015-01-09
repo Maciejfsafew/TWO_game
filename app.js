@@ -10,8 +10,12 @@ var server = http.createServer(app);
 
 var primus = new Primus(server, { transformer: "engine.io", parser: 'JSON' });
 primus.use('emitter', Emitter);
+
+//our modules
 var db_user = require('./backend/db_user');
-var Person = require("./backend/person");
+var person = require("./backend/person");
+var map = require("./backend/map");
+
 // static assets
 app.use('/public', express.static(__dirname + '/public'));
 
@@ -35,7 +39,7 @@ app.get('/game', function (req, res) {
     });
 });
 
-var map = require("./public/js/map");
+
 //console.log(map.readFieldDefinition())
 var playfield = map.readFieldDefinition("public/assets/test.field");
 
@@ -78,7 +82,7 @@ primus.on("connection", function (spark) {
                     }
                 }
                 else {
-                    var new_person = new Person(data.u);
+                    var new_person = new person(data.u);
                     var us = per2us(data, new_person);
                     us.save(function (err, us) {
                         if (err) {
@@ -119,7 +123,7 @@ console.log(map.readFieldDefinition("public/assets/test.field"))
 
 
 function us2per(user) {
-    var person = new Person(user.username);
+    var person = new person(user.username);
     person.strength = user.strength;
     person.dexterity = user.dexterity;
     person.hp = user.hp;
