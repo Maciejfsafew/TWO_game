@@ -37,9 +37,23 @@ app.get('/game', function (req, res) {
 
 primus.on("connection", function (spark) {
     //{ move: 'N/S/W/E' }
-    spark.on('move', function (moveCommand, respond) {
+    spark.on('move', function (moveCommand, responseCallback) {
         try {
-            respond("Move to:" + moveCommand.move);
+            responseCallback({'msg': "Move to:" + moveCommand.move});
+        } catch (err) {
+            console.log("Communication error");
+        }
+    });
+    spark.on('map', function (mapCommand, responseCallback) {
+        try {
+            responseCallback({'msg': "map"});
+        } catch (err) {
+            console.log("Communication error");
+        }
+    });
+    spark.on('bag', function (bagCommand, responseCallback) {
+        try {
+            responseCallback({'msg': "bag"});
         } catch (err) {
             console.log("Communication error");
         }
