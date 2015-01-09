@@ -1,4 +1,4 @@
-var FieldType = require("../public/js/fieldTypes");
+var FieldType = require("../backend/fieldTypes");
 
 function Monster(monsterConfiguration) {
     this.name = monsterConfiguration.name;

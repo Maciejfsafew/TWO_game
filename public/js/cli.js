@@ -14,36 +14,30 @@
     var date = new Date();
     var n = date.toDateString();
     var time = date.toLocaleTimeString();
-    shell.onNewPrompt(function(callback) {
-        callback("[" + n + " " + time + "] $ ");
+    shell.onNewPrompt(function(shellCallback) {
+        shellCallback("[" + n + " " + time + "] $ ");
     });
     // all communication will happen here.
     // Commands defined in cli-commands.js
 
     Commands.forEach(function(entry) {
       var name = entry.name;
-      var msg = entry.msg;
       var alias = entry.alias;
+      var msg = entry.msg;
       var args_handler = entry.args_handler;
 
       var handler = {
-        exec: function(cmd, args, callback) {
-          var response = "";
-
+        exec: function(cmd, args, shellCallback) {
           var status = args_handler(args);
+
           //If command valid
           if (status.success === true) {
-              console.log("SENDING");
-              primus.send(name, status.msg, function(data) {
-                  msg = data;
-                  response += msg;
-                  callback(response);
+              primus.send(name, status.msg, function(response) {
+                  shellCallback(msg + response);
               });
           //If command invalid e.g. typo in command:
           } else {
-              msg = status.msg;
-              response += msg;
-              callback(response);
+              shellCallback(msg + status.msg);
           }
         }
       };

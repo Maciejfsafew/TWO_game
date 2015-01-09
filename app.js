@@ -10,8 +10,8 @@ var server = http.createServer(app);
 
 var primus = new Primus(server, { transformer: "engine.io", parser: 'JSON' });
 primus.use('emitter', Emitter);
-var db_user = require('./public/js/db_user');
-var Person = require("./public/js/person");
+var db_user = require('./backend/db_user');
+var Person = require("./backend/person");
 // static assets
 app.use('/public', express.static(__dirname + '/public'));
 
@@ -36,26 +36,27 @@ app.get('/game', function (req, res) {
 });
 
 primus.on("connection", function (spark) {
-    spark.on('move', function (data, fn) {
+    //{ move: 'N/S/W/E' }
+    spark.on('move', function (moveCommand, respond) {
         try {
-            fn(data);
+            respond("Move to:" + moveCommand.move);
         } catch (err) {
             console.log("Communication error");
         }
     });
-    spark.on('login', function (data, fn) {
+    spark.on('login', function (data, respond) {
         if (data.u != null && data.p != null) {
             db_user.findOne({'username': data.u}, function (err, user) {
                 if (err) {
-                    fn({'login_answer': 'error'});
+                    respond({'login_answer': 'error'});
                     return console.error(err);
                 }
                 if (user != null) {
                     if (data.p === user.password) {
-                        fn({'login_answer': 'success'});
+                        respond({'login_answer': 'success'});
                     }
                     else {
-                        fn({'login_answer': 'bad'});
+                        respond({'login_answer': 'bad'});
                     }
                 }
                 else {
@@ -63,10 +64,10 @@ primus.on("connection", function (spark) {
                     var us = per2us(data, new_person);
                     us.save(function (err, us) {
                         if (err) {
-                            fn({'login_answer': 'error'});
+                            respond({'login_answer': 'error'});
                             return console.error(err);
                         }
-                        fn({'login_answer': 'success'});
+                        respond({'login_answer': 'success'});
                     });
                 }
             });
@@ -93,7 +94,7 @@ server.listen(8080);
 console.log('8080 is where the magic happens');
 
 
-var map = require("./public/js/map");
+var map = require("./backend/map");
 console.log(map.readFieldDefinition("public/assets/test.field"))
 
 function us2per(user) {
