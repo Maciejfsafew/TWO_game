@@ -13,6 +13,9 @@ var Commands = [
                 }
             }
             return msg;
+        },
+        response_handler: function (server_response) {
+            window.person.currentLocation = server_response.location;
         }
     },
     {
