@@ -43,7 +43,7 @@ primus.on("connection", function (spark) {
     //{ move: 'N/S/W/E' }
     spark.on('move', function (moveCommand, responseCallback) {
         try {
-            responseCallback({'msg': "Move to:" + moveCommand.move});
+            responseCallback({'msg': "Move to:" + moveCommand.move, 'location': {x: 1, y:1}});
         } catch (err) {
             console.log("Communication error");
         }
