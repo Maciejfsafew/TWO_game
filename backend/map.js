@@ -58,10 +58,6 @@ exports.getStartField = function(playfield) {
     }
 }
 
-
-
-
-
 exports.readFieldDefinition = function(filepath) {
     fs = require('fs');
 

@@ -2,19 +2,29 @@
 // load the things we need
 
 var express = require('express');
+var expressSession = require('express-session');
 var http = require('http');
 var app = express();
 var Primus = require("primus");
 var Emitter = require('primus-emitter');
 var server = http.createServer(app);
 
-var primus = new Primus(server, { transformer: "engine.io", parser: 'JSON' });
-primus.use('emitter', Emitter);
+var memoryStore = new expressSession.MemoryStore();
+var session = expressSession({
+    store: memoryStore,
+    secret: 'e570f59eb46209f572f934aae4e90562',
+    resave: false,
+    saveUninitialized: true
+});
 
 //our modules
 var db_user = require('./backend/db_user');
 var Person = require("./backend/person");
 var map = require("./backend/map");
+var playfield = map.readFieldDefinition("public/assets/test.field");
+
+// session store
+app.use(session);
 
 // static assets
 app.use('/public', express.static(__dirname + '/public'));
@@ -22,8 +32,14 @@ app.use('/public', express.static(__dirname + '/public'));
 // set the view engine to ejs
 app.set('view engine', 'ejs');
 
+
+var primus = new Primus(server, {transformer: "faye", parser: 'JSON'});
+primus.use('emitter', Emitter);
+primus.before('session', session);
+
 // serve client-side library
 primus.save(__dirname + '/public/lib/primus.js');
+
 
 // index page (please note, that views is the root folder of all template files!)
 app.get('/', function (req, res) {
@@ -39,31 +55,35 @@ app.get('/game', function (req, res) {
     });
 });
 
-
-//console.log(map.readFieldDefinition())
-var playfield = map.readFieldDefinition("public/assets/test.field");
-
 primus.on("connection", function (spark) {
     //{ move: 'N/S/W/E' }
     spark.on('move', function (moveCommand, responseCallback) {
         try {
-            responseCallback({'msg': "Move to:" + moveCommand.move, 'location': {x: 1, y:1}});
+            responseCallback({
+                'msg': "Move " + spark.request.session.username + " to:" + moveCommand.move,
+                'location': {x: 1, y: 1}
+            });
         } catch (err) {
-            console.log("Communication error");
+            //TODO: add response to the client
+            console.log(err);
         }
     });
+    //mapCommand doesn't have arguments
     spark.on('map', function (mapCommand, responseCallback) {
         try {
             responseCallback({'msg': "map"});
         } catch (err) {
-            console.log("Communication error");
+            //TODO: add response to the client
+            console.log(err);
         }
     });
+    //bag doesn't have arguments
     spark.on('bag', function (bagCommand, responseCallback) {
         try {
             responseCallback({'msg': "bag"});
         } catch (err) {
-            console.log("Communication error");
+            //TODO: add response to the client
+            console.log(err);
         }
     });
     spark.on('login', function (data, respond) {
@@ -75,6 +95,7 @@ primus.on("connection", function (spark) {
                 }
                 if (user != null) {
                     if (data.p === user.password) {
+                        spark.request.session.username = data.u;
                         respond({'login_answer': 'success'});
                     }
                     else {
@@ -89,22 +110,25 @@ primus.on("connection", function (spark) {
                             respond({'login_answer': 'error'});
                             return console.error(err);
                         }
+                        spark.request.session.username = data.u;
                         respond({'login_answer': 'success'});
                     });
                 }
             });
         }
     });
-    spark.on('pause', function(data, fn) {
+    spark.on('pause', function (data, fn) {
         fn("pause_answer");
     });
     spark.on('get_person', function (data, fn) {
         db_user.findOne({'username': data.u}, function (err, user) {
             if (err) {
                 fn({'get_person_answer': 'error'});
-            }else if (user != null) {
-                fn({'get_person_answer': 'success', 'person': us2per(user),
-                    map: playfield});
+            } else if (user != null) {
+                fn({
+                    'get_person_answer': 'success', 'person': us2per(user),
+                    map: playfield
+                });
             }
             else {
                 fn({'get_person_answer': 'error'});
@@ -117,6 +141,7 @@ server.listen(8080);
 console.log('8080 is where the magic happens');
 
 
+//TODO: Please move it somewhere else (e.g. make it methods on Person, create utilities module etc.) :)
 function us2per(user) {
     var person = new Person(user.username);
     person.strength = user.strength;
