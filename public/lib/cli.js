@@ -10,12 +10,13 @@
         var readline = new Josh.ReadLine({history: history, console: _console});
         var shell = Josh.Shell({readline: readline, history: history, console: _console});
 
-        // Prompt
-        var date = new Date();
-        var n = date.toDateString();
-        var time = date.toLocaleTimeString();
-        shell.onNewPrompt(function (shellCallback) {
-            shellCallback("[" + n + " " + time + "] $ ");
+
+        shell.onNewPrompt(function (callback) {
+            // Prompt
+            var date = new Date();
+            var n = date.toDateString();
+            var time = date.toLocaleTimeString();
+            callback("[" + n + " " + time + "] $ ");
         });
         // all communication will happen here.
         // Commands defined in cli-commands.js

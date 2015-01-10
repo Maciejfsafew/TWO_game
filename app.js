@@ -115,6 +115,54 @@ primus.on("connection", function (spark) {
                 }
             });
         }
+        else if (data === 'pause') {
+            spark.write('pause_answer');
+        }
+        else if (data.action === 'get_person') {
+            db_user.findOne({'username': data.u}, function (err, user) {
+                if (err) {
+                    spark.write({'get_person_answer': 'error'});
+                    return console.error(err);
+                }
+                if (user != null) {
+                    spark.write({'get_person_answer': 'success', 'person': us2per(user)});
+                }
+                else {
+                    spark.write({'get_person_answer': 'error'});
+                }
+            });
+        }
+        else if (data.action === 'update_person') {
+            db_user.findOne({'username': data.person.name}, function (err, user) {
+                if (err) {
+                    spark.write({'update_person_answer': 'error'});
+                    return console.error(err);
+                }
+                if (user != null) {
+                    user.strength = data.person.strength;
+                    user.dexterity = data.person.dexterity;
+                    user.hp = data.person.hp;
+                    user.maxhp = data.person.maxhp;
+                    user.level = data.person.level;
+                    user.experience = data.person.experience;
+                    user.items = data.person.items;
+                    user.currentField = data.person.currentField;
+                    user.save(function (err, us) {
+                        if (err) {
+                            spark.write({'update_person_answer': 'error'});
+                            return console.error(err);
+                        }
+                        spark.write({'update_person_answer': 'success'});
+                    });
+                }
+                else {
+                    spark.write({'update_person_answer': 'error'});
+                }
+            });
+        }
+        else {
+            spark.write({'login_answer': 'error'});
+        }
     });
     spark.on('pause', function (data, fn) {
         fn("pause_answer");
