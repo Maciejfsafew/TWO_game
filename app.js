@@ -21,6 +21,7 @@ var session = expressSession({
 var db_user = require('./backend/db_user');
 var Person = require("./backend/person");
 var map = require("./backend/map");
+var playfield = map.readFieldDefinition("public/assets/test.field");
 
 // session store
 app.use(session);
@@ -85,20 +86,21 @@ primus.on("connection", function (spark) {
             console.log(err);
         }
     });
-    spark.on('login', function (data, respond) {
+
+    spark.on('login', function (data, responseCallback) {
         if (data.u != null && data.p != null) {
             db_user.findOne({'username': data.u}, function (err, user) {
                 if (err) {
-                    respond({'login_answer': 'error'});
+                    responseCallback({'login_answer': 'error'});
                     return console.error(err);
                 }
                 if (user != null) {
                     if (data.p === user.password) {
                         spark.request.session.username = data.u;
-                        respond({'login_answer': 'success'});
+                        responseCallback({'login_answer': 'success'});
                     }
                     else {
-                        respond({'login_answer': 'bad'});
+                        responseCallback({'login_answer': 'bad'});
                     }
                 }
                 else {
@@ -106,67 +108,69 @@ primus.on("connection", function (spark) {
                     var us = per2us(data, new_person);
                     us.save(function (err, us) {
                         if (err) {
-                            respond({'login_answer': 'error'});
+                            responseCallback({'login_answer': 'error'});
                             return console.error(err);
                         }
                         spark.request.session.username = data.u;
-                        respond({'login_answer': 'success'});
+                        responseCallback({'login_answer': 'success'});
                     });
                 }
             });
-        }
-        else if (data === 'pause') {
-            spark.write('pause_answer');
-        }
-        else if (data.action === 'get_person') {
-            db_user.findOne({'username': data.u}, function (err, user) {
-                if (err) {
-                    spark.write({'get_person_answer': 'error'});
-                    return console.error(err);
-                }
-                if (user != null) {
-                    spark.write({'get_person_answer': 'success', 'person': us2per(user)});
-                }
-                else {
-                    spark.write({'get_person_answer': 'error'});
-                }
-            });
-        }
-        else if (data.action === 'update_person') {
-            db_user.findOne({'username': data.person.name}, function (err, user) {
-                if (err) {
-                    spark.write({'update_person_answer': 'error'});
-                    return console.error(err);
-                }
-                if (user != null) {
-                    user.strength = data.person.strength;
-                    user.dexterity = data.person.dexterity;
-                    user.hp = data.person.hp;
-                    user.maxhp = data.person.maxhp;
-                    user.level = data.person.level;
-                    user.experience = data.person.experience;
-                    user.items = data.person.items;
-                    user.currentField = data.person.currentField;
-                    user.save(function (err, us) {
-                        if (err) {
-                            spark.write({'update_person_answer': 'error'});
-                            return console.error(err);
-                        }
-                        spark.write({'update_person_answer': 'success'});
-                    });
-                }
-                else {
-                    spark.write({'update_person_answer': 'error'});
-                }
-            });
-        }
-        else {
-            spark.write({'login_answer': 'error'});
         }
     });
+
+    spark.on('pause', function (data, responseCallback) {
+        responseCallback({'msg': "bag"})
+    });
+
+    spark.on('get_person', function (data, responseCallback) {
+        db_user.findOne({'username': data.u}, function (err, user) {
+            if (err) {
+                responseCallback({'get_person_answer': 'error'});
+                return console.error(err);
+            }
+            if (user != null) {
+                responseCallback({'get_person_answer': 'success', 'person': us2per(user)});
+            }
+            else {
+                responseCallback({'get_person_answer': 'error'});
+            }
+        });
+    });
+
+    spark.on('update_person', function (data, responseCallback) {
+        db_user.findOne({'username': data.person.name}, function (err, user) {
+            if (err) {
+                responseCallback({'update_person_answer': 'error'});
+                return console.error(err);
+            }
+            if (user != null) {
+                user.strength = data.person.strength;
+                user.dexterity = data.person.dexterity;
+                user.hp = data.person.hp;
+                user.maxhp = data.person.maxhp;
+                user.level = data.person.level;
+                user.experience = data.person.experience;
+                user.items = data.person.items;
+                user.currentField = data.person.currentField;
+                user.save(function (err, us) {
+                    if (err) {
+                        responseCallback({'update_person_answer': 'error'});
+                        return console.error(err);
+                    }
+                    responseCallback({'update_person_answer': 'success'});
+                });
+            }
+            else {
+                responseCallback({'update_person_answer': 'error'});
+            }
+        })
+    });
+
     spark.on('pause', function (data, fn) {
         fn("pause_answer");
     });
+
     spark.on('get_person', function (data, fn) {
         db_user.findOne({'username': data.u}, function (err, user) {
             if (err) {
