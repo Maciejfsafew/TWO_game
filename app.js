@@ -21,7 +21,6 @@ var session = expressSession({
 var db_user = require('./backend/db_user');
 var Person = require("./backend/person");
 var map = require("./backend/map");
-var playfield = map.readFieldDefinition("public/assets/test.field");
 
 // session store
 app.use(session);
