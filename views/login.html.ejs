@@ -53,8 +53,7 @@
         var p = $("#txtPass").val();
         if (u != null && u != '' && p != null && p != '') {
             var primus = Primus.connect();
-            primus.write({'u': u, 'p': CryptoJS.SHA256(p).toString(CryptoJS.enc.Hex)});
-            primus.on('data', function message(data) {
+            primus.send('login', {'u': u, 'p': CryptoJS.SHA256(p).toString(CryptoJS.enc.Hex)}, function(data) {
                 var login_answer = data.login_answer;
                 if (login_answer === 'error') {
                     window.alert('Error');

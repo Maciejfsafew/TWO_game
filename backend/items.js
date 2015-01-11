@@ -38,11 +38,11 @@ exports.generateItem = function () {
 };
 
 exports.showBag = function (hero){
+    var result = "";
     hero.items.forEach(function(it){
-        console.log(".:: "+ it.name +" ::.");
-        console.log(it.description);
-        console.log("+"+it.value +" " +it.attribute+"\n");
+        result += ".:: "+ it.name +" ::.\n"+it.description+"\n+"+it.value +" " +it.attribute+"\n";
     });
+    return result;
 }
 
 //as parameter give hero or monster to add stats from items

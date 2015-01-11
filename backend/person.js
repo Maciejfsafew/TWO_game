@@ -22,6 +22,8 @@ var Person = function Person(name) {
         this.hp = this.maxhp;
         //window.alert("Unfortunately, you died. Try again from start!");
     }
+    this.playfield = undefined;
+    this.currentLocation = {x: -1, y: -1};
 };
 
 module.exports = Person;
