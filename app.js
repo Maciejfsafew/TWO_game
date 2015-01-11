@@ -93,11 +93,12 @@ primus.on("connection", function (spark) {
     //bag doesn't have arguments
     spark.on('bag', function (bagCommand, responseCallback) {
         try {
-			var msg;
-			if(spark.request.session.person.items < 1 || typeof spark.request.session.person.items == 'undefined'){
+			var msg = "";
+            var person = spark.request.session.person;
+			if(person.items < 1 || typeof person.items == 'undefined'){
 				msg = "Your bag is empty.";
 			}else {
-				msg = "Your bag contains:\n" + Items.showBag(spark.request.session.person);
+				msg = "Your bag contains:\n" + Items.showBag(person);
 			}
 			responseCallback({'msg': msg});
         } catch (err) {
@@ -152,11 +153,7 @@ primus.on("connection", function (spark) {
     });
 
     spark.on('pause', function (data, responseCallback) {
-<<<<<<< HEAD
-        responseCallback({'msg': "pause"})
-=======
         responseCallback({'msg': ''});
->>>>>>> master
     });
 
     spark.on('get_person', function (data, responseCallback) {
