@@ -63,7 +63,7 @@ primus.on("connection", function (spark) {
             var person = spark.request.session.person;
             map.movePerson(person, moveCommand.move);
             responseCallback({
-                'msg': "Moved " + person.name + " to: {x:" + person.currentLocation.x + ", y:" + person.currentLocation.y + "}",
+                'msg': "Moved " + person.name + " to: {x:" + person.currentLocation.x + ", y:" + person.currentLocation.y + "}  " +  map.getFieldDescription(person.currentField),
                 'location': {x: 1, y: 1}
             });
         } catch (err) {
