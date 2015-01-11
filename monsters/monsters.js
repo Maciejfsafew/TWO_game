@@ -9,6 +9,7 @@ function Monster(monsterConfiguration) {
     this.hp = monsterConfiguration.hp;
     this.maxhp = monsterConfiguration.maxhp;
     this.items = monsterConfiguration.items.slice(0);
+    this.gold = Math.floor((Math.random() * 200) + 100);
 }
 var monsterDefinitions = require("./monsterDefinitions.json");
 exports.generateMonster = function (hero, probability) {
