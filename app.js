@@ -120,7 +120,7 @@ primus.on("connection", function (spark) {
     });
 
     spark.on('pause', function (data, responseCallback) {
-        responseCallback({'msg': "bag"})
+        responseCallback({'msg': ""})
     });
 
     spark.on('get_person', function (data, responseCallback) {
