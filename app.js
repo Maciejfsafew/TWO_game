@@ -8,6 +8,7 @@ var app = express();
 var Primus = require("primus");
 var Emitter = require('primus-emitter');
 var server = http.createServer(app);
+var fs = require('fs')
 
 var memoryStore = new expressSession.MemoryStore();
 var session = expressSession({
@@ -55,6 +56,13 @@ app.get('/game', function (req, res) {
         'title': "Gra RPG"
     });
 });
+
+app.get('/highscores', function (req, res) {
+    res.render('highscores.html.ejs', {
+        'title': "Gra RPG - High scores"
+    });
+});
+
 
 primus.on("connection", function (spark) {
     //{ move: 'N/S/W/E' }
@@ -169,6 +177,20 @@ primus.on("connection", function (spark) {
                 fn({'get_person_answer': 'error'});
             }
         });
+    });
+
+    spark.on('get_config', function(_data, fn) {
+        var config, config_json = fs.readFileSync("config/game_config.json");
+        try {
+            config = JSON.parse(config_json);
+            console.log("parsed config");
+            console.log(config);
+            fn({'get_config_answer': config});
+        } catch (err) {
+            console.error('Error parsing configuration JSON!')
+            console.error(err);
+            fn({'get_config_answer' : 'error'});
+        }
     });
 });
 
