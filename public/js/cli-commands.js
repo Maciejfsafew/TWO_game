@@ -34,7 +34,7 @@ var Commands = [
         alias: "pause",
         msg: 'Please, answer the alert',
         args_handler: function (args) {
-            return {success: true, msg: ""}//Args handler validates only arguments
+            return {success: true, msg: window.person}//Args handler validates only arguments
         },
         response_handler: function (server_response) {
             if (confirm("Do you want to exit?")) {

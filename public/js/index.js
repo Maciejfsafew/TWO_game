@@ -6,8 +6,16 @@ primus.on("open", function () {
 });
 
 function logout() {
-    $.removeCookie("name");
-    window.open('/', "_self");
+    primus.send('update_person', {'person': window.person}, function (data) {
+        var update_person_answer = data.update_person_answer;
+        if (update_person_answer === 'error') {
+            window.alert('Update error');
+        }
+        else if (update_person_answer === 'success') {
+            $.removeCookie("name");
+            window.open('/', "_self");
+        }
+    });
 };
 
 $(function () {

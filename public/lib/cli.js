@@ -35,7 +35,8 @@
                     //If command valid
                     if (status.success === true) {
                         primus.send(name, status.msg, function (response) {
-                            shellCallback(msg + response.msg);
+                            var responseMsg = response.msg;
+                            shellCallback(msg + (responseMsg != undefined ? responseMsg : ''));
                             if (response_handler !== undefined) {
                                 response_handler(response);
                             }
