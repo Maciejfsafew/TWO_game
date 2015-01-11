@@ -43,7 +43,7 @@
                                 }
                             });
                         else
-                            shellCallback("You cannot do anything, because you are sleeping.");
+                            shellCallback("You cannot do anything, because you are sleeping. Type 'wakeup' to wake up.");
                         //If command invalid e.g. typo in command:
                     } else {
                         shellCallback(msg + status.msg);

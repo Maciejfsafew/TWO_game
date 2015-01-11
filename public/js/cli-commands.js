@@ -38,6 +38,20 @@ var Commands = [
         },
         response_handler: function (server_response) {
             window.is_sleeping = true;
+            window.myInterval = setInterval(function () {
+                if (window.person.hp + 5 <= window.person.maxhp) {
+                    window.person.hp += 5;
+                    primus.send('update_person', {'person': window.person}, function (data) {
+                        var update_person_answer = data.update_person_answer;
+                        if (update_person_answer === 'error') {
+                            window.alert('Sleep error');
+                        }
+                        else if (update_person_answer === 'success') {
+                            //ignore
+                        }
+                    });
+                }
+            }, 5000);
         }
     },
     {
@@ -49,6 +63,7 @@ var Commands = [
         },
         response_handler: function (server_response) {
             window.is_sleeping = false;
+            clearInterval(window.myInterval);
         }
     },
     {
