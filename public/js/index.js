@@ -10,7 +10,7 @@ function updateHeight() {
     health.value = window.person.hp;
     health.max = window.person.maxhp;
     var maxHp = document.getElementById("maxHp");
-    $("#maxHp").html(health.max);
+    $("#currHp").html(health.value + '/' + health.max);
 }
 
 function setUpUserInfo() {
@@ -18,10 +18,13 @@ function setUpUserInfo() {
     $("#level").html(window.person.level);
     var strength = document.getElementById("strength");
     strength.value = window.person.strength;
+    $("#currStrength").html(strength.value + '/' + strength.max);
     var dexterity = document.getElementById("dexterity");
     dexterity.value = window.person.dexterity;
+    $("#currDexterity").html(dexterity.value + '/' + dexterity.max);
     var experience = document.getElementById("experience");
     experience.value = window.person.experience;
+    $("#currExperience").html(experience.value + '/' + experience.max);
 }
 
 function logout() {
