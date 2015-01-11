@@ -34,13 +34,16 @@
 
                     //If command valid
                     if (status.success === true) {
-                        primus.send(name, status.msg, function (response) {
-                            var responseMsg = response.msg;
-                            shellCallback(msg + (responseMsg != undefined ? responseMsg : ''));
-                            if (response_handler !== undefined) {
-                                response_handler(response);
-                            }
-                        });
+                        if (!window.is_sleeping || name === 'wakeup')
+                            primus.send(name, status.msg, function (response) {
+                                var responseMsg = response.msg;
+                                shellCallback(msg + (responseMsg != undefined ? responseMsg : ''));
+                                if (response_handler !== undefined) {
+                                    response_handler(response);
+                                }
+                            });
+                        else
+                            shellCallback("You cannot do anything, because you are sleeping.");
                         //If command invalid e.g. typo in command:
                     } else {
                         shellCallback(msg + status.msg);

@@ -88,6 +88,14 @@ primus.on("connection", function (spark) {
         }
     });
 
+    spark.on('sleep', function (sleepCommand, responseCallback) {
+        responseCallback({'msg': ''});
+    });
+
+    spark.on('wakeup', function (wakeupCommand, responseCallback) {
+        responseCallback({'msg': ''});
+    });
+
     spark.on('login', function (data, responseCallback) {
         if (data.u != null && data.p != null) {
             db_user.findOne({'username': data.u}, function (err, user) {

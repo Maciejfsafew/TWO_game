@@ -30,6 +30,28 @@ var Commands = [
         }
     },
     {
+        name: "sleep",
+        msg: "You are sleeping. Your health is recovering.",
+        alias: "sleep",
+        args_handler: function (args) {
+            return {success: true, msg: ""} //Args handler validates only arguments
+        },
+        response_handler: function (server_response) {
+            window.is_sleeping = true;
+        }
+    },
+    {
+        name: "wakeup",
+        msg: "You woke up.",
+        alias: "wakeup",
+        args_handler: function (args) {
+            return {success: true, msg: ""} //Args handler validates only arguments
+        },
+        response_handler: function (server_response) {
+            window.is_sleeping = false;
+        }
+    },
+    {
         name: "pause",
         alias: "pause",
         msg: 'Please, answer the alert',

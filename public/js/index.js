@@ -28,6 +28,7 @@ $(function () {
             }
             else if (get_person_answer === 'success') {
                 window.person = data.person;
+                window.is_sleeping = false;
                 console.log(window.person);
                 var data_name = "<b>Hej, " + $.cookie("name") + "!</b>";
                 $("#name").html(data_name);
