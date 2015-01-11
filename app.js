@@ -20,6 +20,7 @@ var session = expressSession({
 //our modules
 var db_user = require('./backend/db_user');
 var Person = require("./backend/person");
+var Items = require("./backend/items");
 var map = require("./backend/map");
 var playfield = map.readFieldDefinition("public/assets/test.field");
 
@@ -80,7 +81,13 @@ primus.on("connection", function (spark) {
     //bag doesn't have arguments
     spark.on('bag', function (bagCommand, responseCallback) {
         try {
-            responseCallback({'msg': "bag"});
+			var msg;
+			if(spark.request.session.person.items < 1 || typeof spark.request.session.person.items == 'undefined'){
+				msg = "Your bag is empty.";
+			}else {
+				msg = "Your bag contains:\n" + Items.showBag(spark.request.session.person);
+			}
+			responseCallback({'msg': msg});
         } catch (err) {
             //TODO: add response to the client
             console.log(err);
@@ -120,7 +127,7 @@ primus.on("connection", function (spark) {
     });
 
     spark.on('pause', function (data, responseCallback) {
-        responseCallback({'msg': "bag"})
+        responseCallback({'msg': "pause"})
     });
 
     spark.on('get_person', function (data, responseCallback) {

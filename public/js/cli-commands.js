@@ -42,7 +42,7 @@ var Commands = [
         alias: "b",
         msg: "",
         args_handler: function (args) {
-            return {success: true, msg: ""}
+            return {success: true, msg: ""} //Args handler validates only arguments
         }
     }
 ]
