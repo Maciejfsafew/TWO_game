@@ -61,15 +61,22 @@ primus.on("connection", function (spark) {
     spark.on('move', function (moveCommand, responseCallback) {
         try {
             var person = spark.request.session.person;
-            map.movePerson(person, moveCommand.move);
+            var moved = map.movePerson(person, moveCommand.move);
+            var msg = "";
+            if (moved.status === true) {
+                person.currentLocation = moved.location;
+                msg = "Moved " + person.name + " to: {x:" + person.currentLocation.x + ", y:" + person.currentLocation.y + "}"
+            } else {
+                msg = "Can't move there!"
+            }
             responseCallback({
-                'msg': "Moved " + person.name + " to: {x:" + person.currentLocation.x + ", y:" + person.currentLocation.y + "}",
-                'location': {x: 1, y: 1}
+                'msg': msg,
+                'location': person.currentLocation
             });
         } catch (err) {
-           responseCallback({
-               'msg': "Server error.",
-           });
+            responseCallback({
+                'msg': "Server error."
+            });
             console.log(err);
         }
     });
@@ -103,8 +110,9 @@ primus.on("connection", function (spark) {
     spark.on('login', function (data, responseCallback) {
         if (data.u != null && data.p != null) {
 
-            spark.request.session.person = new Person(data.u);
-            spark.request.session.person.playfield = playfield;
+            var person = new Person(data.u, playfield);
+            person.initialize_position();
+            spark.request.session.person = person;
 
             db_user.findOne({'username': data.u}, function (err, user) {
                 if (err) {
@@ -121,7 +129,7 @@ primus.on("connection", function (spark) {
                     }
                 }
                 else {
-                    var new_person = new Person(data.u);
+                    var new_person = new Person(data.u, playfield);
                     var us = db_helper.per2us(db_user, data, new_person);
                     us.save(function (err, us) {
                         if (err) {
