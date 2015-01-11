@@ -23,6 +23,7 @@ var Person = require("./backend/person");
 var Items = require("./backend/items");
 var map = require("./backend/map");
 var playfield = map.readFieldDefinition("public/assets/test.field");
+var db_helper = require('./backend/db_helper');
 
 // session store
 app.use(session);
@@ -60,12 +61,23 @@ primus.on("connection", function (spark) {
     //{ move: 'N/S/W/E' }
     spark.on('move', function (moveCommand, responseCallback) {
         try {
+            var person = spark.request.session.person;
+            var moved = map.movePerson(person, moveCommand.move);
+            var msg = "";
+            if (moved.status === true) {
+                person.currentLocation = moved.location;
+                msg = "Moved " + person.name + " to: {x:" + person.currentLocation.x + ", y:" + person.currentLocation.y + "}"
+            } else {
+                msg = "Can't move there!"
+            }
             responseCallback({
-                'msg': "Move " + spark.request.session.username + " to:" + moveCommand.move,
-                'location': {x: 1, y: 1}
+                'msg': msg,
+                'location': person.currentLocation
             });
         } catch (err) {
-            //TODO: add response to the client
+            responseCallback({
+                'msg': "Server error."
+            });
             console.log(err);
         }
     });
@@ -94,8 +106,21 @@ primus.on("connection", function (spark) {
         }
     });
 
+    spark.on('sleep', function (sleepCommand, responseCallback) {
+        responseCallback({'msg': ''});
+    });
+
+    spark.on('wakeup', function (wakeupCommand, responseCallback) {
+        responseCallback({'msg': ''});
+    });
+
     spark.on('login', function (data, responseCallback) {
         if (data.u != null && data.p != null) {
+
+            var person = new Person(data.u, playfield);
+            person.initialize_position();
+            spark.request.session.person = person;
+
             db_user.findOne({'username': data.u}, function (err, user) {
                 if (err) {
                     responseCallback({'login_answer': 'error'});
@@ -111,8 +136,8 @@ primus.on("connection", function (spark) {
                     }
                 }
                 else {
-                    var new_person = new Person(data.u);
-                    var us = per2us(data, new_person);
+                    var new_person = new Person(data.u, playfield);
+                    var us = db_helper.per2us(db_user, data, new_person);
                     us.save(function (err, us) {
                         if (err) {
                             responseCallback({'login_answer': 'error'});
@@ -127,7 +152,11 @@ primus.on("connection", function (spark) {
     });
 
     spark.on('pause', function (data, responseCallback) {
+<<<<<<< HEAD
         responseCallback({'msg': "pause"})
+=======
+        responseCallback({'msg': ''});
+>>>>>>> master
     });
 
     spark.on('get_person', function (data, responseCallback) {
@@ -137,7 +166,7 @@ primus.on("connection", function (spark) {
                 return console.error(err);
             }
             if (user != null) {
-                responseCallback({'get_person_answer': 'success', 'person': us2per(user)});
+                responseCallback({'get_person_answer': 'success', 'person': db_helper.us2per(Person, user)});
             }
             else {
                 responseCallback({'get_person_answer': 'error'});
@@ -146,32 +175,7 @@ primus.on("connection", function (spark) {
     });
 
     spark.on('update_person', function (data, responseCallback) {
-        db_user.findOne({'username': data.person.name}, function (err, user) {
-            if (err) {
-                responseCallback({'update_person_answer': 'error'});
-                return console.error(err);
-            }
-            if (user != null) {
-                user.strength = data.person.strength;
-                user.dexterity = data.person.dexterity;
-                user.hp = data.person.hp;
-                user.maxhp = data.person.maxhp;
-                user.level = data.person.level;
-                user.experience = data.person.experience;
-                user.items = data.person.items;
-                user.currentField = data.person.currentField;
-                user.save(function (err, us) {
-                    if (err) {
-                        responseCallback({'update_person_answer': 'error'});
-                        return console.error(err);
-                    }
-                    responseCallback({'update_person_answer': 'success'});
-                });
-            }
-            else {
-                responseCallback({'update_person_answer': 'error'});
-            }
-        })
+        db_helper.updatePerson(db_user, data.person, responseCallback);
     });
 
     spark.on('pause', function (data, fn) {
@@ -184,7 +188,7 @@ primus.on("connection", function (spark) {
                 fn({'get_person_answer': 'error'});
             } else if (user != null) {
                 fn({
-                    'get_person_answer': 'success', 'person': us2per(user),
+                    'get_person_answer': 'success', 'person': db_helper.us2per(Person, user),
                     map: playfield
                 });
             }
@@ -197,33 +201,3 @@ primus.on("connection", function (spark) {
 
 server.listen(8080);
 console.log('8080 is where the magic happens');
-
-
-//TODO: Please move it somewhere else (e.g. make it methods on Person, create utilities module etc.) :)
-function us2per(user) {
-    var person = new Person(user.username);
-    person.strength = user.strength;
-    person.dexterity = user.dexterity;
-    person.hp = user.hp;
-    person.maxhp = user.maxhp;
-    person.level = user.level;
-    person.experience = user.experience;
-    person.items = user.items;
-    person.currentField = user.currentField;
-    return person;
-}
-
-function per2us(data, person) {
-    return new db_user({
-        username: data.u,
-        password: data.p,
-        strength: person.strength,
-        dexterity: person.dexterity,
-        hp: person.hp,
-        maxhp: person.maxhp,
-        level: person.level,
-        experience: person.experience,
-        items: person.items,
-        currentField: person.currentField
-    });
-}
