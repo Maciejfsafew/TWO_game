@@ -60,12 +60,16 @@ primus.on("connection", function (spark) {
     //{ move: 'N/S/W/E' }
     spark.on('move', function (moveCommand, responseCallback) {
         try {
+            var person = spark.request.session.person;
+            map.movePerson(person, moveCommand.move);
             responseCallback({
-                'msg': "Move " + spark.request.session.username + " to:" + moveCommand.move,
+                'msg': "Moved " + person.name + " to: {x:" + person.currentLocation.x + ", y:" + person.currentLocation.y + "}",
                 'location': {x: 1, y: 1}
             });
         } catch (err) {
-            //TODO: add response to the client
+           responseCallback({
+               'msg': "Server error.",
+           });
             console.log(err);
         }
     });
@@ -98,6 +102,10 @@ primus.on("connection", function (spark) {
 
     spark.on('login', function (data, responseCallback) {
         if (data.u != null && data.p != null) {
+
+            spark.request.session.person = new Person(data.u);
+            spark.request.session.person.playfield = playfield;
+
             db_user.findOne({'username': data.u}, function (err, user) {
                 if (err) {
                     responseCallback({'login_answer': 'error'});
