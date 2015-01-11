@@ -66,7 +66,7 @@ exports.readFieldDefinition = function(filepath) {
 };
 
 exports.movePerson = function(person, direction) {
-    var newLocation = person.currentLocation;
+    var newLocation = {x: person.currentLocation.x, y: person.currentLocation.y};
     if (direction === "W") {
         newLocation.x -= 1;
     } else if (direction === "E") {

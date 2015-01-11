@@ -14,6 +14,7 @@ function Item(itemsConfiguration, attribute, value) {
     this.description = itemsConfiguration.description;
     this.attribute = attribute;
     this.value = value;
+    this.price = rand(30, 70)*(value/2);
 }
 
 var itemDefinitions = require("./itemDefinitions.json");

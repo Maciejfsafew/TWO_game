@@ -20,6 +20,7 @@ var session = expressSession({
 //our modules
 var db_user = require('./backend/db_user');
 var Person = require("./backend/person");
+var Items = require("./backend/items");
 var map = require("./backend/map");
 var playfield = map.readFieldDefinition("public/assets/test.field");
 var db_helper = require('./backend/db_helper');
@@ -60,12 +61,23 @@ primus.on("connection", function (spark) {
     //{ move: 'N/S/W/E' }
     spark.on('move', function (moveCommand, responseCallback) {
         try {
+            var person = spark.request.session.person;
+            var moved = map.movePerson(person, moveCommand.move);
+            var msg = "";
+            if (moved.status === true) {
+                person.currentLocation = moved.location;
+                msg = "Moved " + person.name + " to: {x:" + person.currentLocation.x + ", y:" + person.currentLocation.y + "}"
+            } else {
+                msg = "Can't move there!"
+            }
             responseCallback({
-                'msg': "Move " + spark.request.session.username + " to:" + moveCommand.move,
-                'location': {x: 1, y: 1}
+                'msg': msg,
+                'location': person.currentLocation
             });
         } catch (err) {
-            //TODO: add response to the client
+            responseCallback({
+                'msg': "Server error."
+            });
             console.log(err);
         }
     });
@@ -81,7 +93,14 @@ primus.on("connection", function (spark) {
     //bag doesn't have arguments
     spark.on('bag', function (bagCommand, responseCallback) {
         try {
-            responseCallback({'msg': "bag"});
+			var msg = "";
+            var person = spark.request.session.person;
+			if(person.items < 1 || typeof person.items == 'undefined'){
+				msg = "Your bag is empty.";
+			}else {
+				msg = "Your bag contains:\n" + Items.showBag(person);
+			}
+			responseCallback({'msg': msg});
         } catch (err) {
             //TODO: add response to the client
             console.log(err);
@@ -98,6 +117,11 @@ primus.on("connection", function (spark) {
 
     spark.on('login', function (data, responseCallback) {
         if (data.u != null && data.p != null) {
+
+            var person = new Person(data.u, playfield);
+            person.initialize_position();
+            spark.request.session.person = person;
+
             db_user.findOne({'username': data.u}, function (err, user) {
                 if (err) {
                     responseCallback({'login_answer': 'error'});
@@ -113,7 +137,7 @@ primus.on("connection", function (spark) {
                     }
                 }
                 else {
-                    var new_person = new Person(data.u);
+                    var new_person = new Person(data.u, playfield);
                     var us = db_helper.per2us(db_user, data, new_person);
                     us.save(function (err, us) {
                         if (err) {
