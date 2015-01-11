@@ -66,7 +66,7 @@ primus.on("connection", function (spark) {
             var msg = "";
             if (moved.status === true) {
                 person.currentLocation = moved.location;
-                msg = "Moved " + person.name + " to: {x:" + person.currentLocation.x + ", y:" + person.currentLocation.y + "}"
+                msg = "Moved " + person.name + " to: {x:" + person.currentLocation.x + ", y:" + person.currentLocation.y + "}  " + map.getFieldDescription(person.playfield[person.currentLocation.x][person.currentLocation.y])
             } else {
                 msg = "Can't move there!"
             }
