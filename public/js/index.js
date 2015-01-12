@@ -17,11 +17,9 @@ function setUpUserInfo() {
     updateHeight();
     $("#level").html(window.person.level);
     var strength = document.getElementById("strength");
-    strength.value = window.person.strength;
-    $("#currStrength").html(strength.value + '/' + strength.max);
+    $("#currStrength").html(window.person.strength);
     var dexterity = document.getElementById("dexterity");
-    dexterity.value = window.person.dexterity;
-    $("#currDexterity").html(dexterity.value + '/' + dexterity.max);
+    $("#currDexterity").html(window.person.dexterity);
     var experience = document.getElementById("experience");
     experience.value = window.person.experience;
     $("#currExperience").html(experience.value + '/' + experience.max);
