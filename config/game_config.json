@@ -3,6 +3,6 @@
         "level" : 10,
         "time": -1,
         "experience": 2,
-        "nr_of_items": 1
+        "items": 1
     }
 }

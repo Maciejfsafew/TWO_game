@@ -25,6 +25,7 @@ var Items = require("./backend/items");
 var map = require("./backend/map");
 var playfield = map.readFieldDefinition("public/assets/test.field");
 var db_helper = require('./backend/db_helper');
+var highscores = require('./backend/highscores');
 
 // session store
 app.use(session);
@@ -58,6 +59,7 @@ app.get('/game', function (req, res) {
     });
 });
 
+// view with high scores
 app.get('/highscores', function (req, res) {
     res.render('highscores.html.ejs', {
         'title': "Gra RPG - High scores"
@@ -203,18 +205,14 @@ primus.on("connection", function (spark) {
         });
     });
 
-    spark.on('get_config', function(_data, fn) {
-        var config, config_json = fs.readFileSync("config/game_config.json");
-        try {
-            config = JSON.parse(config_json);
-            console.log("parsed config");
-            console.log(config);
-            fn({'get_config_answer': config});
-        } catch (err) {
-            console.error('Error parsing configuration JSON!')
-            console.error(err);
-            fn({'get_config_answer' : 'error'});
-        }
+    spark.on('get_highscores', function(data, response_callback) {
+        highscores.get_highscores(function(highscores) {
+            response_callback({'highscores' : highscores});
+        })
+    });
+
+    spark.on('get_config', function(_data, response_callback) {
+        response_callback({'config' : highscores.get_config()});
     });
 });
 
