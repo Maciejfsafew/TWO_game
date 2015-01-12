@@ -8,6 +8,7 @@ var app = express();
 var Primus = require("primus");
 var Emitter = require('primus-emitter');
 var server = http.createServer(app);
+var fs = require('fs')
 
 var memoryStore = new expressSession.MemoryStore();
 var session = expressSession({
@@ -25,6 +26,7 @@ var map = require("./backend/map");
 var playfield = map.readFieldDefinition("public/assets/test.field");
 var db_helper = require('./backend/db_helper');
 var generateQuiz = require('./backend/quiz/quiz')();
+var highscores = require('./backend/highscores');
 
 // session store
 app.use(session);
@@ -57,17 +59,25 @@ app.get('/game', function (req, res) {
         'title': "Gra RPG"
     });
 });
-function connectionHandler(spark) {
+
+// view with high scores
+app.get('/highscores', function (req, res) {
+    res.render('highscores.html.ejs', {
+        'title': "Gra RPG - High scores"
+    });
+});
+
+
+primus.on("connection", function (spark) {
     //{ move: 'N/S/W/E' }
-    function moveHandler(moveCommand, responseCallback) {
+    spark.on('move', function (moveCommand, responseCallback) {
         try {
             var person = spark.request.session.person;
             var moved = map.movePerson(person, moveCommand.move);
-            console.log(JSON.stringify(moved));
             var msg = "";
             if (moved.status === true) {
                 person.currentLocation = moved.location;
-                msg = "Moved " + person.name + " to: {x:" + person.currentLocation.x + ", y:" + person.currentLocation.y + "}";
+                msg = "Moved " + person.name + " to: {x:" + person.currentLocation.x + ", y:" + person.currentLocation.y + "}. " + map.getFieldDescription(person.playfield[person.currentLocation.x][person.currentLocation.y])
                 var quiz = generateQuiz(moved);
                 if (quiz) {
                     person.activeQuiz = quiz;
@@ -86,9 +96,7 @@ function connectionHandler(spark) {
             });
             console.log(err);
         }
-    }
-
-    spark.on('move', moveHandler);
+    });
     spark.on('answer', function (answerCommand, responseCallback) {
         try {
             var person = spark.request.session.person;
@@ -128,7 +136,6 @@ function connectionHandler(spark) {
             });
             console.log(err);
         }
-    });
     //mapCommand doesn't have arguments
     spark.on('map', function (mapCommand, responseCallback) {
         try {
@@ -242,8 +249,17 @@ function connectionHandler(spark) {
             }
         });
     });
-}
-primus.on("connection", connectionHandler);
+
+    spark.on('get_highscores', function(data, response_callback) {
+        highscores.get_highscores(function(highscores) {
+            response_callback({'highscores' : highscores});
+        })
+    });
+
+    spark.on('get_config', function(_data, response_callback) {
+        response_callback({'config' : highscores.get_config()});
+    });
+});
 
 server.listen(8080);
 console.log('8080 is where the magic happens');

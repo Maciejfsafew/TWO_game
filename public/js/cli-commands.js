@@ -71,7 +71,7 @@ var Commands = [
                             window.alert('Sleep error');
                         }
                         else if (update_person_answer === 'success') {
-                            //ignore
+                            updateHeight();
                         }
                     });
                 }
