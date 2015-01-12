@@ -200,6 +200,16 @@ primus.on("connection", function (spark) {
             }
         });
     });
+
+
+    spark.on('highscores', function (moveCommand, responseCallback) {
+
+            db_user.find({}, 'username level experience maxhp', function (err, docs) {
+                console.log(docs);
+                responseCallback({'msg': 'success', 'people': docs});
+            });
+
+    });
 });
 
 server.listen(8080);
