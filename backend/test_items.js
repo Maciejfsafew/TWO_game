@@ -1,6 +1,6 @@
 var Person = require("./person");
 var Items = require("./items");
-var Monster = require("../monsters/monsters");
+var Monster = require("./monsters/monsters");
 
 var person = new Person("Hero");
 //generate item
