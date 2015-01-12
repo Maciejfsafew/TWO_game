@@ -136,6 +136,7 @@ primus.on("connection", function (spark) {
             });
             console.log(err);
         }
+    });
     //mapCommand doesn't have arguments
     spark.on('map', function (mapCommand, responseCallback) {
         try {
