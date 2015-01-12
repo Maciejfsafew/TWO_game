@@ -57,6 +57,12 @@ app.get('/game', function (req, res) {
     });
 });
 
+app.get('/highscores', function (req, res) {
+    res.render('highscores.html.ejs', {
+        'title': "Gra RPG - High scores"
+    });
+});
+
 primus.on("connection", function (spark) {
     //{ move: 'N/S/W/E' }
     spark.on('move', function (moveCommand, responseCallback) {
@@ -193,6 +199,16 @@ primus.on("connection", function (spark) {
                 fn({'get_person_answer': 'error'});
             }
         });
+    });
+
+
+    spark.on('highscores', function (moveCommand, responseCallback) {
+
+            db_user.find({}, 'username level experience maxhp', function (err, docs) {
+                console.log(docs);
+                responseCallback({'msg': 'success', 'people': docs});
+            });
+
     });
 });
 

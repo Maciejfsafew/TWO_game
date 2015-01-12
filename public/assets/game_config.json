@@ -1,0 +1,7 @@
+{
+    "playerscore" : {
+        "level" : 10,
+        "experience": 2,
+        "maxhp": 1
+    }
+}
