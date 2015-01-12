@@ -8,6 +8,7 @@ var app = express();
 var Primus = require("primus");
 var Emitter = require('primus-emitter');
 var server = http.createServer(app);
+var fs = require('fs')
 
 var memoryStore = new expressSession.MemoryStore();
 var session = expressSession({
@@ -24,6 +25,7 @@ var Items = require("./backend/items");
 var map = require("./backend/map");
 var playfield = map.readFieldDefinition("public/assets/test.field");
 var db_helper = require('./backend/db_helper');
+var highscores = require('./backend/highscores');
 
 // session store
 app.use(session);
@@ -57,11 +59,13 @@ app.get('/game', function (req, res) {
     });
 });
 
+// view with high scores
 app.get('/highscores', function (req, res) {
     res.render('highscores.html.ejs', {
         'title': "Gra RPG - High scores"
     });
 });
+
 
 primus.on("connection", function (spark) {
     //{ move: 'N/S/W/E' }
@@ -201,14 +205,14 @@ primus.on("connection", function (spark) {
         });
     });
 
+    spark.on('get_highscores', function(data, response_callback) {
+        highscores.get_highscores(function(highscores) {
+            response_callback({'highscores' : highscores});
+        })
+    });
 
-    spark.on('highscores', function (moveCommand, responseCallback) {
-
-            db_user.find({}, 'username level experience maxhp', function (err, docs) {
-                console.log(docs);
-                responseCallback({'msg': 'success', 'people': docs});
-            });
-
+    spark.on('get_config', function(_data, response_callback) {
+        response_callback({'config' : highscores.get_config()});
     });
 });
 

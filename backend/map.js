@@ -7,9 +7,6 @@ var FinalBoss = require("./finalBoss")
 var Forbidden = require("./forbidden")
 var Path = require("./path")
 
-
-
-
 function parsePlayfield(text) {
     var playfield = [[]];
     var os = require('os');
