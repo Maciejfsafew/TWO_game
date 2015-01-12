@@ -17,6 +17,7 @@ var userSchema = mongoose.Schema({
     level: Number,
     experience: Number,
     items: Array,
+    gold: Number,
     currentField: Number
 });
 
