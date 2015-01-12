@@ -1,3 +1,5 @@
+var FieldType = require("../backend/fieldTypes");
+
 function Monster(monsterConfiguration) {
     this.name = monsterConfiguration.name;
     this.description = monsterConfiguration.description;
@@ -7,6 +9,7 @@ function Monster(monsterConfiguration) {
     this.hp = monsterConfiguration.hp;
     this.maxhp = monsterConfiguration.maxhp;
     this.items = monsterConfiguration.items.slice(0);
+    this.gold = Math.floor((Math.random() * 200) + 100);
 }
 var monsterDefinitions = require("./monsterDefinitions.json");
 exports.generateMonster = function (hero, probability) {
@@ -27,5 +30,5 @@ exports.generateMonster = function (hero, probability) {
 
 
 function containsMonster(field) {
-    return field.monster && field.type === FieldType.MONSTER; // field should probably be able do contain a monster object
+    return field && (field.type === FieldType.MONSTER) && field.monster; // field should probably be able do contain a monster object
 }

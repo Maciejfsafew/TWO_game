@@ -1,28 +1,45 @@
 #shell-panel {
-  height: 800px;
-  width: 95%;
-  background-color: #002f05;
-  color: #00fe00;
-  padding: 20px 20px 20px 20px;
-  font-family: 'Source Code Pro';
-  overflow: scroll;
-  overflow-x: hidden;
-  overflow-y: scroll;
-  border: 1px dashed #E6EBE0;
+    height: 500px;
+    width: 95%;
+    background-color: #002f05;
+    color: #00fe00;
+    padding: 20px 20px 20px 20px;
+    font-family: 'Source Code Pro';
+    overflow: scroll;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    border: 1px dashed #E6EBE0;
 }
 
 #shell-cli .prompt {
-  font-weight: bold;
 }
 
-#high-scores {
-  /*color: #12A312;*/
-  text-align: center;
-  text-shadow:
-                /*-1px -1px 1px #00fe00,*/
-                /*1px -1px 1px #00fe00,*/
-                /*1px 1px 1px #00fe00,*/
-                /*-1px 1px 1px #00fe00,*/
-                0px 0px 2px #00fe00;
-  font-size: 200%
+/*progress {*/
+/*background-color: #b20000;*/
+/*border: 0;*/
+/*height: 18px;*/
+/*border-radius: 9px;*/
+/*}*/
+
+/*progress::-webkit-progress-bar {*/
+/*background: #fff;*/
+/*}*/
+
+/*progress::-webkit-progress-value {*/
+/*background: #b20000;*/
+/*}*/
+
+/*progress::-moz-progress-bar {*/
+/*background: #fff;*/
+/*}*/
+
+progress {
+    color: #0063a6;
+    font-size: .6em;
+    line-height: 1.5em;
+    text-indent: .5em;
+    width: 15em;
+    height: 1.8em;
+    border: 1px solid #0063a6;
+    background: #ffffff;
 }
