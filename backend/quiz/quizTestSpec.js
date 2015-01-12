@@ -22,7 +22,7 @@ describe("Quiz Test Suite", function () {
             }
         ]
     };
-    var FieldType = require("../public/js/fieldTypes.js");
+    var FieldType = require("../fieldTypes.js");
     var generateQuiz;
     beforeEach(function () {
         generateQuiz = require("./quiz")("./testQuizDefinitions");

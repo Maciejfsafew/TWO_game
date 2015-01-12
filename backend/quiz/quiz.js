@@ -6,7 +6,7 @@ function initiate(definitionsFilePath) {
     } else {
         quizDefinitions = require("./quizDefinitions.json");
     }
-    FieldType = require("../backend/fieldTypes.js");
+    FieldType = require("../fieldTypes.js");
 }
 
 
@@ -50,16 +50,15 @@ Quiz.prototype.toString = function () {
 };
 function generateQuiz(hero) {
     //hero - Must contain currentField property.
-    if (isChestField(hero.field)) {
+    if (isChestFieldAndNotLooted(hero.field)) {
         return new Quiz(quizDefinitions[Math.floor(Math.random() * quizDefinitions.length)]);
     }
     return null;
 }
 
-
-function isChestField(field) {
+function isChestFieldAndNotLooted(field) {
     console.log(field);
-    return field && field.type === FieldType.CHEST;
+    return field && field.type === FieldType.CHEST && !field.looted;
 }
 
 module.exports = function (definitionsFilePath) {

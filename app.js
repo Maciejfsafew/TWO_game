@@ -24,7 +24,7 @@ var Items = require("./backend/items");
 var map = require("./backend/map");
 var playfield = map.readFieldDefinition("public/assets/test.field");
 var db_helper = require('./backend/db_helper');
-var generateQuiz = require('./quiz_chests/quiz')();
+var generateQuiz = require('./backend/quiz/quiz')();
 
 // session store
 app.use(session);
@@ -97,26 +97,25 @@ function connectionHandler(spark) {
             var quiz = person.activeQuiz;
             var msg = "";
             if (quiz) {
+                var field = person.playfield[location.x][location.y];
                 console.log(answerCommand.answer);
                 if (quiz.checkAnswers(answerCommand.answer)) {
                     msg = "Correct answer!";
-                    var field = person.playfield[location.x][location.y];
+
                     var lootItems = field.items;
                     var lootGold = field.gold;
                     person.items.push.apply(person.items, lootItems);
-                    person.activeQuiz = null;
                     msg += "\nYou receive:\n" + lootItems.join("\n");
                     if (lootItems.length > 0) {
                         msg += " and "
                     }
                     msg += lootGold + " gold";
-                    //todo add reward
                 }
                 else {
-                    msg = "wrong answer";
-                    person.activeQuiz = null;
-                    //todo add punishment
+                    msg = "Wrong answer! Chest disappears.";
                 }
+                field.looted = true;
+                person.activeQuiz = null;
             } else {
                 msg = "There was no question!"
             }
