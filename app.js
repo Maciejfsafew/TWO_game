@@ -107,6 +107,45 @@ primus.on("connection", function (spark) {
         }
     });
 
+    spark.on('buy', function (buyCommand, responseCallback) {
+        try {
+            var person = spark.request.session.person;
+            var msg = "";
+            if (buyCommand.buy === 0) {
+                //display list of items to buy
+                msg = "Items to buy";
+            } else if(buyCommand.buy > 0 && buyCommand.buy < 6){
+                //add item from store to person
+                //person.items.push(store[idx])
+                msg = "Purchased the item xyz"
+            }
+            responseCallback({'msg': msg});
+        } catch (err) {
+            responseCallback({
+                'msg': "Server error."
+            });
+            console.log(err);
+        }
+    });
+
+    spark.on('sell', function (sellCommand, responseCallback) {
+        try {
+            var person = spark.request.session.person;
+            var msg = "";
+            var idx = sellCommand.sell-1;
+            //delete item from bag and add gold to person
+            //person.gold += person.items[idx].price/2;
+            //person.items.splice(idx, 1);
+            msg = "You sell the item xyz";
+            responseCallback({'msg': msg});
+        } catch (err) {
+            responseCallback({
+                'msg': "Server error."
+            });
+            console.log(err);
+        }
+    });
+
     spark.on('sleep', function (sleepCommand, responseCallback) {
         responseCallback({'msg': ''});
     });

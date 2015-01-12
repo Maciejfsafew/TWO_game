@@ -86,5 +86,37 @@ var Commands = [
         args_handler: function (args) {
             return {success: true, msg: ""} //Args handler validates only arguments
         }
+    },
+    {
+        name: "buy",
+        alias: "buy",
+        msg: "",
+        args_handler: function (args) {
+            var msg = {success: false, msg: "Bad argument! Use 'buy' - to see list of items you can buy or 'buy [id]' - to buy item with [id]"};
+            if (args.length == 0) {
+                msg = {success: true, msg: {buy: 0}}
+            }else if (args.length == 1) {
+                var arg = args[0];
+                if (arg > 0 && arg < 6) {
+                    msg = {success: true, msg: {buy: arg}}
+                }
+            }
+            return msg;
+        }
+    },
+    {
+        name: "sell",
+        alias: "sell",
+        msg: "",
+        args_handler: function (args) {
+            var msg = {success: false, msg: "Bad argument! Use 'sell [id]' - to sell item from your bag with [id]"};
+            if (args.length == 1) {
+                var arg = args[0];
+                if (arg > 0 && arg <= window.person.items.length) {
+                    msg = {success: true, msg: {sell: arg}}
+                }
+            }
+            return msg;
+        }
     }
 ]

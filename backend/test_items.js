@@ -10,7 +10,9 @@ person.items.push(item);
 item = Items.generateItem();
 person.items.push(item);
 //display bag content
-Items.showBag(person);
+console.log("SHOW BAG");
+var msg = Items.showBag(person);
+console.log(msg);
 Items.updateStats(person);
 console.log(person);
 
