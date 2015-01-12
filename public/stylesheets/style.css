@@ -15,7 +15,9 @@
 #shell-cli .prompt {
 }
 
-#high-scores {
+
+.highscore {
+
   /*color: #12A312;*/
   /*color: #002f05;*/
   text-align: center;
@@ -25,6 +27,22 @@
                 /*1px 1px 1px #00fe00,*/
                 /*-1px 1px 1px #00fe00,*/
                 0px 0px 2px #00fe00;
-  font-size: 200%
+  font-size: 200%;
+
+
 }
 
+#high-scores-title {
+    font-size: 300%;
+    text-align: center;
+    display: none
+
+}
+
+table, th, td {
+    border: 1px dotted   #002f05;
+}
+
+td {
+    display: none;
+}
