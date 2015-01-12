@@ -23,9 +23,12 @@
   "homepage": "https://github.com/Maciejfsafew/TWO_game",
   "dependencies": {
     "ejs": "^1.0.0",
-    "engine.io": "^1.4.2",
     "express": "^4.10.1",
+    "express-session": "^1.10.1",
+    "faye-websocket": "^0.9.2",
+    "mongoose": "^3.8.20",
     "primus": "^2.4.10",
+    "primus-emitter": "^3.0.3"
     "underscore":"*",
     "jasmine-node":"*"
   }

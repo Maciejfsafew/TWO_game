@@ -1,6 +1,8 @@
 var FieldType = require("./fieldTypes");
+var expMan = require('./characterUtils/experienceManager');
+var map = require("./map");
 
-var Person = function Person(name) {
+var Person = function Person(name, playfield) {
     this.name = name;
     this.strength = 2;
     this.dexterity = 2;
@@ -9,20 +11,23 @@ var Person = function Person(name) {
     this.level = 1;
     this.experience = 0;
     this.items = [];
-    this.currentField = {type: FieldType.MONSTER};
+    this.currentField = {type: FieldType.START};
     this.levelDown = function () {
-        if (this.level != 1)
-            this.level--;
-    }
-    this.levelUp = function () {
-        this.level++;
-    }
+        expMan.levelDownCharacter(this);
+    };
     this.die = function () {
         this.levelDown();
         this.items = [];
         this.currentField = {type: FieldType.START};
         this.hp = this.maxhp;
         //window.alert("Unfortunately, you died. Try again from start!");
+    }
+    this.playfield = playfield;
+    this.currentLocation = {x: -1, y: -1};
+
+    this.initialize_position = function() {
+        var start_location = map.getStartField(playfield);
+        this.currentLocation = {x: start_location[0], y: start_location[1]};
     }
 };
 

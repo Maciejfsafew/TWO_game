@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "name": "Necklace",
+    "description": "The necklace consists of a shimmering blue-green crystal at the end of a long platinum chain."
+  },
+  {
+    "id": 2,
+    "name": "Short Sword",
+    "description": "This nice sharp piece of steel is a couple of feet long."
+  },
+  {
+    "id": 3,
+    "name": "Axe",
+    "description": "This is a very small axe, but also very sharp."
+  },
+  {
+    "id": 4,
+    "name": "Black obsidian staff",
+    "description": "This is a long, dominating staff which doesn't nearly feel as heavy as it should."
+  },
+  {
+    "id": 5,
+    "name": "Moonstone ring",
+    "description": "A simple, classic platinum band wraps around the wearer's finger, and two small rose-cut diamonds flank the central moonstone in its open setting."
+  },
+  {
+    "id": 6,
+    "name": "Green malachite pendant",
+    "description": "Swirls of light and dark green malachite combine in this pendant, reflecting the light and casting a green aura around the wearer's throat."
+  },
+  {
+    "id": 7,
+    "name": "Silver long sword",
+    "description": "This lovely, gleaming long sword is made of about four feet of solid silver."
+  },
+  {
+    "id": 8,
+    "name": "Repeating crossbow",
+    "description": "Made from lacquered oak, this crossbow has a complicated steel mechanism which allows it to be loaded with several bolts at once."
+  }
+]
