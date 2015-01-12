@@ -6,7 +6,7 @@ function initiate(definitionsFilePath) {
     } else {
         quizDefinitions = require("./quizDefinitions.json");
     }
-    FieldType = require("../public/js/fieldTypes.js");
+    FieldType = require("../backend/fieldTypes.js");
 }
 
 
@@ -38,12 +38,19 @@ function Quiz(quizConfiguration) {
             });
             return result;
         }
-    }
-}
+    };
 
+}
+Quiz.prototype.toString = function () {
+    var str = "\n" + this.question;
+    this.answers.forEach(function (element, index) {
+        str += ("\n" + index + ". " + element.answerText)
+    });
+    return str;
+};
 function generateQuiz(hero) {
     //hero - Must contain currentField property.
-    if (isChestField(hero.currentField)) {
+    if (isChestField(hero.field)) {
         return new Quiz(quizDefinitions[Math.floor(Math.random() * quizDefinitions.length)]);
     }
     return null;
@@ -51,6 +58,7 @@ function generateQuiz(hero) {
 
 
 function isChestField(field) {
+    console.log(field);
     return field && field.type === FieldType.CHEST;
 }
 

@@ -24,6 +24,7 @@ var Items = require("./backend/items");
 var map = require("./backend/map");
 var playfield = map.readFieldDefinition("public/assets/test.field");
 var db_helper = require('./backend/db_helper');
+var generateQuiz = require('./quiz_chests/quiz')();
 
 // session store
 app.use(session);
@@ -56,23 +57,71 @@ app.get('/game', function (req, res) {
         'title': "Gra RPG"
     });
 });
-
-primus.on("connection", function (spark) {
+function connectionHandler(spark) {
     //{ move: 'N/S/W/E' }
-    spark.on('move', function (moveCommand, responseCallback) {
+    function moveHandler(moveCommand, responseCallback) {
         try {
             var person = spark.request.session.person;
             var moved = map.movePerson(person, moveCommand.move);
+            console.log(JSON.stringify(moved));
             var msg = "";
             if (moved.status === true) {
                 person.currentLocation = moved.location;
-                msg = "Moved " + person.name + " to: {x:" + person.currentLocation.x + ", y:" + person.currentLocation.y + "}"
+                msg = "Moved " + person.name + " to: {x:" + person.currentLocation.x + ", y:" + person.currentLocation.y + "}";
+                var quiz = generateQuiz(moved);
+                if (quiz) {
+                    person.activeQuiz = quiz;
+                    msg += quiz.toString()
+                }
             } else {
                 msg = "Can't move there!"
             }
             responseCallback({
                 'msg': msg,
                 'location': person.currentLocation
+            });
+        } catch (err) {
+            responseCallback({
+                'msg': "Server error."
+            });
+            console.log(err);
+        }
+    }
+
+    spark.on('move', moveHandler);
+    spark.on('answer', function (answerCommand, responseCallback) {
+        try {
+            var person = spark.request.session.person;
+            console.log(person);
+            var location = person.currentLocation;
+            var quiz = person.activeQuiz;
+            var msg = "";
+            if (quiz) {
+                console.log(answerCommand.answer);
+                if (quiz.checkAnswers(answerCommand.answer)) {
+                    msg = "Correct answer!";
+                    var field = person.playfield[location.x][location.y];
+                    var lootItems = field.items;
+                    var lootGold = field.gold;
+                    person.items.push.apply(person.items, lootItems);
+                    person.activeQuiz = null;
+                    msg += "\nYou receive:\n" + lootItems.join("\n");
+                    if (lootItems.length > 0) {
+                        msg += " and "
+                    }
+                    msg += lootGold + " gold";
+                    //todo add reward
+                }
+                else {
+                    msg = "wrong answer";
+                    person.activeQuiz = null;
+                    //todo add punishment
+                }
+            } else {
+                msg = "There was no question!"
+            }
+            responseCallback({
+                'msg': msg
             });
         } catch (err) {
             responseCallback({
@@ -93,14 +142,14 @@ primus.on("connection", function (spark) {
     //bag doesn't have arguments
     spark.on('bag', function (bagCommand, responseCallback) {
         try {
-			var msg = "";
+            var msg = "";
             var person = spark.request.session.person;
-			if(person.items < 1 || typeof person.items == 'undefined'){
-				msg = "Your bag is empty.";
-			}else {
-				msg = "Your bag contains:\n" + Items.showBag(person);
-			}
-			responseCallback({'msg': msg});
+            if (person.items < 1 || typeof person.items == 'undefined') {
+                msg = "Your bag is empty.";
+            } else {
+                msg = "Your bag contains:\n" + Items.showBag(person);
+            }
+            responseCallback({'msg': msg});
         } catch (err) {
             //TODO: add response to the client
             console.log(err);
@@ -194,7 +243,8 @@ primus.on("connection", function (spark) {
             }
         });
     });
-});
+}
+primus.on("connection", connectionHandler);
 
 server.listen(8080);
 console.log('8080 is where the magic happens');

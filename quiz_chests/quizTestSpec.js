@@ -28,14 +28,14 @@ describe("Quiz Test Suite", function () {
         generateQuiz = require("./quiz")("./testQuizDefinitions");
     });
     it("should return test quiz", function () {
-        var heroStub = {currentField: {type: FieldType.CHEST}};
+        var heroStub = {field: {type: FieldType.CHEST}};
         var quiz = generateQuiz(heroStub);
         expect(quiz.question).toBe(expectedQuiz.question);
         expect(_.isEqual(quiz.answers, expectedQuiz.answers)).toEqual(true);
     });
 
     it("should verify the answer correctly", function () {
-        var heroStub = {currentField: {type: FieldType.CHEST}};
+        var heroStub = {field: {type: FieldType.CHEST}};
         var quiz = generateQuiz(heroStub);
         expect(quiz.checkAnswers([3])).toEqual(false);
         expect(quiz.checkAnswers([0,3])).toEqual(true);
@@ -44,7 +44,7 @@ describe("Quiz Test Suite", function () {
     });
 
     it("should return null", function () {
-        var heroStub = {currentField: {type: FieldType.MONSTER}};
+        var heroStub = {field: {type: FieldType.MONSTER}};
         var quiz = generateQuiz(heroStub);
         expect(quiz).toBe(null);
     });
