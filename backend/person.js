@@ -12,12 +12,14 @@ var Person = function Person(name, playfield) {
     this.experience = 0;
     this.items = [];
     this.currentField = {type: FieldType.START};
+    this.gold = 0;
     this.levelDown = function () {
         expMan.levelDownCharacter(this);
     };
     this.die = function () {
         this.levelDown();
         this.items = [];
+        this.gold = 0;
         this.currentField = {type: FieldType.START};
         this.hp = this.maxhp;
         //window.alert("Unfortunately, you died. Try again from start!");

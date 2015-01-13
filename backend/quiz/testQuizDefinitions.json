@@ -1,0 +1,23 @@
+[
+  {
+    "question": "Test question?",
+    "answers": [
+      {
+        "answerText": "Test answer 1",
+        "correct": true
+      },
+      {
+        "answerText": "Test answer 2",
+        "correct": false
+      },
+      {
+        "answerText": "Test answer 3.",
+        "correct": false
+      },
+      {
+        "answerText": "Test answer 4",
+        "correct": true
+      }
+    ]
+  }
+]

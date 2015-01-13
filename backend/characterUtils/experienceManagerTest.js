@@ -4,7 +4,7 @@
  */
 var experienceManager = require("./experienceManager");
 var Person = require("../person");
-var generateMonster = require("../../../monsters/monsters").generateMonster;
+var generateMonster = require("../monsters/monsters").generateMonster;
 
 var person = new Person("bohater");
 

@@ -8,6 +8,7 @@ var app = express();
 var Primus = require("primus");
 var Emitter = require('primus-emitter');
 var server = http.createServer(app);
+var fs = require('fs')
 
 var memoryStore = new expressSession.MemoryStore();
 var session = expressSession({
@@ -24,6 +25,8 @@ var Items = require("./backend/items");
 var map = require("./backend/map");
 var playfield = map.readFieldDefinition("public/assets/test.field");
 var db_helper = require('./backend/db_helper');
+var generateQuiz = require('./backend/quiz/quiz')();
+var highscores = require('./backend/highscores');
 
 // session store
 app.use(session);
@@ -57,11 +60,13 @@ app.get('/game', function (req, res) {
     });
 });
 
+// view with high scores
 app.get('/highscores', function (req, res) {
     res.render('highscores.html.ejs', {
         'title': "Gra RPG - High scores"
     });
 });
+
 
 primus.on("connection", function (spark) {
     //{ move: 'N/S/W/E' }
@@ -73,6 +78,11 @@ primus.on("connection", function (spark) {
                 if (moved.status === true) {
                     person.currentLocation = moved.location;
                     msg = "Moved " + person.name + " to: {x:" + person.currentLocation.x + ", y:" + person.currentLocation.y + "}"
+                    var quiz = generateQuiz(moved);
+                    if (quiz) {
+                        spark.request.session.activeQuiz = quiz;
+                        msg += quiz.toString()
+                    }
                 } else {
                     msg = "Can't move there!"
                 }
@@ -84,6 +94,46 @@ primus.on("connection", function (spark) {
                             'location': person.currentLocation
                         });
                     }
+                });
+            });
+        } catch (err) {
+            responseCallback({
+                'msg': "Server error."
+            });
+            console.log(err);
+        }
+    });
+    spark.on('answer', function (answerCommand, responseCallback) {
+        try {
+            db_helper.getPerson(db_user, Person, spark.request.session.username, function(person) {
+                var quiz = spark.request.session.activeQuiz;
+                var location = person.currentLocation;
+                var msg = "";
+                if (quiz) {
+                    var field = person.playfield[location.x][location.y];
+                    console.log(answerCommand.answer);
+                    if (quiz.checkAnswers(answerCommand.answer)) {
+                        msg = "Correct answer!";
+
+                        var lootItems = field.items;
+                        var lootGold = field.gold;
+                        person.items.push.apply(person.items, lootItems);
+                        msg += "\nYou receive:\n" + lootItems.join("\n");
+                        if (lootItems.length > 0) {
+                            msg += " and "
+                        }
+                        msg += lootGold + " gold";
+                    }
+                    else {
+                        msg = "Wrong answer! Chest disappears.";
+                    }
+                    field.looted = true;
+                    person.activeQuiz = null;
+                } else {
+                    msg = "There was no question!"
+                }
+                responseCallback({
+                    'msg': msg
                 });
             });
         } catch (err) {
@@ -105,14 +155,14 @@ primus.on("connection", function (spark) {
     //bag doesn't have arguments
     spark.on('bag', function (bagCommand, responseCallback) {
         try {
-			var msg = "";
+            var msg = "";
             var person = spark.request.session.person;
-			if(person.items < 1 || typeof person.items == 'undefined'){
-				msg = "Your bag is empty.";
-			}else {
-				msg = "Your bag contains:\n" + Items.showBag(person);
-			}
-			responseCallback({'msg': msg});
+            if (person.items < 1 || typeof person.items == 'undefined') {
+                msg = "Your bag is empty.";
+            } else {
+                msg = "Your bag contains:\n" + Items.showBag(person);
+            }
+            responseCallback({'msg': msg});
         } catch (err) {
             //TODO: add response to the client
             console.log(err);
@@ -204,14 +254,14 @@ primus.on("connection", function (spark) {
         });
     });
 
+    spark.on('get_highscores', function(data, response_callback) {
+        highscores.get_highscores(function(highscores) {
+            response_callback({'highscores' : highscores});
+        })
+    });
 
-    spark.on('highscores', function (moveCommand, responseCallback) {
-
-            db_user.find({}, 'username level experience maxhp', function (err, docs) {
-                console.log(docs);
-                responseCallback({'msg': 'success', 'people': docs});
-            });
-
+    spark.on('get_config', function(_data, response_callback) {
+        response_callback({'config' : highscores.get_config()});
     });
 });
 

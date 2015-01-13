@@ -18,6 +18,7 @@ var userSchema = mongoose.Schema({
     experience: Number,
     items: Array,
     currentField: Number,
+    gold: Number,
     currentLocation: mongoose.Schema.Types.Mixed,
     playfield: mongoose.Schema.Types.Mixed
 });
