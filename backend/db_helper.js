@@ -14,7 +14,8 @@ exports.updatePerson = function (db_user, person, responseCallback) {
             user.items = person.items;
             user.currentField = person.currentField;
             user.currentLocation = person.currentLocation;
-            user.playfield = person.playfield
+            user.playfield = person.playfield;
+            user.gold = person.gold;
             user.save(function (err, us) {
                 if (err) {
                     responseCallback({'update_person_answer': 'error', 'msg': ''});
@@ -40,7 +41,8 @@ exports.us2per = function (Person, user) {
     person.items = user.items;
     person.currentField = user.currentField;
     person.currentLocation = user.currentLocation;
-    person.playfield = user.playfield
+    person.playfield = user.playfield;
+    person.gold = user.gold;
     return person;
 };
 
@@ -57,7 +59,8 @@ exports.per2us = function (db_user, data, person) {
         items: person.items,
         currentField: person.currentField,
         currentLocation: person.currentLocation,
-        playfield: person.playfield
+        playfield: person.playfield,
+        gold: person.gold
     });
 };
 

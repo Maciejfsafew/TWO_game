@@ -117,6 +117,7 @@ primus.on("connection", function (spark) {
 
                         var lootItems = field.items;
                         var lootGold = field.gold;
+                        person.gold += lootGold;
                         person.items.push.apply(person.items, lootItems);
                         msg += "\nYou receive:\n" + lootItems.join("\n");
                         if (lootItems.length > 0) {
@@ -132,8 +133,12 @@ primus.on("connection", function (spark) {
                 } else {
                     msg = "There was no question!"
                 }
-                responseCallback({
-                    'msg': msg
+                db_helper.updatePerson(db_user, person, function(update_result) {
+                    if(update_result.update_person_answer == "success") {
+                        responseCallback({
+                            'msg': msg
+                        });
+                    }
                 });
             });
         } catch (err) {
