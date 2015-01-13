@@ -72,23 +72,29 @@ primus.on("connection", function (spark) {
     //{ move: 'N/S/W/E' }
     spark.on('move', function (moveCommand, responseCallback) {
         try {
-            var person = spark.request.session.person;
-            var moved = map.movePerson(person, moveCommand.move);
-            var msg = "";
-            if (moved.status === true) {
-                person.currentLocation = moved.location;
-                msg = "Moved " + person.name + " to: {x:" + person.currentLocation.x + ", y:" + person.currentLocation.y + "}. " + map.getFieldDescription(person.playfield[person.currentLocation.x][person.currentLocation.y])
-                var quiz = generateQuiz(moved);
-                if (quiz) {
-                    person.activeQuiz = quiz;
-                    msg += quiz.toString()
+            db_helper.getPerson(db_user, Person, spark.request.session.username, function(person) {
+                var moved = map.movePerson(person, moveCommand.move);
+                var msg = "";
+                if (moved.status === true) {
+                    person.currentLocation = moved.location;
+                    msg = "Moved " + person.name + " to: {x:" + person.currentLocation.x + ", y:" + person.currentLocation.y + "}"
+                    var quiz = generateQuiz(moved);
+                    if (quiz) {
+                        spark.request.session.activeQuiz = quiz;
+                        msg += quiz.toString()
+                    }
+                } else {
+                    msg = "Can't move there!"
                 }
-            } else {
-                msg = "Can't move there!"
-            }
-            responseCallback({
-                'msg': msg,
-                'location': person.currentLocation
+
+                db_helper.updatePerson(db_user, person, function(update_result) {
+                    if(update_result.update_person_answer == "success") {
+                        responseCallback({
+                            'msg': msg,
+                            'location': person.currentLocation
+                        });
+                    }
+                });
             });
         } catch (err) {
             responseCallback({
@@ -99,36 +105,41 @@ primus.on("connection", function (spark) {
     });
     spark.on('answer', function (answerCommand, responseCallback) {
         try {
-            var person = spark.request.session.person;
-            console.log(person);
-            var location = person.currentLocation;
-            var quiz = person.activeQuiz;
-            var msg = "";
-            if (quiz) {
-                var field = person.playfield[location.x][location.y];
-                console.log(answerCommand.answer);
-                if (quiz.checkAnswers(answerCommand.answer)) {
-                    msg = "Correct answer!";
+            db_helper.getPerson(db_user, Person, spark.request.session.username, function(person) {
+                var quiz = spark.request.session.activeQuiz;
+                var location = person.currentLocation;
+                var msg = "";
+                if (quiz) {
+                    var field = person.playfield[location.x][location.y];
+                    console.log(answerCommand.answer);
+                    if (quiz.checkAnswers(answerCommand.answer)) {
+                        msg = "Correct answer!";
 
-                    var lootItems = field.items;
-                    var lootGold = field.gold;
-                    person.items.push.apply(person.items, lootItems);
-                    msg += "\nYou receive:\n" + lootItems.join("\n");
-                    if (lootItems.length > 0) {
-                        msg += " and "
+                        var lootItems = field.items;
+                        var lootGold = field.gold;
+                        person.gold += lootGold;
+                        person.items.push.apply(person.items, lootItems);
+                        msg += "\nYou receive:\n" + lootItems.join("\n");
+                        if (lootItems.length > 0) {
+                            msg += " and "
+                        }
+                        msg += lootGold + " gold";
                     }
-                    msg += lootGold + " gold";
+                    else {
+                        msg = "Wrong answer! Chest disappears.";
+                    }
+                    field.looted = true;
+                    person.activeQuiz = null;
+                } else {
+                    msg = "There was no question!"
                 }
-                else {
-                    msg = "Wrong answer! Chest disappears.";
-                }
-                field.looted = true;
-                person.activeQuiz = null;
-            } else {
-                msg = "There was no question!"
-            }
-            responseCallback({
-                'msg': msg
+                db_helper.updatePerson(db_user, person, function(update_result) {
+                    if(update_result.update_person_answer == "success") {
+                        responseCallback({
+                            'msg': msg
+                        });
+                    }
+                });
             });
         } catch (err) {
             responseCallback({
@@ -174,10 +185,6 @@ primus.on("connection", function (spark) {
     spark.on('login', function (data, responseCallback) {
         if (data.u != null && data.p != null) {
 
-            var person = new Person(data.u, playfield);
-            person.initialize_position();
-            spark.request.session.person = person;
-
             db_user.findOne({'username': data.u}, function (err, user) {
                 if (err) {
                     responseCallback({'login_answer': 'error'});
@@ -194,6 +201,7 @@ primus.on("connection", function (spark) {
                 }
                 else {
                     var new_person = new Person(data.u, playfield);
+                    new_person.initialize_position();
                     var us = db_helper.per2us(db_user, data, new_person);
                     us.save(function (err, us) {
                         if (err) {
