@@ -17,7 +17,9 @@ var userSchema = mongoose.Schema({
     level: Number,
     experience: Number,
     items: Array,
-    currentField: Number
+    currentField: Number,
+    currentLocation: mongoose.Schema.Types.Mixed,
+    playfield: mongoose.Schema.Types.Mixed
 });
 
 var User = mongoose.model('User', userSchema);
