@@ -1,19 +1,24 @@
 #shell-panel {
-  /*height: 800px;  */
-  height: 500px;
-  width: 95%;
-  background-color: #002f05;
-  color: #00fe00;
-  padding: 20px 20px 20px 20px;
-  font-family: 'Source Code Pro';
-  overflow: scroll;
-  overflow-x: hidden;
-  overflow-y: scroll;
-  border: 1px dashed #E6EBE0;
-  text-shadow: 0px 0px 1px #00fe00;
+    /*height: 800px;  */
+    height: 500px;
+    width: 95%;
+    background-color: #002f05;
+    color: #00fe00;
+    padding: 20px 20px 20px 20px;
+    font-family: 'Source Code Pro';
+    overflow: scroll;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    border: 1px dashed #E6EBE0;
+    text-shadow: 0px 0px 1px #00fe00;
 }
 
 #shell-cli .prompt {
+}
+
+td.left-margin-class {
+    width: 100px;
+    text-align:right;
 }
 
 /*progress {*/
@@ -23,42 +28,43 @@
 /*border-radius: 9px;*/
 /*}*/
 
-/*progress::-webkit-progress-bar {*/
-/*background: #fff;*/
-/*}*/
+progress#health.health_progress::-webkit-progress-value {
+background: #00007f;
+}
 
-/*progress::-webkit-progress-value {*/
-/*background: #b20000;*/
-/*}*/
-
-/*progress::-moz-progress-bar {*/
-/*background: #fff;*/
-/*}*/
-
-progress {
-    color: #0063a6;
+progress#health.health_progress {
+    color: #00007f;
     font-size: .6em;
     line-height: 1.5em;
     text-indent: .5em;
     width: 15em;
     height: 1.8em;
-    border: 1px solid #0063a6;
+    border: 1px solid #00007f;
+    background: #ffffff;
+}
+
+progress#experience.exp_progress::-webkit-progress-value {
+    background: #4A7023;
+}
+
+progress#experience.exp_progress {
+    color: #4A7023;
+    font-size: .6em;
+    line-height: 1.5em;
+    text-indent: .5em;
+    width: 15em;
+    height: 1.8em;
+    border: 1px solid #4A7023;
     background: #ffffff;
 }
 
 .highscore {
 
-  /*color: #12A312;*/
-  /*color: #002f05;*/
-  text-align: center;
-  text-shadow:
-                /*-1px -1px 1px #00fe00,*/
-                /*1px -1px 1px #00fe00,*/
-                /*1px 1px 1px #00fe00,*/
-                /*-1px 1px 1px #00fe00,*/
-                0px 0px 2px #00fe00;
-  font-size: 200%;
-
+    /*color: #12A312;*/
+    /*color: #002f05;*/
+    text-align: center;
+    text-shadow: /*-1px -1px 1px #00fe00,*/ /*1px -1px 1px #00fe00,*/ /*1px 1px 1px #00fe00,*/ /*-1px 1px 1px #00fe00,*/ 0px 0px 2px #00fe00;
+    font-size: 200%;
 
 }
 
@@ -69,8 +75,8 @@ progress {
 
 }
 
-table.highscore, table.highscore th, table.highscore td  {
-    border: 1px dotted   #002f05;
+table.highscore, table.highscore th, table.highscore td {
+    border: 1px dotted #002f05;
 }
 
 td .highscore {
