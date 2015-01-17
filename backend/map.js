@@ -11,6 +11,8 @@ function parsePlayfield(text) {
     var playfield = [[]];
     var os = require('os');
     var lines = text.split(os.EOL);
+    if (lines.length === 1)
+        lines = text.split('\n');
     for(var i = 0; i < lines.length; i++) {
         if(lines[i].trim().length == 0) {
             continue; //ignore empty lines
