@@ -19,6 +19,30 @@ var Commands = [
         }
     },
     {
+        name: "answer",
+        msg: "",
+        alias: "ans",
+        args_handler: function (args) {
+            var msg = {success: false, msg: "No answer given!"};
+            if (args.length > 0) {
+                var parsedArgs = [];
+                args.forEach(function (element, index) {
+                    var parsed = parseInt(element);
+                    if (!parsed || !isNaN(parsed)) {
+                        parsedArgs.push(parsed);
+                    } else {
+                        return msg
+                    }
+                });
+                msg = {success: true, msg: {answer: parsedArgs}}
+            }
+            return msg;
+        },
+        response_handler: function (server_response) {
+            console.log(server_response);
+        }
+    },
+    {
         name: "map",
         msg: "",
         alias: "map",
