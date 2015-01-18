@@ -5,49 +5,33 @@ primus.on("open", function () {
     console.log("Connected!");
 });
 
-function updateHeight() {
+function updateHeight(person) {
     var health = document.getElementById("health");
-    health.value = window.person.hp;
-    health.max = window.person.maxhp;
+    health.value = person.hp;
+    health.max = person.maxhp;
     var maxHp = document.getElementById("maxHp");
     $("#currHp").html(health.value + '/' + health.max);
 }
 
-function setUpUserInfo() {
-    updateHeight();
-    $("#level").html(window.person.level);
+function setUpUserInfo(person) {
+    updateHeight(person);
+    $("#level").html(person.level);
     var strength = document.getElementById("strength");
-    $("#currStrength").html(window.person.strength);
+    $("#currStrength").html(person.strength);
     var dexterity = document.getElementById("dexterity");
-    $("#currDexterity").html(window.person.dexterity);
+    $("#currDexterity").html(person.dexterity);
     var experience = document.getElementById("experience");
-    experience.value = window.person.experience;
+    experience.value = person.experience;
     $("#currExperience").html(experience.value + '/' + experience.max);
 }
 
 function logout() {
-    primus.send('update_person', {'person': window.person}, function (data) {
-        var update_person_answer = data.update_person_answer;
-        if (update_person_answer === 'error') {
-            window.alert('Update error');
-        }
-        else if (update_person_answer === 'success') {
-            $.removeCookie("name");
-            window.open('/', "_self");
-        }
-    });
+    $.removeCookie("name");
+    window.open('/', "_self");
 };
 
 function highscores() {
-    primus.send('update_person', {'person': window.person}, function (data) {
-        var update_person_answer = data.update_person_answer;
-        if (update_person_answer === 'error') {
-            window.alert('Update error');
-        }
-        else if (update_person_answer === 'success') {
-            window.open('/highscores', "_self");
-        }
-    });
+    window.open('/highscores', "_self");
 };
 
 $(function () {
@@ -59,10 +43,10 @@ $(function () {
                 window.open('/', "_self")
             }
             else if (get_person_answer === 'success') {
-                window.person = data.person;
-                setUpUserInfo();
+                //window.person = data.person;
+                setUpUserInfo(data.person);
                 window.is_sleeping = false;
-                console.log(window.person);
+                //console.log(window.person);
                 var data_name = "<b>Hej, " + $.cookie("name") + "!</b>";
                 $("#name").html(data_name);
                 $("#body_elements").attr('style', 'display: block');
