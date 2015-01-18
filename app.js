@@ -72,7 +72,7 @@ primus.on("connection", function (spark) {
     //{ move: 'N/S/W/E' }
     spark.on('move', function (moveCommand, responseCallback) {
         try {
-            db_helper.getPerson(db_user, Person, spark.request.session.username, function(person) {
+            db_helper.getPerson(db_user, Person, spark.request.session.username, function (person) {
                 var moved = map.movePerson(person, moveCommand.move);
                 var msg = "";
                 if (moved.status === true) {
@@ -87,8 +87,8 @@ primus.on("connection", function (spark) {
                     msg = "Can't move there!"
                 }
 
-                db_helper.updatePerson(db_user, person, function(update_result) {
-                    if(update_result.update_person_answer == "success") {
+                db_helper.updatePerson(db_user, person, function (update_result) {
+                    if (update_result.update_person_answer == "success") {
                         responseCallback({
                             'msg': msg,
                             'location': person.currentLocation
@@ -105,7 +105,7 @@ primus.on("connection", function (spark) {
     });
     spark.on('answer', function (answerCommand, responseCallback) {
         try {
-            db_helper.getPerson(db_user, Person, spark.request.session.username, function(person) {
+            db_helper.getPerson(db_user, Person, spark.request.session.username, function (person) {
                 var quiz = spark.request.session.activeQuiz;
                 var location = person.currentLocation;
                 var msg = "";
@@ -133,8 +133,8 @@ primus.on("connection", function (spark) {
                 } else {
                     msg = "There was no question!"
                 }
-                db_helper.updatePerson(db_user, person, function(update_result) {
-                    if(update_result.update_person_answer == "success") {
+                db_helper.updatePerson(db_user, person, function (update_result) {
+                    if (update_result.update_person_answer == "success") {
                         responseCallback({
                             'msg': msg
                         });
@@ -259,14 +259,22 @@ primus.on("connection", function (spark) {
         });
     });
 
-    spark.on('get_highscores', function(data, response_callback) {
-        highscores.get_highscores(function(highscores) {
-            response_callback({'highscores' : highscores});
+    spark.on('sleep_person_start', function (data, responseCallback) {
+        db_helper.sleepPersonStart(db_user, data.person_name, responseCallback);
+    });
+
+    spark.on('add_health', function (data, responseCallback) {
+        db_helper.addHealth(Person, db_helper, db_user, data.person_name, responseCallback);
+    });
+
+    spark.on('get_highscores', function (data, response_callback) {
+        highscores.get_highscores(function (highscores) {
+            response_callback({'highscores': highscores});
         })
     });
 
-    spark.on('get_config', function(_data, response_callback) {
-        response_callback({'config' : highscores.get_config()});
+    spark.on('get_config', function (_data, response_callback) {
+        response_callback({'config': highscores.get_config()});
     });
 });
 

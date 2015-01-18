@@ -19,6 +19,7 @@ var userSchema = mongoose.Schema({
     items: Array,
     currentField: Number,
     gold: Number,
+    sleep_start: Date,
     currentLocation: mongoose.Schema.Types.Mixed,
     playfield: mongoose.Schema.Types.Mixed
 });
