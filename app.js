@@ -90,9 +90,12 @@ primus.on("connection", function (spark) {
     //mapCommand doesn't have arguments
     spark.on('map', function (mapCommand, responseCallback) {
         try {
-            responseCallback({'msg': "map"});
+            var person = spark.request.session.person;
+            responseCallback({'msg': "success", 'map':playfield, 'location':person.currentLocation});
         } catch (err) {
-            //TODO: add response to the client
+            responseCallback({
+                'msg': "Server error."
+            });
             console.log(err);
         }
     });
@@ -210,6 +213,8 @@ primus.on("connection", function (spark) {
             });
 
     });
+
+
 });
 
 server.listen(8080);

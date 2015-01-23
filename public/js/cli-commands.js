@@ -16,17 +16,7 @@ var Commands = [
         },
         response_handler: function (server_response) {
             window.person.currentLocation = server_response.location;
-        }
-    },
-    {
-        name: "map",
-        msg: "",
-        alias: "map",
-        args_handler: function (args) {
-            return {success: true, msg: ""} //Args handler validates only arguments
-        },
-        response_handler: function (server_response) {
-            console.log(server_response);
+            updateLocation();
         }
     },
     {

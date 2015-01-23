@@ -21,7 +21,7 @@
     <link rel="stylesheet" type="text/css" href="/public/stylesheets/style.css">
 </head>
 
-<body id="body_elements" style="display: none;">
+<body id="body_elements" style="display: none;" onload="updateLocation()">
 <table>
     <tr>
         <td id="name">test</td>
@@ -33,40 +33,54 @@
         <td id="highscores"></td><button onclick="highscores()">Highscores</button>
     </tr>
 </table>
-<table>
+<table width="100%">
     <tr>
-        <td>Level:</td>
-        <td id="level"></td>
-    </tr>
-    <tr>
-        <td>Health:</td>
-        <td>
-            <progress id="health" class="progress"></progress>
+        <td width="50%">
+            <table>
+                <tr>
+                    <td>Level:</td>
+                    <td id="level"></td>
+                </tr>
+                <tr>
+                    <td>Health:</td>
+                    <td>
+                        <progress id="health" class="progress"></progress>
+                    </td>
+                    <td id="currHp"></td>
+                </tr>
+                <tr>
+                    <td>Strength:</td>
+                    <td>
+                        <progress id="strength" max="100" class="progress"></progress>
+                    </td>
+                    <td id="currStrength"></td>
+                </tr>
+                <tr>
+                    <td>Dexterity:</td>
+                    <td>
+                        <progress id="dexterity" max="100" class="progress"></progress>
+                    </td>
+                    <td id="currDexterity"></td>
+                </tr>
+                <tr>
+                    <td>Experience:</td>
+                    <td>
+                        <progress id="experience" max="100" class="progress"></progress>
+                    </td>
+                    <td id="currExperience"></td>
+                </tr>
+            </table>
+
         </td>
-        <td id="currHp"></td>
-    </tr>
-    <tr>
-        <td>Strength:</td>
-        <td>
-            <progress id="strength" max="100" class="progress"></progress>
+        <td width="50%">
+            <table id="map-view">
+                <tr>
+                </tr>
+            </table>
         </td>
-        <td id="currStrength"></td>
-    </tr>
-    <tr>
-        <td>Dexterity:</td>
-        <td>
-            <progress id="dexterity" max="100" class="progress"></progress>
-        </td>
-        <td id="currDexterity"></td>
-    </tr>
-    <tr>
-        <td>Experience:</td>
-        <td>
-            <progress id="experience" max="100" class="progress"></progress>
-        </td>
-        <td id="currExperience"></td>
     </tr>
 </table>
+
 <div class="wrapper">
     <div id="shell-panel" tabindex="0">
         <div>Welcome to TWO MUD!<br>
