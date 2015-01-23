@@ -178,7 +178,8 @@ primus.on("connection", function (spark) {
                 var msg = "Nothing to loot here!";
                 var quiz = spark.request.session.activeQuiz;
                 if (quiz) {
-                    msg = quiz.toString();
+                    msg = "Answer with 'ans' command followed by answer numbers, i.e. 'ans 1 2'<br/>";
+                    msg += quiz.toString();
                 }
                 responseCallback({'msg': msg});
             }
