@@ -151,8 +151,10 @@ primus.on("connection", function (spark) {
     //mapCommand doesn't have arguments
     spark.on('map', function (mapCommand, responseCallback) {
         try {
-            var person = spark.request.session.person;
-            responseCallback({'msg': "success", 'map':playfield, 'location':person.currentLocation});
+            db_helper.getPerson(db_user, Person, spark.request.session.username, function (person) {
+                var location = person.currentLocation;
+                responseCallback({'msg': "success", 'map': playfield, 'location': location});
+            });
         } catch (err) {
             responseCallback({
                 'msg': "Server error."

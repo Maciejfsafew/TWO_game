@@ -16,9 +16,12 @@ function updateHeight(person) {
 function updateLocation() {
     primus.send('map', {}, function (server_response) {
 
-        console.log(server_response.map);
-        console.log(server_response.location);
+        //console.log(server_response.map);
+        //console.log(server_response.location);
         var location = server_response.location;
+        if(location == undefined) {
+            location = {x: -1, y: -1};
+        }
         var map_panel = document.getElementById('map-view');
 
         map_panel = map_panel.tBodies[0];
@@ -74,7 +77,6 @@ function updateLocation() {
                 } else {
                     img.style.border = "2px solid lightblue"
                 }
-                console.log(location);
                 newCell10.appendChild(img);
             });
             row = row + 1;
