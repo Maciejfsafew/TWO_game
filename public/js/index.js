@@ -38,7 +38,7 @@ function updateLocation() {
             );
         }
 
-
+        var images = 'public/images/';
         var row = 0, col = 0;
         var area = transpose(server_response.map);
         area.forEach(function (score) {
@@ -52,25 +52,25 @@ function updateLocation() {
                 var img = document.createElement('img');
                 switch (element.type) {
                     case 0:
-                        img.src = 'public/images/tree_image.jpg';
+                        img.src = images + 'tree_image.jpg';
                         break;
                     case 1:
-                        img.src = 'public/images/path_image.jpg';
+                        img.src = images + 'path_image.jpg';
                         break;
                     case 2:
-                        img.src = 'public/images/chest_image.jpg';
+                        img.src = images + 'chest_image.jpg';
                         break;
                     case 3:
-                        img.src = 'public/images/monster_image.jpg';
+                        img.src = images + 'monster_image.jpg';
                         break;
                     case 4:
-                        img.src = 'public/images/boss_image.jpg';
+                        img.src = images + 'boss_image.jpg';
                         break;
                     case 5:
-                        img.src = 'public/images/start_image.jpg';
+                        img.src = images + 'start_image.jpg';
                         break;
                     case 6:
-                        img.src = 'public/images/quest_image.jpg';
+                        img.src = images + 'quest_image.jpg';
                         break;
                 }
                 img.width = 30;
