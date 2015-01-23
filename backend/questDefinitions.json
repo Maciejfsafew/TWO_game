@@ -1,0 +1,35 @@
+[
+  {
+    "task": "Spotykasz czarodziejkę, która prosi Cię o przysługę. W okolicy kręci się król goblinów z którym nigdy nie żyła w zgodzie. Król bardzo lubi podejmować wyzwania, penetruje mapę w poszukiwaniu questów które mógłby wykonać. Pomóż czarodziejce i wykonaj conajmniej dwa questy, tak by król nie mógł ich wykonać.",
+    "notYet": "Czarodziejka czaka, aż ukończysz wszystkie questy",
+    "success": "Ukończyłeś wszystkie questy, w nagrodę czarodziejka podwyższa twój poziom o 1",
+    "required": [
+      ["completedQuests", 2]
+    ],
+    "reward": [
+      ["level", 1]
+    ]
+  },
+  {
+    "task": "Spotykasz krasnala, któremu bardzo zaszły za skórę okoliczne potowry. Zaatakuj 3 potowry, a krasnal na pewno Ci to w jakiś sposób wynagrodzi.",
+    "notYet": "Krasnal czeka, aż zaatakujesz więcej potowróœ.",
+    "success": "Zaatakoowałeś 2 potwory, w nagrodę krasnal podwyższa twóją siłę o 3",
+    "required": [
+      ["attackedMonsters", 2]
+    ],
+    "reward": [
+      ["strength", 3]
+    ]
+  },
+  {
+    "task": "Spotykasz uczonego, który bardzo lubi uczyć młodych, obiecujących wojowników. Jeśli rozwiążesz dwie zagadki ze skrzynek, to uczony nauczy Cię nowych umiejętności.",
+    "notYet": "Uczony czeka aż rozwiążesz więcej quizów.",
+    "success": "Rozwiązałeś 2 zagadki, w nagrodę uczony uczy Cię nowych umiejętności podwyższając twóją bystrość o 3",
+    "required": [
+      ["completedQueezes", 2]
+    ],
+    "reward": [
+      ["dexterity", 3]
+    ]
+  }
+]

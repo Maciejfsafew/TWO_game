@@ -13,6 +13,9 @@ var Person = function Person(name, playfield) {
     this.items = [];
     this.currentField = {type: FieldType.START};
     this.gold = 0;
+    this.attackedMonsters = 0;
+    this.completedQueezes = 0;
+    this.completedQuests = 0;
     this.levelDown = function () {
         expMan.levelDownCharacter(this);
     };

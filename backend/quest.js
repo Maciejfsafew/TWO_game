@@ -2,10 +2,11 @@ var FieldType = require("./fieldTypes")
 
 function Quest() {
     this.type = FieldType.QUEST;
+    this.activated = false;
+    this.questnr = 0;
+    this.finished = null;
 }
-Quest.prototype.toString = function() {
-    return "_";
-};
+
 
 module.exports = Quest
 
