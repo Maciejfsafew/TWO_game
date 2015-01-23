@@ -72,19 +72,35 @@ app.get('/highscores', function (req, res) {
 primus.on("connection", function (spark) {
     //{ move: 'N/S/W/E' }
     spark.on('move', function (moveCommand, responseCallback) {
+        function handleOldQuiz(person) {
+            var msg = '';
+            var oldField = person.getCurrentPlayfield();
+            if (spark.request.session.activeQuiz) {
+                oldField.looted = true;
+                msg = "You ran away from the quiz. Chest disappeared.<br/>"
+            }
+            return msg;
+        }
+
+        function handleNewQuiz(moved) {
+            var msg = '';
+            var newQuiz = generateQuiz(moved);
+            spark.request.session.activeQuiz = newQuiz;
+            if (newQuiz) {
+                msg = "<br/>There's a quiz chest! You can loot it with 'loot' command."
+            }
+            return msg;
+        }
+
         try {
             db_helper.getPerson(db_user, Person, spark.request.session.username, function (person) {
                 var moved = map.movePerson(person, moveCommand.move);
                 var msg = "";
+                msg += handleOldQuiz(person);
                 if (moved.status === true) {
                     person.currentLocation = moved.location;
-                    msg = "Moved " + person.name + " to: {x:" + person.currentLocation.x + ", y:" + person.currentLocation.y + "}"
-                    var quiz = generateQuiz(moved);
-                    if (quiz) {
-                        spark.request.session.activeQuiz = quiz;
-                        msg += quiz.toString()
-                    }
-
+                    msg += "Moved " + person.name + " to: {x:" + person.currentLocation.x + ", y:" + person.currentLocation.y + "}";
+                    msg += handleNewQuiz(moved);
                     var quest_message = quest_helper.getQuest(person);
                     if (quest_message) {
                         //console.log(quest_message);
@@ -122,7 +138,6 @@ primus.on("connection", function (spark) {
                     console.log(answerCommand.answer);
                     if (quiz.checkAnswers(answerCommand.answer)) {
                         msg = "Correct answer!";
-
                         var lootItems = field.items;
                         var lootGold = field.gold;
                         person.gold += lootGold;
@@ -138,7 +153,7 @@ primus.on("connection", function (spark) {
                         msg = "Wrong answer! Chest disappears.";
                     }
                     field.looted = true;
-                    person.activeQuiz = null;
+                    spark.request.session.activeQuiz = null;
                 } else {
                     msg = "There was no question!"
                 }
@@ -150,6 +165,25 @@ primus.on("connection", function (spark) {
                     }
                 });
             });
+        } catch (err) {
+            responseCallback({
+                'msg': "Server error."
+            });
+            console.log(err);
+        }
+    });
+    spark.on('loot', function (answerCommand, responseCallback) {
+        try {
+            function handleLooting() {
+                var msg = "Nothing to loot here!";
+                var quiz = spark.request.session.activeQuiz;
+                if (quiz) {
+                    msg = quiz.toString();
+                }
+                responseCallback({'msg': msg});
+            }
+
+            db_helper.getPerson(db_user, Person, spark.request.session.username, handleLooting);
         } catch (err) {
             responseCallback({
                 'msg': "Server error."

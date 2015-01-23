@@ -42,9 +42,9 @@ function Quiz(quizConfiguration) {
 
 }
 Quiz.prototype.toString = function () {
-    var str = "\n" + this.question;
+    var str = this.question;
     this.answers.forEach(function (element, index) {
-        str += ("\n" + index + ". " + element.answerText)
+        str += ("<br/>" + index + ". " + element.answerText)
     });
     return str;
 };

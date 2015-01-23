@@ -111,5 +111,13 @@ var Commands = [
         args_handler: function (args) {
             return {success: true, msg: ""} //Args handler validates only arguments
         }
+    },
+    {
+        name: "loot",
+        alias: "l",
+        msg: "",
+        args_handler: function () {
+            return {success: true, msg: "You open the chest. Solve the quiz!"}
+        }
     }
 ]
