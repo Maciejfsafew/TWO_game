@@ -69,6 +69,9 @@ function updateLocation() {
                     case 5:
                         img.src = 'public/images/start_image.jpg';
                         break;
+                    case 6:
+                        img.src = 'public/images/quest_image.jpg';
+                        break;
                 }
                 img.width = 30;
                 img.height = 30;

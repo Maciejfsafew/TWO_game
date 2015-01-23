@@ -6,6 +6,7 @@ var Chest = require("./chest")
 var FinalBoss = require("./finalBoss")
 var Forbidden = require("./forbidden")
 var Path = require("./path")
+var Quest = require("./quest")
 
 function parsePlayfield(text) {
     var playfield = [[]];
@@ -39,6 +40,9 @@ function parsePlayfield(text) {
                     break;
                 case "B":
                     newField = new FinalBoss();
+                    break;
+                case "Q":
+                    newField = new Quest();
                     break;
                 default:
                     console.error("Error parsing map field: " + fields[k]);
@@ -124,5 +128,7 @@ exports.getFieldDescription = function (field){
         return "The journey is over. This field is occupied by Smaug.";
     } else if (field.type == FieldType.START) {
         return "This is the start field. Enjoy.";
+    } else if (field.type == FieldType.START) {
+        return "There is a mysterious cottage on the filed. It's owner may ask you for favour.";
     }
 }
