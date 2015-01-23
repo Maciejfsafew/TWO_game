@@ -13,6 +13,9 @@ exports.updatePerson = function (db_user, person, responseCallback) {
             user.experience = person.experience;
             user.items = person.items;
             user.currentField = person.currentField;
+            user.currentLocation = person.currentLocation;
+            user.playfield = person.playfield;
+            user.gold = person.gold;
             user.save(function (err, us) {
                 if (err) {
                     responseCallback({'update_person_answer': 'error', 'msg': ''});
@@ -27,6 +30,80 @@ exports.updatePerson = function (db_user, person, responseCallback) {
     })
 };
 
+exports.sleepPersonStart = function (db_user, person_name, responseCallback) {
+    db_user.findOne({'username': person_name}, function (err, user) {
+        if (err) {
+            responseCallback({'sleep_person_start_answer': 'error', 'msg': ''});
+            return console.error(err);
+        }
+        if (user != null) {
+            user.sleep_start = new Date();
+            user.hp = 5;
+            user.save(function (err, us) {
+                if (err) {
+                    responseCallback({'sleep_person_start_answer': 'error', 'msg': ''});
+                    return console.error(err);
+                }
+                responseCallback({'sleep_person_start_answer': 'success', 'msg': ''});
+            });
+        }
+        else {
+            responseCallback({'sleep_person_start_answer': 'error', 'msg': ''});
+        }
+    })
+};
+
+exports.addHealth = function (Person, db_helper, db_user, person_name, responseCallback) {
+    db_user.findOne({'username': person_name}, function (err, user) {
+        if (err) {
+            responseCallback({'add_health_answer': 'error', 'msg': ''});
+            return console.error(err);
+        }
+        if (user != null) {
+            var currDate = new Date();
+            var oldDate = user.sleep_start;
+            var timeDiff = Math.abs(currDate.getTime() - oldDate.getTime());
+            var diffSeconds = Math.floor(timeDiff / 1000);
+            if (user.hp === user.maxhp) {
+                responseCallback({'add_health_answer': 'max', 'msg': ''});
+            }
+            else if ((diffSeconds + user.hp) <= user.maxhp) {
+                user.hp += diffSeconds;
+                user.sleep_start = currDate;
+                user.save(function (err, us) {
+                    if (err) {
+                        responseCallback({'add_health_answer': 'error', 'msg': ''});
+                        return console.error(err);
+                    }
+                    responseCallback({
+                        'add_health_answer': 'success',
+                        'msg': '',
+                        'person': db_helper.us2per(Person, user)
+                    });
+                });
+            }
+            else {
+                user.hp = user.maxhp;
+                user.sleep_start = currDate;
+                user.save(function (err, us) {
+                    if (err) {
+                        responseCallback({'add_health_answer': 'error', 'msg': ''});
+                        return console.error(err);
+                    }
+                    responseCallback({
+                        'add_health_answer': 'success',
+                        'msg': '',
+                        'person': db_helper.us2per(Person, user)
+                    });
+                });
+            }
+        }
+        else {
+            responseCallback({'add_health_answer': 'error', 'msg': ''});
+        }
+    })
+};
+
 exports.us2per = function (Person, user) {
     var person = new Person(user.username);
     person.strength = user.strength;
@@ -37,6 +114,9 @@ exports.us2per = function (Person, user) {
     person.experience = user.experience;
     person.items = user.items;
     person.currentField = user.currentField;
+    person.currentLocation = user.currentLocation;
+    person.playfield = user.playfield;
+    person.gold = user.gold;
     return person;
 };
 
@@ -51,6 +131,17 @@ exports.per2us = function (db_user, data, person) {
         level: person.level,
         experience: person.experience,
         items: person.items,
-        currentField: person.currentField
+        currentField: person.currentField,
+        currentLocation: person.currentLocation,
+        playfield: person.playfield,
+        gold: person.gold
+    });
+};
+
+exports.getPerson = function (db_user, Person, username, callback) {
+    db_user.findOne({'username': username}, function (err, user) {
+        if (user != null) {
+            callback(exports.us2per(Person, user))
+        }
     });
 };

@@ -30,7 +30,8 @@
         </td>
     </tr>
     <tr>
-        <td id="highscores"></td><button onclick="highscores()">Highscores</button>
+        <td id="highscores"></td>
+        <button onclick="highscores()">Highscores</button>
     </tr>
 </table>
 <table width="100%">
@@ -38,34 +39,20 @@
         <td width="50%">
             <table>
                 <tr>
-                    <td>Level:</td>
-                    <td id="level"></td>
-                </tr>
-                <tr>
-                    <td>Health:</td>
+                    <td>Strength:</td>
+                    <td id="currStrength"></td>
+                    <td class="left-margin-class">Dexterity:</td>
+                    <td id="currDexterity"></td>
+                    <td class="left-margin-class">Health:</td>
                     <td>
-                        <progress id="health" class="progress"></progress>
+                        <progress id="health" class="health_progress"></progress>
                     </td>
                     <td id="currHp"></td>
-                </tr>
-                <tr>
-                    <td>Strength:</td>
+                    <td class="left-margin-class">Level:</td>
+                    <td id="level"></td>
+                    <td class="left-margin-class">Experience:</td>
                     <td>
-                        <progress id="strength" max="100" class="progress"></progress>
-                    </td>
-                    <td id="currStrength"></td>
-                </tr>
-                <tr>
-                    <td>Dexterity:</td>
-                    <td>
-                        <progress id="dexterity" max="100" class="progress"></progress>
-                    </td>
-                    <td id="currDexterity"></td>
-                </tr>
-                <tr>
-                    <td>Experience:</td>
-                    <td>
-                        <progress id="experience" max="100" class="progress"></progress>
+                        <progress id="experience" max="100" class="exp_progress"></progress>
                     </td>
                     <td id="currExperience"></td>
                 </tr>

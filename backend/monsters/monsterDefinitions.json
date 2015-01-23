@@ -7,7 +7,8 @@
     "dexterity": 2,
     "hp": 100,
     "maxhp": 100,
-    "items": []
+    "items": [],
+    "gold": 25
   },
   {
     "name": "Rogue",
@@ -17,7 +18,8 @@
     "dexterity": 10,
     "hp": 30,
     "maxhp": 30,
-    "items": []
+    "items": [],
+    "gold": 15
   },
   {
     "name": "Troll",
@@ -27,6 +29,7 @@
     "dexterity": 5,
     "hp": 130,
     "maxhp": 130,
-    "items": []
+    "items": [],
+    "gold": 40
   }
 ]

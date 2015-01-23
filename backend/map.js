@@ -7,13 +7,12 @@ var FinalBoss = require("./finalBoss")
 var Forbidden = require("./forbidden")
 var Path = require("./path")
 
-
-
-
 function parsePlayfield(text) {
     var playfield = [[]];
     var os = require('os');
     var lines = text.split(os.EOL);
+    if (lines.length === 1)
+        lines = text.split('\n');
     for(var i = 0; i < lines.length; i++) {
         if(lines[i].trim().length == 0) {
             continue; //ignore empty lines
@@ -112,4 +111,18 @@ exports.movePerson = function(person, direction) {
     }
 }
 
-
+exports.getFieldDescription = function (field){
+    if (field.type == FieldType.FORBIDDEN) {
+        return "This field is forbidden.";
+    } else if (field.type == FieldType.PATH) {
+        return "Normal path field.";
+    } else if (field.type == FieldType.CHEST) {
+        return "On this field is chest.";
+    } else if (field.type ==  FieldType.MONSTER) {
+        return "On this field is really scary monster.";
+    } else if (field.type ==  FieldType.FINAL_BOSS) {
+        return "The journey is over. This field is occupied by Smaug.";
+    } else if (field.type == FieldType.START) {
+        return "This is the start field. Enjoy.";
+    }
+}

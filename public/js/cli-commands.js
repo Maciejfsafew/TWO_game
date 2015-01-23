@@ -15,8 +15,33 @@ var Commands = [
             return msg;
         },
         response_handler: function (server_response) {
-            window.person.currentLocation = server_response.location;
+            // TODO: replace, client haven't window.person object
+            //window.person.currentLocation = server_response.location;
             updateLocation();
+        }
+    },
+    {
+        name: "answer",
+        msg: "",
+        alias: "ans",
+        args_handler: function (args) {
+            var msg = {success: false, msg: "No answer given!"};
+            if (args.length > 0) {
+                var parsedArgs = [];
+                args.forEach(function (element, index) {
+                    var parsed = parseInt(element);
+                    if (!parsed || !isNaN(parsed)) {
+                        parsedArgs.push(parsed);
+                    } else {
+                        return msg
+                    }
+                });
+                msg = {success: true, msg: {answer: parsedArgs}}
+            }
+            return msg;
+        },
+        response_handler: function (server_response) {
+            console.log(server_response);
         }
     },
     {
@@ -28,20 +53,29 @@ var Commands = [
         },
         response_handler: function (server_response) {
             window.is_sleeping = true;
-            window.myInterval = setInterval(function () {
-                if (window.person.hp + 5 <= window.person.maxhp) {
-                    window.person.hp += 5;
-                    primus.send('update_person', {'person': window.person}, function (data) {
-                        var update_person_answer = data.update_person_answer;
-                        if (update_person_answer === 'error') {
-                            window.alert('Sleep error');
-                        }
-                        else if (update_person_answer === 'success') {
-                            updateHeight();
-                        }
-                    });
+            primus.send('sleep_person_start', {'person_name': $.cookie("name")}, function (data) {
+                var sleep_person_start_answer = data.sleep_person_start_answer;
+                console.log(sleep_person_start_answer);
+                if (sleep_person_start_answer === 'error') {
+                    window.alert('Sleep error');
                 }
-            }, 5000);
+                else if (sleep_person_start_answer === 'success') {
+                    window.myInterval = setInterval(function () {
+                        primus.send('add_health', {'person_name': $.cookie("name")}, function (data) {
+                            var add_health_answer = data.add_health_answer;
+                            if (add_health_answer === 'error') {
+                                window.alert('Sleep error');
+                            }
+                            else if (add_health_answer === 'success') {
+                                updateHeight(data.person);
+                            }
+                            else if (add_health_answer === 'max') {
+                                //ignore
+                            }
+                        });
+                    }, 5000);
+                }
+            });
         }
     },
     {
