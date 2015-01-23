@@ -26,6 +26,7 @@ var map = require("./backend/map");
 var playfield = map.readFieldDefinition("public/assets/test.field");
 var db_helper = require('./backend/db_helper');
 var generateQuiz = require('./backend/quiz/quiz')();
+var quest_helper = require('./backend/quest_helper');
 var highscores = require('./backend/highscores');
 
 // session store
@@ -83,6 +84,12 @@ primus.on("connection", function (spark) {
                         spark.request.session.activeQuiz = quiz;
                         msg += quiz.toString()
                     }
+
+                    var quest_message = quest_helper.getQuest(person);
+                    if (quest_message) {
+                        //console.log(quest_message);
+                        msg +=  " " + quest_message;
+                    }
                 } else {
                     msg = "Can't move there!"
                 }
@@ -91,7 +98,8 @@ primus.on("connection", function (spark) {
                     if (update_result.update_person_answer == "success") {
                         responseCallback({
                             'msg': msg,
-                            'location': person.currentLocation
+                            'location': person.currentLocation,
+                            'person': person
                         });
                     }
                 });
@@ -119,6 +127,7 @@ primus.on("connection", function (spark) {
                         var lootGold = field.gold;
                         person.gold += lootGold;
                         person.items.push.apply(person.items, lootItems);
+                        person.completedQueezes += 1;
                         msg += "\nYou receive:\n" + lootItems.join("\n");
                         if (lootItems.length > 0) {
                             msg += " and "

@@ -21,7 +21,12 @@ var userSchema = mongoose.Schema({
     gold: Number,
     sleep_start: Date,
     currentLocation: mongoose.Schema.Types.Mixed,
-    playfield: mongoose.Schema.Types.Mixed
+    playfield: mongoose.Schema.Types.Mixed,
+
+    // Fields used for quests
+    attackedMonsters: Number,
+    completedQueezes: Number,
+    completedQuests: Number
 });
 
 var User = mongoose.model('User', userSchema);

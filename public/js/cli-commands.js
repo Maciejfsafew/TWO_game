@@ -17,6 +17,7 @@ var Commands = [
         response_handler: function (server_response) {
             // TODO: replace, client haven't window.person object
             //window.person.currentLocation = server_response.location;
+            setUpUserInfo(server_response.person);
             updateLocation();
         }
     },

@@ -16,6 +16,9 @@ exports.updatePerson = function (db_user, person, responseCallback) {
             user.currentLocation = person.currentLocation;
             user.playfield = person.playfield;
             user.gold = person.gold;
+            user.attackedMonsters = person.attackedMonsters;
+            user.completedQueezes = person.completedQueezes;
+            user.completedQuests = person.completedQuests;
             user.save(function (err, us) {
                 if (err) {
                     responseCallback({'update_person_answer': 'error', 'msg': ''});
@@ -117,6 +120,9 @@ exports.us2per = function (Person, user) {
     person.currentLocation = user.currentLocation;
     person.playfield = user.playfield;
     person.gold = user.gold;
+    person.attackedMonsters = user.attackedMonsters;
+    person.completedQueezes = user.completedQueezes;
+    person.completedQuests = user.completedQuests;
     return person;
 };
 
@@ -134,7 +140,10 @@ exports.per2us = function (db_user, data, person) {
         currentField: person.currentField,
         currentLocation: person.currentLocation,
         playfield: person.playfield,
-        gold: person.gold
+        gold: person.gold,
+        attackedMonsters: person.attackedMonsters,
+        completedQueezes: person.completedQueezes,
+        completedQuests: person.completedQuests
     });
 };
 
