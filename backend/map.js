@@ -46,13 +46,22 @@ function parsePlayfield(text) {
             playfield[i][k] = newField;
         }
     }
-    return playfield;
+    function transpose(a) {
+        return Object.keys(a[0]).map(
+            function (c) {
+                return a.map(function (r) {
+                    return r[c];
+                });
+            }
+        );
+    }
+    return transpose(playfield);
 }
 
 exports.getStartField = function(playfield) {
     for(var i = 0; i < playfield.length; i++) {
         var line = playfield[i];
-        for(var k = 0; k < playfield.length; k++) {
+        for(var k = 0; k < playfield[i].length; k++) {
             if(playfield[i][k].type == FieldType.START) {
                 return [i, k];
             }
@@ -80,10 +89,10 @@ exports.movePerson = function(person, direction) {
     }
 
     var status = true;
-    if (newLocation.x < 0 || newLocation.x >= person.playfield[0].length) {
+    if (newLocation.x < 0 || newLocation.x >= person.playfield.length) {
         status = false;
     }
-    if (newLocation.y < 0 || newLocation.y >= person.playfield.length) {
+    if (newLocation.y < 0 || newLocation.y >= person.playfield[0].length) {
         status = false;
     }
 

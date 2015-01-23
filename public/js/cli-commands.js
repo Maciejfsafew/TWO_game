@@ -17,6 +17,7 @@ var Commands = [
         response_handler: function (server_response) {
             // TODO: replace, client haven't window.person object
             //window.person.currentLocation = server_response.location;
+            updateLocation();
         }
     },
     {
@@ -38,17 +39,6 @@ var Commands = [
                 msg = {success: true, msg: {answer: parsedArgs}}
             }
             return msg;
-        },
-        response_handler: function (server_response) {
-            console.log(server_response);
-        }
-    },
-    {
-        name: "map",
-        msg: "",
-        alias: "map",
-        args_handler: function (args) {
-            return {success: true, msg: ""} //Args handler validates only arguments
         },
         response_handler: function (server_response) {
             console.log(server_response);
