@@ -116,7 +116,6 @@ var Commands = [
         }
     },
     {
-<<<<<<< HEAD
         name: "buy",
         msg: "",
         alias: "buy",
@@ -145,7 +144,9 @@ var Commands = [
                 }
             }
             return msg;
-=======
+        }
+    },
+    {
         name: "loot",
         alias: "l",
         msg: "",
@@ -154,7 +155,6 @@ var Commands = [
         },
         response_handler: function () {
             updateLocation();
->>>>>>> origin/master
         }
     }
 ]

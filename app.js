@@ -22,11 +22,8 @@ var session = expressSession({
 var db_user = require('./backend/db_user');
 var Person = require("./backend/person");
 var Items = require("./backend/items");
-<<<<<<< HEAD
 var Store = require("./backend/store_helper");
-=======
 var battle = require("./backend/battle");
->>>>>>> origin/master
 var map = require("./backend/map");
 var playfield = map.readFieldDefinition("public/assets/test.field");
 var FieldType = require("./backend/fieldTypes");
