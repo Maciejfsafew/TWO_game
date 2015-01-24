@@ -17,7 +17,6 @@ var userSchema = mongoose.Schema({
     level: Number,
     experience: Number,
     items: Array,
-    currentField: Number,
     gold: Number,
     sleep_start: Date,
     currentLocation: mongoose.Schema.Types.Mixed,

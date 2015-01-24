@@ -77,6 +77,7 @@ primus.on("connection", function (spark) {
             db_helper.getPerson(db_user, Person, spark.request.session.username, function (person) {
                 var moved = map.movePerson(person, moveCommand.move);
                 var msg = "";
+                var is_dead = false;
                 if (moved.status === true) {
                     person.currentLocation = moved.location;
                     msg = "Moved " + person.name + " to: {x:" + person.currentLocation.x + ", y:" + person.currentLocation.y + "} " + map.getFieldDescription(moved.field)
@@ -93,9 +94,9 @@ primus.on("connection", function (spark) {
                             console.log(whoWin);
                             msg += ("<br><br>Fight:" + battle_result.str + "<br>" + whoWin + "<br>" + (!battle_result.result ? "You are dead. :(" : ""));
                             if (!battle_result.result) {
+                                is_dead = true;
                                 person.die();
                             }
-                            person.currentField =
                         }
                     }
                     var quiz = generateQuiz(moved);
@@ -118,7 +119,8 @@ primus.on("connection", function (spark) {
                         responseCallback({
                             'msg': msg,
                             'location': person.currentLocation,
-                            'person': person
+                            'person': person,
+                            'is_dead': is_dead
                         });
                     }
                 });
