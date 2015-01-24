@@ -19,6 +19,8 @@ var Commands = [
             //window.person.currentLocation = server_response.location;
             setUpUserInfo(server_response.person);
             updateLocation();
+            if (server_response.is_dead)
+                window.alert("Unfortunately, you died. Try again from start!");
         }
     },
     {
@@ -43,6 +45,7 @@ var Commands = [
         },
         response_handler: function (server_response) {
             console.log(server_response);
+            updateLocation();
         }
     },
     {
@@ -113,6 +116,7 @@ var Commands = [
         }
     },
     {
+<<<<<<< HEAD
         name: "buy",
         msg: "",
         alias: "buy",
@@ -141,6 +145,16 @@ var Commands = [
                 }
             }
             return msg;
+=======
+        name: "loot",
+        alias: "l",
+        msg: "",
+        args_handler: function () {
+            return {success: true, msg: ""}
+        },
+        response_handler: function () {
+            updateLocation();
+>>>>>>> origin/master
         }
     }
 ]

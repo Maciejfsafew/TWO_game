@@ -14,21 +14,17 @@ function Monster(monsterConfiguration) {
 var monsterDefinitions = require("./monsterDefinitions.json");
 exports.generateMonster = function (hero, probability) {
     //hero - Must contain currentField property. Probability is of monster generation.
-    if (!containsMonster(hero.currentField)) {
-        if (Math.random() <= probability) {
-            var monstersFilteredByLevel = monsterDefinitions.filter(function (monster) {
-                return monster.level <= hero.level;
-            });
-            if (monstersFilteredByLevel.length === 0) {
-                monstersFilteredByLevel = monsterDefinitions
-            }
-            return new Monster(monstersFilteredByLevel[Math.floor(Math.random() * monstersFilteredByLevel.length)]);
+    if (Math.random() <= probability) {
+        var monstersFilteredByLevel = monsterDefinitions.filter(function (monster) {
+            return monster.level <= hero.level;
+        });
+        if (monstersFilteredByLevel.length === 0) {
+            monstersFilteredByLevel = monsterDefinitions
         }
+        return new Monster(monstersFilteredByLevel[Math.floor(Math.random() * monstersFilteredByLevel.length)]);
     }
-    return null;
 };
 
-
-function containsMonster(field) {
-    return field && (field.type === FieldType.MONSTER) && field.monster; // field should probably be able do contain a monster object
-}
+//function containsMonster(field) {
+//    return field && (field.type === FieldType.MONSTER) && field.monster; // field should probably be able do contain a monster object
+//}
