@@ -28,6 +28,7 @@ var db_helper = require('./backend/db_helper');
 var Quiz = require('./backend/quiz/quiz')();
 var quest_helper = require('./backend/quest_helper');
 var highscores = require('./backend/highscores');
+var _ = require("underscore");
 
 // session store
 app.use(session);
@@ -130,19 +131,21 @@ primus.on("connection", function (spark) {
         try {
             db_helper.getPerson(db_user, Person, spark.request.session.username, function (person) {
                 var quiz = spark.request.session.activeQuiz;
-                var location = person.currentLocation;
                 var msg = "";
                 if (quiz) {
-                    var field = person.playfield[location.x][location.y];
+                    var field = person.getCurrentPlayfield();
                     console.log(answerCommand.answer);
                     if (quiz.checkAnswers(answerCommand.answer)) {
-                        msg = "Correct answer!";
+                        msg = "Correct answer! ";
                         var lootItems = field.items;
                         var lootGold = field.gold;
                         person.gold += lootGold;
                         person.items.push.apply(person.items, lootItems);
                         person.completedQueezes += 1;
-                        msg += "\nYou receive:\n" + lootItems.join("\n");
+                        lootItems = _.map(lootItems, function (item) {
+                            return item.name;
+                        });
+                        msg += "You receive: " + lootItems.join(", ");
                         if (lootItems.length > 0) {
                             msg += " and "
                         }
