@@ -96,8 +96,9 @@ primus.on("connection", function (spark) {
                     person.currentLocation = moved.location;
                     msg += "Moved " + person.name + " to: {x:" + person.currentLocation.x + ", y:" + person.currentLocation.y + "} " + map.getFieldDescription(moved.field);
                     if (moved.field != null) {
+                        var type = moved.field.type;
                         var monster = moved.field.monster;
-                        if (monster != null) {
+                        if (type != null && type === FieldType.MONSTER && monster != null) {
                             //update stats before action
                             Items.updateStats(person);
                             Items.updateStats(monster);
