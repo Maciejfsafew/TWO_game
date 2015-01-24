@@ -100,9 +100,9 @@ primus.on("connection", function (spark) {
                     if (moved.field != null) {
                         var type = moved.field.type;
                         var monster = moved.field.monster;
+                        Items.updateStats(person);
                         if (type != null && type === FieldType.MONSTER && monster != null) {
-                            //update stats before action
-                            Items.updateStats(person);
+                            //update monster stats before action
                             Items.updateStats(monster);
                             var battle_result = battle(person, monster, true, null, "");
                             var whoWin = (battle_result.result ? person.name : monster.name) + ' win!!!';
@@ -255,8 +255,6 @@ primus.on("connection", function (spark) {
                         msg = "You have: " + person.gold;
                         msg += "<br>Items to buy:<br>" + Store.showStore();
                     } else if (buyCommand.buy > 0 && buyCommand.buy < 6) {
-                        //add item from store to person
-                        //person.items.push(store[idx])
                         msg = Store.buy(person, buyCommand.buy);
                         db_helper.updatePerson(db_user, person, function (update_result) {
                             if (update_result.update_person_answer == "success") {
