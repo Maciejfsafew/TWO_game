@@ -30,6 +30,7 @@ var Quiz = require('./backend/quiz/quiz')();
 var quest_helper = require('./backend/quest_helper');
 var highscores = require('./backend/highscores');
 var _ = require("underscore");
+var FieldType = require("./backend/fieldTypes");
 
 // session store
 app.use(session);
@@ -97,8 +98,6 @@ primus.on("connection", function (spark) {
                     if (moved.field != null) {
                         var monster = moved.field.monster;
                         if (monster != null) {
-                            person.items.push(Items.generateItem());
-                            monster.items.push(Items.generateItem());
                             //update stats before action
                             Items.updateStats(person);
                             Items.updateStats(monster);
@@ -109,6 +108,9 @@ primus.on("connection", function (spark) {
                             if (!battle_result.result) {
                                 is_dead = true;
                                 person.die();
+                            }
+                            else {
+                                moved.field.type = FieldType.PATH;
                             }
                         }
                     }
