@@ -21,7 +21,7 @@
     <link rel="stylesheet" type="text/css" href="/public/stylesheets/style.css">
 </head>
 
-<body id="body_elements" style="display: none;" onload="updateLocation()">
+<body id="body_elements" style="display: none; overflow:hidden; margin:0;" onload="updateLocation()">
 <table>
     <tr>
         <td id="name">test</td>
@@ -35,54 +35,48 @@
     </tr>
 </table>
 <table width="100%">
-    <tr>
-        <td width="50%">
-            <table>
-                <tr>
-                    <td class="left-margin-class">Strength:</td>
-                    <td id="currStrength"></td>
-                </tr>
-                <tr>
-                    <td class="left-margin-class">Dexterity:</td>
-                    <td id="currDexterity"></td>
-                </tr>
-                <tr>
-                    <td class="left-margin-class">Health:</td>
-                    <td>
-                        <progress id="health" class="health_progress"></progress>
-                    </td>
-                    <td id="currHp"></td>
-                </tr>
-                <tr>
-
-                    <td class="left-margin-class">Level:</td>
-                    <td id="level"></td>
-                </tr>
-                <tr>
-                    <td class="left-margin-class">Experience:</td>
-                    <td>
-                        <progress id="experience" max="100" class="exp_progress"></progress>
-                    </td>
-                    <td id="currExperience"></td>
-                </tr>
-            </table>
-
-        </td>
-        <td width="50%">
-            <table id="map-view">
-                <tr>
-                </tr>
-            </table>
-        </td>
-    </tr>
-</table>
-
-<div class="wrapper">
-    <div id="shell-panel" tabindex="0">
-        <div>Welcome to TWO MUD!<br>
+    <td width="70%">
+        <table align="center">
+            <tr>
+                <td class="left-margin-class">Strength:</td>
+                <td align="left" id="currStrength"></td>
+                <td class="left-margin-class">Dexterity:</td>
+                <td id="currDexterity"></td>
+                <td class="left-margin-class">Health:</td>
+                <td>
+                    <progress id="health" class="health_progress"></progress>
+                </td>
+                <td id="currHp"></td>
+                <td class="left-margin-class">Level:</td>
+                <td id="level"></td>
+                <td class="left-margin-class">Experience:</td>
+                <td>
+                    <progress id="experience" max="100" class="exp_progress"></progress>
+                </td>
+                <td id="currExperience"></td>
+            </tr>
+        </table>
+        <div class="wrapper">
+            <div id="shell-panel" tabindex="0">
+                <div>Welcome to TWO MUD!<br>
+                </div>
+                <div id="shell-view"></div>
+            </div>
         </div>
-        <div id="shell-view"></div>
-    </div>
-</div>
+    </td>
+    <td width="30%" align="center">
+        <table id="map-view">
+            <tr>
+            </tr>
+        </table>
+    </td>
+</table>
+<script language="javascript">
+    function autoResizeDiv() {
+        document.getElementById('shell-panel').style.height = (window.innerHeight - 150) + 'px';
+    }
+    window.onresize = autoResizeDiv;
+    autoResizeDiv();
+</script>
 </body>
 </html>

@@ -19,7 +19,7 @@ function updateLocation() {
         //console.log(server_response.map);
         //console.log(server_response.location);
         var location = server_response.location;
-        if(location == undefined) {
+        if (location == undefined) {
             location = {x: -1, y: -1};
         }
         var map_panel = document.getElementById('map-view');
@@ -73,8 +73,8 @@ function updateLocation() {
                         img.src = images + 'quest_image.jpg';
                         break;
                 }
-                img.width = 30;
-                img.height = 30;
+                img.width = 25;
+                img.height = 25;
                 if (col == score.length - location.x && row == location.y) {
                     img.style.border = "2px solid blue";
                 } else {
