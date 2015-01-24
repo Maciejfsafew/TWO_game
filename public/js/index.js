@@ -76,7 +76,7 @@ function updateLocation() {
                 img.width = 25;
                 img.height = 25;
                 if (col == score.length - location.x && row == location.y) {
-                    img.style.border = "2px solid blue";
+                    img.style.border = "2px solid yellow";
                 } else {
                     img.style.border = "2px solid lightblue"
                 }
