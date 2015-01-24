@@ -347,5 +347,5 @@ primus.on("connection", function (spark) {
 
 });
 
-server.listen(8081);
+server.listen(8080);
 console.log('8080 is where the magic happens');
