@@ -10,7 +10,7 @@ $(document).ready(function() {
     var table = document.getElementById('high-scores-table');
     table = table.tBodies[0];
     primus.send('get_highscores', '', function(response) {
-        var highscores = response['highscores'];
+        var highscores = response['highscores'].sort().reverse();
         highscores.forEach(function (score) {
             var newRow = table.insertRow(-1);
 
@@ -25,8 +25,8 @@ $(document).ready(function() {
             newCell01.appendChild(newCellText);
 
         });
-        $('td').typewrite({ 'delay': 100, callback: function() {
-            $("table, td, th").animate({"border-color": "#00fe00"}, 400);
+        $('td').typewrite({ 'delay': 20, callback: function() {
+            $("table, td, th").animate({"border-color": "#00fe00"}, 800);
         }});
 
     });

@@ -28,7 +28,7 @@ exports.get_all_players = function(callback) {
 
 function stat_value(property) {
     if (property instanceof Array) {
-        return numerical(property.length)
+        return stat_value(property.length)
     } else {
         return property;
     }
@@ -40,10 +40,11 @@ exports.get_highscores = function(callback) {
         var weights = config["playerscore"];
         var high_scores = [];
         players.forEach(function (player) {
+            console.log(player);
             var player_score = 0;
             for (var prop in weights) {
                 if(prop in player) {
-                    player_score += weights[prop] * player[stat_value(prop)];
+                    player_score += weights[prop] * stat_value(player[prop]);
                 } else {
                     console.warn("Player property: " + prop + " requested in game_config not found!");
                 }
