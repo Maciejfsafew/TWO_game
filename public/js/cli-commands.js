@@ -19,6 +19,8 @@ var Commands = [
             //window.person.currentLocation = server_response.location;
             setUpUserInfo(server_response.person);
             updateLocation();
+            if (server_response.person.hp === 0)
+                window.alert("Unfortunately, you died. Try again from start!");
         }
     },
     {

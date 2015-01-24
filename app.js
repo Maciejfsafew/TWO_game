@@ -8,7 +8,7 @@ var app = express();
 var Primus = require("primus");
 var Emitter = require('primus-emitter');
 var server = http.createServer(app);
-var fs = require('fs')
+var fs = require('fs');
 
 var memoryStore = new expressSession.MemoryStore();
 var session = expressSession({
@@ -22,6 +22,7 @@ var session = expressSession({
 var db_user = require('./backend/db_user');
 var Person = require("./backend/person");
 var Items = require("./backend/items");
+var battle = require("./backend/battle");
 var map = require("./backend/map");
 var playfield = map.readFieldDefinition("public/assets/test.field");
 var db_helper = require('./backend/db_helper');
@@ -79,6 +80,24 @@ primus.on("connection", function (spark) {
                 if (moved.status === true) {
                     person.currentLocation = moved.location;
                     msg = "Moved " + person.name + " to: {x:" + person.currentLocation.x + ", y:" + person.currentLocation.y + "} " + map.getFieldDescription(moved.field)
+                    if (moved.field != null) {
+                        var monster = moved.field.monster;
+                        if (monster != null) {
+                            person.items.push(Items.generateItem());
+                            monster.items.push(Items.generateItem());
+                            //update stats before action
+                            Items.updateStats(person);
+                            Items.updateStats(monster);
+                            var battle_result = battle(person, monster, true, null, "");
+                            var whoWin = (battle_result.result ? person.name : monster.name) + ' win!!!';
+                            console.log(whoWin);
+                            msg += ("<br><br>Fight:" + battle_result.str + "<br>" + whoWin + "<br>" + (!battle_result.result ? "You are dead. :(" : ""));
+                            if (!battle_result.result) {
+                                person.die();
+                            }
+                            person.currentField =
+                        }
+                    }
                     var quiz = generateQuiz(moved);
                     if (quiz) {
                         spark.request.session.activeQuiz = quiz;
@@ -88,7 +107,7 @@ primus.on("connection", function (spark) {
                     var quest_message = quest_helper.getQuest(person);
                     if (quest_message) {
                         //console.log(quest_message);
-                        msg +=  " " + quest_message;
+                        msg += " " + quest_message;
                     }
                 } else {
                     msg = "Can't move there!"
@@ -294,5 +313,5 @@ primus.on("connection", function (spark) {
 
 });
 
-server.listen(8080);
+server.listen(8081);
 console.log('8080 is where the magic happens');
