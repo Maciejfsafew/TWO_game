@@ -22,8 +22,10 @@ var session = expressSession({
 var db_user = require('./backend/db_user');
 var Person = require("./backend/person");
 var Items = require("./backend/items");
+var Store = require("./backend/store_helper");
 var map = require("./backend/map");
 var playfield = map.readFieldDefinition("public/assets/test.field");
+var FieldType = require("./backend/fieldTypes");
 var db_helper = require('./backend/db_helper');
 var generateQuiz = require('./backend/quiz/quiz')();
 var quest_helper = require('./backend/quest_helper');
@@ -175,15 +177,86 @@ primus.on("connection", function (spark) {
     spark.on('bag', function (bagCommand, responseCallback) {
         try {
             var msg = "";
-            var person = spark.request.session.person;
-            if (person.items < 1 || typeof person.items == 'undefined') {
-                msg = "Your bag is empty.";
-            } else {
-                msg = "Your bag contains:\n" + Items.showBag(person);
-            }
-            responseCallback({'msg': msg});
+            db_helper.getPerson(db_user, Person, spark.request.session.username, function (person) {
+                if (person.items < 1 || typeof person.items == 'undefined') {
+                    msg = "Your bag is empty.";
+                } else {
+                    msg = "Your bag contains:<br>" + Items.showBag(person);
+                }
+                responseCallback({'msg': msg});
+            });
+
         } catch (err) {
-            //TODO: add response to the client
+            console.log(err);
+        }
+    });
+
+    spark.on('buy', function (buyCommand, responseCallback) {
+        try {
+            db_helper.getPerson(db_user, Person, spark.request.session.username, function (person) {
+                var msg = "";
+                var location = person.currentLocation;
+                var field = person.playfield[location.x][location.y];
+                if(field && field.type === FieldType.STORE) {
+                    if (buyCommand.buy == 0) {
+                        msg = "You have: " + person.gold;
+                        msg += "<br>Items to buy:<br>" + Store.showStore();
+                    } else if (buyCommand.buy > 0 && buyCommand.buy < 6) {
+                        //add item from store to person
+                        //person.items.push(store[idx])
+                        msg = Store.buy(person, buyCommand.buy);
+                        db_helper.updatePerson(db_user, person, function (update_result) {
+                            if (update_result.update_person_answer == "success") {
+                                responseCallback({
+                                    'msg': msg
+                                });
+                            }
+                        });
+                    }
+                } else{
+                    msg = "You must be in STORE to use this command.";
+                }
+                responseCallback({'msg': msg});
+            });
+        } catch (err) {
+            responseCallback({
+                'msg': "Server error."
+            });
+            console.log(err);
+        }
+    });
+
+    spark.on('sell', function (sellCommand, responseCallback) {
+        try {
+            db_helper.getPerson(db_user, Person, spark.request.session.username, function (person) {
+                var msg = "";
+                var idx = sellCommand.sell - 1;
+                var location = person.currentLocation;
+                var field = person.playfield[location.x][location.y];
+                if(field && field.type === FieldType.STORE) {
+                    if(idx < person.items.length) {
+                        //delete item from bag and add gold to person
+                        person.gold += person.items[idx].price / 2;
+                        person.items.splice(idx, 1);
+                        msg = "You sell the item!";
+                        db_helper.updatePerson(db_user, person, function (update_result) {
+                            if (update_result.update_person_answer == "success") {
+                                responseCallback({
+                                    'msg': msg
+                                });}
+                        });
+                    } else {
+                        msg = "Bad item id!";
+                    }
+                } else{
+                    msg = "You must be in STORE to use this command.";
+                }
+                responseCallback({'msg': msg});
+            });
+        } catch (err) {
+            responseCallback({
+                'msg': "Server error."
+            });
             console.log(err);
         }
     });
