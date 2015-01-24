@@ -12,7 +12,6 @@ exports.updatePerson = function (db_user, person, responseCallback) {
             user.level = person.level;
             user.experience = person.experience;
             user.items = person.items;
-            user.currentField = person.currentField;
             user.currentLocation = person.currentLocation;
             user.playfield = person.playfield;
             user.gold = person.gold;
@@ -116,7 +115,6 @@ exports.us2per = function (Person, user) {
     person.level = user.level;
     person.experience = user.experience;
     person.items = user.items;
-    person.currentField = user.currentField;
     person.currentLocation = user.currentLocation;
     person.playfield = user.playfield;
     person.gold = user.gold;
@@ -137,7 +135,6 @@ exports.per2us = function (db_user, data, person) {
         level: person.level,
         experience: person.experience,
         items: person.items,
-        currentField: person.currentField,
         currentLocation: person.currentLocation,
         playfield: person.playfield,
         gold: person.gold,

@@ -3,7 +3,7 @@
  * Exports: addExperience(character, monster)
  *          levelDownCharacter(character)
  */
-    
+
 var experiencePerLevel = [100, 500, 1500, 3000, 4500, 7000, 10000];
 
 function addExperience(character, monster) {
@@ -15,7 +15,7 @@ function addExperience(character, monster) {
 }
 
 function countExperienceFromMonster(monster) {
-    return (monster.strength + monster.dexterity)*10 + monster.maxhp;
+    return (monster.strength + monster.dexterity) * 10 + monster.maxhp;
 }
 
 function addExperienceToCharacter(character, expToAdd) {
@@ -23,7 +23,7 @@ function addExperienceToCharacter(character, expToAdd) {
     character.experience += expToAdd;
 
     // Checks if character gained level.
-    while (character.experience >= experiencePerLevel[character.level-1]) {
+    while (character.experience >= experiencePerLevel[character.level - 1]) {
         levelUpCharacter(character);
     }
 }

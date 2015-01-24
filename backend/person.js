@@ -11,7 +11,6 @@ var Person = function Person(name, playfield) {
     this.level = 1;
     this.experience = 0;
     this.items = [];
-    this.currentField = {type: FieldType.START};
     this.gold = 0;
     this.attackedMonsters = 0;
     this.completedQueezes = 0;
@@ -21,9 +20,9 @@ var Person = function Person(name, playfield) {
     };
     this.die = function () {
         this.levelDown();
+        this.currentLocation = {'x':1, 'y':1};
         this.items = [];
         this.gold = 0;
-        this.currentField = {type: FieldType.START};
         this.hp = this.maxhp;
         //window.alert("Unfortunately, you died. Try again from start!");
     }
@@ -33,6 +32,10 @@ var Person = function Person(name, playfield) {
     this.initialize_position = function() {
         var start_location = map.getStartField(playfield);
         this.currentLocation = {x: start_location[0], y: start_location[1]};
+    }
+
+    this.getCurrentPlayfield = function () {
+        return this.playfield[this.currentLocation.x][this.currentLocation.y];
     }
 };
 

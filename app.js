@@ -8,7 +8,7 @@ var app = express();
 var Primus = require("primus");
 var Emitter = require('primus-emitter');
 var server = http.createServer(app);
-var fs = require('fs')
+var fs = require('fs');
 
 var memoryStore = new expressSession.MemoryStore();
 var session = expressSession({
@@ -22,12 +22,15 @@ var session = expressSession({
 var db_user = require('./backend/db_user');
 var Person = require("./backend/person");
 var Items = require("./backend/items");
+var battle = require("./backend/battle");
 var map = require("./backend/map");
 var playfield = map.readFieldDefinition("public/assets/test.field");
 var db_helper = require('./backend/db_helper');
-var generateQuiz = require('./backend/quiz/quiz')();
+var Quiz = require('./backend/quiz/quiz')();
 var quest_helper = require('./backend/quest_helper');
 var highscores = require('./backend/highscores');
+var _ = require("underscore");
+var FieldType = require("./backend/fieldTypes");
 
 // session store
 app.use(session);
@@ -72,23 +75,50 @@ app.get('/highscores', function (req, res) {
 primus.on("connection", function (spark) {
     //{ move: 'N/S/W/E' }
     spark.on('move', function (moveCommand, responseCallback) {
+        function handleOldQuiz(person) {
+            var msg = '';
+            var oldField = person.getCurrentPlayfield();
+            if (spark.request.session.activeQuiz) {
+                msg = "You ran away from the quiz. Chest disappeared.<br/>"
+                Quiz.hideChest(oldField);
+                spark.request.session.activeQuiz = null;
+            }
+            return msg;
+        }
+
         try {
             db_helper.getPerson(db_user, Person, spark.request.session.username, function (person) {
                 var moved = map.movePerson(person, moveCommand.move);
                 var msg = "";
+                msg += handleOldQuiz(person);
+                var is_dead = false;
                 if (moved.status === true) {
                     person.currentLocation = moved.location;
-                    msg = "Moved " + person.name + " to: {x:" + person.currentLocation.x + ", y:" + person.currentLocation.y + "}"
-                    var quiz = generateQuiz(moved);
-                    if (quiz) {
-                        spark.request.session.activeQuiz = quiz;
-                        msg += quiz.toString()
+                    msg += "Moved " + person.name + " to: {x:" + person.currentLocation.x + ", y:" + person.currentLocation.y + "} " + map.getFieldDescription(moved.field);
+                    if (moved.field != null) {
+                        var type = moved.field.type;
+                        var monster = moved.field.monster;
+                        if (type != null && type === FieldType.MONSTER && monster != null) {
+                            //update stats before action
+                            Items.updateStats(person);
+                            Items.updateStats(monster);
+                            var battle_result = battle(person, monster, true, null, "");
+                            var whoWin = (battle_result.result ? person.name : monster.name) + ' win!!!';
+                            console.log(whoWin);
+                            msg += ("<br><br>Fight:" + battle_result.str + "<br>" + whoWin + "<br>" + (!battle_result.result ? "You are dead. :(" : ""));
+                            if (!battle_result.result) {
+                                is_dead = true;
+                                person.die();
+                            }
+                            else {
+                                moved.field.type = FieldType.PATH;
+                            }
+                        }
                     }
-
                     var quest_message = quest_helper.getQuest(person);
                     if (quest_message) {
                         //console.log(quest_message);
-                        msg +=  " " + quest_message;
+                        msg += " " + quest_message;
                     }
                 } else {
                     msg = "Can't move there!"
@@ -99,7 +129,8 @@ primus.on("connection", function (spark) {
                         responseCallback({
                             'msg': msg,
                             'location': person.currentLocation,
-                            'person': person
+                            'person': person,
+                            'is_dead': is_dead
                         });
                     }
                 });
@@ -115,20 +146,21 @@ primus.on("connection", function (spark) {
         try {
             db_helper.getPerson(db_user, Person, spark.request.session.username, function (person) {
                 var quiz = spark.request.session.activeQuiz;
-                var location = person.currentLocation;
                 var msg = "";
                 if (quiz) {
-                    var field = person.playfield[location.x][location.y];
+                    var field = person.getCurrentPlayfield();
                     console.log(answerCommand.answer);
                     if (quiz.checkAnswers(answerCommand.answer)) {
-                        msg = "Correct answer!";
-
+                        msg = "Correct answer! ";
                         var lootItems = field.items;
                         var lootGold = field.gold;
                         person.gold += lootGold;
                         person.items.push.apply(person.items, lootItems);
                         person.completedQueezes += 1;
-                        msg += "\nYou receive:\n" + lootItems.join("\n");
+                        lootItems = _.map(lootItems, function (item) {
+                            return item.name;
+                        });
+                        msg += "You receive: " + lootItems.join(", ");
                         if (lootItems.length > 0) {
                             msg += " and "
                         }
@@ -137,8 +169,8 @@ primus.on("connection", function (spark) {
                     else {
                         msg = "Wrong answer! Chest disappears.";
                     }
-                    field.looted = true;
-                    person.activeQuiz = null;
+                    Quiz.hideChest(field);
+                    spark.request.session.activeQuiz = null;
                 } else {
                     msg = "There was no question!"
                 }
@@ -157,12 +189,34 @@ primus.on("connection", function (spark) {
             console.log(err);
         }
     });
+    spark.on('loot', function (answerCommand, responseCallback) {
+        try {
+            function handleLooting(person) {
+                var msg = "Nothing to loot here!";
+                var quiz = Quiz.generateQuiz(person.getCurrentPlayfield());
+                spark.request.session.activeQuiz = quiz;
+                if (quiz) {
+                    msg = "You open the chest. Solve the quiz! " +
+                    "Answer with 'ans' command followed by answer numbers, i.e. 'ans 1 2'<br/>";
+                    msg += quiz.toString();
+                }
+                responseCallback({'msg': msg});
+            }
+
+            db_helper.getPerson(db_user, Person, spark.request.session.username, handleLooting);
+        } catch (err) {
+            responseCallback({
+                'msg': "Server error."
+            });
+            console.log(err);
+        }
+    });
     //mapCommand doesn't have arguments
     spark.on('map', function (mapCommand, responseCallback) {
         try {
             db_helper.getPerson(db_user, Person, spark.request.session.username, function (person) {
                 var location = person.currentLocation;
-                responseCallback({'msg': "success", 'map': playfield, 'location': location});
+                responseCallback({'msg': "success", 'map': person.playfield, 'location': location});
             });
         } catch (err) {
             responseCallback({
