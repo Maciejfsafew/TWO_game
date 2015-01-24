@@ -25,7 +25,7 @@ var Items = require("./backend/items");
 var map = require("./backend/map");
 var playfield = map.readFieldDefinition("public/assets/test.field");
 var db_helper = require('./backend/db_helper');
-var generateQuiz = require('./backend/quiz/quiz')();
+var Quiz = require('./backend/quiz/quiz')();
 var quest_helper = require('./backend/quest_helper');
 var highscores = require('./backend/highscores');
 
@@ -76,17 +76,16 @@ primus.on("connection", function (spark) {
             var msg = '';
             var oldField = person.getCurrentPlayfield();
             if (spark.request.session.activeQuiz) {
-                oldField.looted = true;
                 msg = "You ran away from the quiz. Chest disappeared.<br/>"
+                Quiz.hideChest(oldField);
+                spark.request.session.activeQuiz = null;
             }
             return msg;
         }
 
         function handleNewQuiz(moved) {
             var msg = '';
-            var newQuiz = generateQuiz(moved);
-            spark.request.session.activeQuiz = newQuiz;
-            if (newQuiz) {
+            if (Quiz.isChestFieldAndNotLooted(moved.field)) {
                 msg = "<br/>There's a quiz chest! You can loot it with 'loot' command."
             }
             return msg;
@@ -152,7 +151,7 @@ primus.on("connection", function (spark) {
                     else {
                         msg = "Wrong answer! Chest disappears.";
                     }
-                    field.looted = true;
+                    Quiz.hideChest(field);
                     spark.request.session.activeQuiz = null;
                 } else {
                     msg = "There was no question!"
@@ -174,11 +173,13 @@ primus.on("connection", function (spark) {
     });
     spark.on('loot', function (answerCommand, responseCallback) {
         try {
-            function handleLooting() {
+            function handleLooting(person) {
                 var msg = "Nothing to loot here!";
-                var quiz = spark.request.session.activeQuiz;
+                var quiz = Quiz.generateQuiz(person.getCurrentPlayfield());
+                spark.request.session.activeQuiz = quiz;
                 if (quiz) {
-                    msg = "Answer with 'ans' command followed by answer numbers, i.e. 'ans 1 2'<br/>";
+                    msg = "You open the chest. Solve the quiz! " +
+                    "Answer with 'ans' command followed by answer numbers, i.e. 'ans 1 2'<br/>";
                     msg += quiz.toString();
                 }
                 responseCallback({'msg': msg});
@@ -197,7 +198,7 @@ primus.on("connection", function (spark) {
         try {
             db_helper.getPerson(db_user, Person, spark.request.session.username, function (person) {
                 var location = person.currentLocation;
-                responseCallback({'msg': "success", 'map': playfield, 'location': location});
+                responseCallback({'msg': "success", 'map': person.playfield, 'location': location});
             });
         } catch (err) {
             responseCallback({

@@ -25,7 +25,7 @@ describe("Quiz Test Suite", function () {
     var FieldType = require("../fieldTypes.js");
     var generateQuiz;
     beforeEach(function () {
-        generateQuiz = require("./quiz")("./testQuizDefinitions");
+        generateQuiz = require("./quiz")("./testQuizDefinitions").generateQuiz;
     });
     it("should return test quiz", function () {
         var heroStub = {field: {type: FieldType.CHEST}};

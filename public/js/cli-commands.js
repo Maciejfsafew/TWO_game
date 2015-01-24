@@ -43,6 +43,7 @@ var Commands = [
         },
         response_handler: function (server_response) {
             console.log(server_response);
+            updateLocation();
         }
     },
     {
@@ -117,7 +118,10 @@ var Commands = [
         alias: "l",
         msg: "",
         args_handler: function () {
-            return {success: true, msg: "You open the chest. Solve the quiz!"}
+            return {success: true, msg: ""}
+        },
+        response_handler: function () {
+            updateLocation();
         }
     }
 ]
