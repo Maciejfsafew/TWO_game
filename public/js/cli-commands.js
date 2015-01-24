@@ -43,6 +43,7 @@ var Commands = [
         },
         response_handler: function (server_response) {
             console.log(server_response);
+            updateLocation();
         }
     },
     {
@@ -110,6 +111,17 @@ var Commands = [
         msg: "",
         args_handler: function (args) {
             return {success: true, msg: ""} //Args handler validates only arguments
+        }
+    },
+    {
+        name: "loot",
+        alias: "l",
+        msg: "",
+        args_handler: function () {
+            return {success: true, msg: ""}
+        },
+        response_handler: function () {
+            updateLocation();
         }
     }
 ]

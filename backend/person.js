@@ -34,6 +34,10 @@ var Person = function Person(name, playfield) {
         var start_location = map.getStartField(playfield);
         this.currentLocation = {x: start_location[0], y: start_location[1]};
     }
+
+    this.getCurrentPlayfield = function () {
+        return this.playfield[this.currentLocation.x][this.currentLocation.y];
+    }
 };
 
 module.exports = Person;

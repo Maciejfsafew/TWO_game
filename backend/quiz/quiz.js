@@ -42,15 +42,15 @@ function Quiz(quizConfiguration) {
 
 }
 Quiz.prototype.toString = function () {
-    var str = "\n" + this.question;
+    var str = this.question;
     this.answers.forEach(function (element, index) {
-        str += ("\n" + index + ". " + element.answerText)
+        str += ("<br/>" + index + ". " + element.answerText)
     });
     return str;
 };
-function generateQuiz(hero) {
+function generateQuiz(field) {
     //hero - Must contain currentField property.
-    if (isChestFieldAndNotLooted(hero.field)) {
+    if (isChestFieldAndNotLooted(field)) {
         return new Quiz(quizDefinitions[Math.floor(Math.random() * quizDefinitions.length)]);
     }
     return null;
@@ -61,7 +61,17 @@ function isChestFieldAndNotLooted(field) {
     return field && field.type === FieldType.CHEST && !field.looted;
 }
 
+function hideChest(field) {
+    if (isChestFieldAndNotLooted(field)) {
+        field.type = FieldType.PATH;
+    }
+}
+
 module.exports = function (definitionsFilePath) {
     initiate(definitionsFilePath);
-    return generateQuiz;
+    return {
+        'generateQuiz': generateQuiz,
+        'isChestFieldAndNotLooted': isChestFieldAndNotLooted,
+        'hideChest': hideChest
+    };
 };
