@@ -40,7 +40,6 @@ exports.sleepPersonStart = function (db_user, person_name, responseCallback) {
         }
         if (user != null) {
             user.sleep_start = new Date();
-            user.hp = 5;
             user.save(function (err, us) {
                 if (err) {
                     responseCallback({'sleep_person_start_answer': 'error', 'msg': ''});
