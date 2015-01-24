@@ -127,7 +127,7 @@ exports.getFieldDescription = function (field) {
     } else if (field.type == FieldType.PATH) {
         return "Normal path field. Nothing special.";
     } else if (field.type == FieldType.CHEST) {
-        return "On this field is chest. Answer properly to the question to unlock it. ";
+        return "There's a quiz chest! You can loot it with 'loot' command.";
     } else if (field.type == FieldType.MONSTER) {
         return "On this field is really scary monster - " + getMonsterDescription(field.monster);
     } else if (field.type == FieldType.FINAL_BOSS) {
