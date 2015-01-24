@@ -18,7 +18,7 @@
 
 td.left-margin-class {
     width: 100px;
-    text-align:right;
+    text-align: right;
 }
 
 /*progress {*/
@@ -29,7 +29,7 @@ td.left-margin-class {
 /*}*/
 
 progress#health.health_progress::-webkit-progress-value {
-background: #00007f;
+    background: #00007f;
 }
 
 progress#health.health_progress {

@@ -34,55 +34,63 @@
         <button onclick="highscores()">Highscores</button>
     </tr>
 </table>
+
 <table width="100%">
     <tr>
-        <td width="50%">
+        <td width="70%">
+            <div class="wrapper">
+                <div id="shell-panel" tabindex="0">
+                    <div>Welcome to TWO MUD!<br>
+                    </div>
+                    <div id="shell-view"></div>
+                </div>
+            </div>
+        </td>
+        <td width="30%" align="center" valign="top">
             <table>
                 <tr>
-                    <td class="left-margin-class">Strength:</td>
-                    <td id="currStrength"></td>
-                </tr>
-                <tr>
-                    <td class="left-margin-class">Dexterity:</td>
-                    <td id="currDexterity"></td>
-                </tr>
-                <tr>
-                    <td class="left-margin-class">Health:</td>
-                    <td>
-                        <progress id="health" class="health_progress"></progress>
-                    </td>
-                    <td id="currHp"></td>
-                </tr>
-                <tr>
-
-                    <td class="left-margin-class">Level:</td>
-                    <td id="level"></td>
-                </tr>
-                <tr>
-                    <td class="left-margin-class">Experience:</td>
-                    <td>
-                        <progress id="experience" max="100" class="exp_progress"></progress>
-                    </td>
-                    <td id="currExperience"></td>
-                </tr>
-            </table>
-
-        </td>
-        <td width="50%">
-            <table id="map-view">
-                <tr>
+                    <table id="map-view">
+                        <tr>
+                        </tr>
+                    </table>
+                    <br>
+                    <br>
+                    <table>
+                        <tr>
+                            <td class="left-margin-class">Strength:</td>
+                            <td id="currStrength"></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="left-margin-class">Dexterity:</td>
+                            <td id="currDexterity"></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="left-margin-class">Health:</td>
+                            <td>
+                                <progress id="health" class="health_progress"></progress>
+                            </td>
+                            <td id="currHp"></td>
+                        </tr>
+                        <tr>
+                            <td class="left-margin-class">Level:</td>
+                            <td id="level"></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="left-margin-class">Experience:</td>
+                            <td>
+                                <progress id="experience" max="100" class="exp_progress"></progress>
+                            </td>
+                            <td id="currExperience"></td>
+                        </tr>
+                    </table>
                 </tr>
             </table>
         </td>
     </tr>
 </table>
 
-<div class="wrapper">
-    <div id="shell-panel" tabindex="0">
-        <div>Welcome to TWO MUD!<br>
-        </div>
-        <div id="shell-view"></div>
-    </div>
-</div>
 </body>
 </html>

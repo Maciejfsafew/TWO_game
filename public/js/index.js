@@ -73,8 +73,8 @@ function updateLocation() {
                         img.src = images + 'quest_image.jpg';
                         break;
                 }
-                img.width = 30;
-                img.height = 30;
+                img.width = 20;
+                img.height = 20;
                 if (col == score.length - location.x && row == location.y) {
                     img.style.border = "2px solid blue";
                 } else {
