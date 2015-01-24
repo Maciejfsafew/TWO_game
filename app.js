@@ -230,7 +230,7 @@ primus.on("connection", function (spark) {
     spark.on('bag', function (bagCommand, responseCallback) {
         try {
             var msg = "";
-            db_helper.getPerson(db_user, Person, spark.request.session.username, function (person) {
+            db_helper.getPerson(db_user, Person, bagCommand.u, function (person) {
                 if (person.items < 1 || typeof person.items == 'undefined') {
                     msg = "Your bag is empty.";
                 } else {
@@ -246,11 +246,11 @@ primus.on("connection", function (spark) {
 
     spark.on('buy', function (buyCommand, responseCallback) {
         try {
-            db_helper.getPerson(db_user, Person, spark.request.session.username, function (person) {
+            db_helper.getPerson(db_user, Person, buyCommand.u, function (person) {
                 var msg = "";
                 var location = person.currentLocation;
                 var field = person.playfield[location.x][location.y];
-                if(field && field.type === FieldType.STORE) {
+                if (field && field.type === FieldType.STORE) {
                     if (buyCommand.buy == 0) {
                         msg = "You have: " + person.gold;
                         msg += "<br>Items to buy:<br>" + Store.showStore();
@@ -266,7 +266,7 @@ primus.on("connection", function (spark) {
                             }
                         });
                     }
-                } else{
+                } else {
                     msg = "You must be in STORE to use this command.";
                 }
                 responseCallback({'msg': msg});
@@ -281,13 +281,13 @@ primus.on("connection", function (spark) {
 
     spark.on('sell', function (sellCommand, responseCallback) {
         try {
-            db_helper.getPerson(db_user, Person, spark.request.session.username, function (person) {
+            db_helper.getPerson(db_user, Person, sellCommand.u, function (person) {
                 var msg = "";
                 var idx = sellCommand.sell - 1;
                 var location = person.currentLocation;
                 var field = person.playfield[location.x][location.y];
-                if(field && field.type === FieldType.STORE) {
-                    if(idx < person.items.length) {
+                if (field && field.type === FieldType.STORE) {
+                    if (idx < person.items.length) {
                         //delete item from bag and add gold to person
                         person.gold += person.items[idx].price / 2;
                         person.items.splice(idx, 1);
@@ -296,12 +296,13 @@ primus.on("connection", function (spark) {
                             if (update_result.update_person_answer == "success") {
                                 responseCallback({
                                     'msg': msg
-                                });}
+                                });
+                            }
                         });
                     } else {
                         msg = "Bad item id!";
                     }
-                } else{
+                } else {
                     msg = "You must be in STORE to use this command.";
                 }
                 responseCallback({'msg': msg});

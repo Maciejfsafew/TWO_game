@@ -112,7 +112,7 @@ var Commands = [
         alias: "b",
         msg: "",
         args_handler: function (args) {
-            return {success: true, msg: ""} //Args handler validates only arguments
+            return {success: true, msg: {'u': $.cookie("name")}} //Args handler validates only arguments
         }
     },
     {
@@ -120,14 +120,18 @@ var Commands = [
         msg: "",
         alias: "buy",
         args_handler: function (args) {
-            var msg = {success: false, msg: "Bad argument! Use: 'buy' - to show list of items in store or 'buy [id]' - to buy item with [id]"};
+            var msg = {
+                success: false,
+                msg: "Bad argument! Use: 'buy' - to show list of items in store or 'buy [id]' - to buy item with [id]"
+            };
             if (args.length == 1) {
                 var arg = args[0];
-                if (arg > 0 && arg <= 6 ) {
-                    msg = {success: true, msg: {buy: arg}}
+                if (arg > 0 && arg <= 6) {
+                    msg = {success: true, msg: {buy: arg, 'u': $.cookie("name")}}
                 }
-            } else if (args.length == 0){
-                msg = {success: true, msg: {buy: 0}}}
+            } else if (args.length == 0) {
+                msg = {success: true, msg: {buy: 0, 'u': $.cookie("name")}}
+            }
             return msg;
         }
     },
@@ -140,7 +144,7 @@ var Commands = [
             if (args.length == 1) {
                 var arg = args[0];
                 if (arg > 0) {
-                    msg = {success: true, msg: {sell: arg}}
+                    msg = {success: true, msg: {sell: arg, 'u': $.cookie("name")}}
                 }
             }
             return msg;
