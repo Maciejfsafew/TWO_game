@@ -78,7 +78,7 @@ primus.on("connection", function (spark) {
                 var msg = "";
                 if (moved.status === true) {
                     person.currentLocation = moved.location;
-                    msg = "Moved " + person.name + " to: {x:" + person.currentLocation.x + ", y:" + person.currentLocation.y + "}"
+                    msg = "Moved " + person.name + " to: {x:" + person.currentLocation.x + ", y:" + person.currentLocation.y + "} " + map.getFieldDescription(moved.field)
                     var quiz = generateQuiz(moved);
                     if (quiz) {
                         spark.request.session.activeQuiz = quiz;
