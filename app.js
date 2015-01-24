@@ -8,7 +8,7 @@ var app = express();
 var Primus = require("primus");
 var Emitter = require('primus-emitter');
 var server = http.createServer(app);
-var fs = require('fs')
+var fs = require('fs');
 
 var memoryStore = new expressSession.MemoryStore();
 var session = expressSession({
@@ -22,6 +22,7 @@ var session = expressSession({
 var db_user = require('./backend/db_user');
 var Person = require("./backend/person");
 var Items = require("./backend/items");
+var battle = require("./backend/battle");
 var map = require("./backend/map");
 var playfield = map.readFieldDefinition("public/assets/test.field");
 var db_helper = require('./backend/db_helper');
@@ -29,6 +30,7 @@ var Quiz = require('./backend/quiz/quiz')();
 var quest_helper = require('./backend/quest_helper');
 var highscores = require('./backend/highscores');
 var _ = require("underscore");
+var FieldType = require("./backend/fieldTypes");
 
 // session store
 app.use(session);
@@ -89,13 +91,33 @@ primus.on("connection", function (spark) {
                 var moved = map.movePerson(person, moveCommand.move);
                 var msg = "";
                 msg += handleOldQuiz(person);
+                var is_dead = false;
                 if (moved.status === true) {
                     person.currentLocation = moved.location;
                     msg += "Moved " + person.name + " to: {x:" + person.currentLocation.x + ", y:" + person.currentLocation.y + "} " + map.getFieldDescription(moved.field);
+                    if (moved.field != null) {
+                        var monster = moved.field.monster;
+                        if (monster != null) {
+                            //update stats before action
+                            Items.updateStats(person);
+                            Items.updateStats(monster);
+                            var battle_result = battle(person, monster, true, null, "");
+                            var whoWin = (battle_result.result ? person.name : monster.name) + ' win!!!';
+                            console.log(whoWin);
+                            msg += ("<br><br>Fight:" + battle_result.str + "<br>" + whoWin + "<br>" + (!battle_result.result ? "You are dead. :(" : ""));
+                            if (!battle_result.result) {
+                                is_dead = true;
+                                person.die();
+                            }
+                            else {
+                                moved.field.type = FieldType.PATH;
+                            }
+                        }
+                    }
                     var quest_message = quest_helper.getQuest(person);
                     if (quest_message) {
                         //console.log(quest_message);
-                        msg +=  " " + quest_message;
+                        msg += " " + quest_message;
                     }
                 } else {
                     msg = "Can't move there!"
@@ -106,7 +128,8 @@ primus.on("connection", function (spark) {
                         responseCallback({
                             'msg': msg,
                             'location': person.currentLocation,
-                            'person': person
+                            'person': person,
+                            'is_dead': is_dead
                         });
                     }
                 });
