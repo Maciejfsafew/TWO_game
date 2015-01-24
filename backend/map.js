@@ -7,6 +7,7 @@ var FinalBoss = require("./finalBoss")
 var Forbidden = require("./forbidden")
 var Path = require("./path")
 var Quest = require("./quest")
+var Store = require("./store")
 var generateMonster = require("./monsters/monsters").generateMonster;
 
 function parsePlayfield(text) {
@@ -44,6 +45,9 @@ function parsePlayfield(text) {
                     break;
                 case "Q":
                     newField = new Quest();
+                    break;
+                case "W":
+                    newField = new Store();
                     break;
                 default:
                     console.error("Error parsing map field: " + fields[k]);
@@ -134,6 +138,8 @@ exports.getFieldDescription = function (field) {
         return "The journey is over. This field is occupied by Smaug.";
     } else if (field.type == FieldType.START) {
         return "There is a mysterious cottage on the filed. It's owner may ask you for favour.";
+    } else if (field.type ==  FieldType.STORE) {
+        return "Welcome to store. You can buy or sell items.";
     } else if (field.type == FieldType.QUEST){
         return "Attention. Something interesting happening here... "
     }

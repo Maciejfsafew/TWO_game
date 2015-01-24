@@ -40,8 +40,10 @@ exports.generateItem = function () {
 
 exports.showBag = function (hero){
     var result = "";
+    var idx = 1;
     hero.items.forEach(function(it){
-        result += ".:: "+ it.name +" ::.\n"+it.description+"\n+"+it.value +" " +it.attribute+"\n";
+        result += idx +". .:: "+ it.name +" ::.<br>&nbsp&nbsp&nbsp"+ it.description+"<br>&nbsp&nbsp&nbsp+"+ it.value +" "+ it.attribute +"<br>&nbsp&nbsp&nbspPrice: "+ it.price/2+"<br>";
+        idx++;
     });
     return result;
 }
