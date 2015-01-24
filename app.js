@@ -87,7 +87,7 @@ primus.on("connection", function (spark) {
         }
 
         try {
-            db_helper.getPerson(db_user, Person, spark.request.session.username, function (person) {
+            db_helper.getPerson(db_user, Person, moveCommand.u, function (person) {
                 var moved = map.movePerson(person, moveCommand.move);
                 var msg = "";
                 msg += handleOldQuiz(person);
@@ -144,7 +144,7 @@ primus.on("connection", function (spark) {
     });
     spark.on('answer', function (answerCommand, responseCallback) {
         try {
-            db_helper.getPerson(db_user, Person, spark.request.session.username, function (person) {
+            db_helper.getPerson(db_user, Person, answerCommand.u, function (person) {
                 var quiz = spark.request.session.activeQuiz;
                 var msg = "";
                 if (quiz) {
@@ -203,7 +203,7 @@ primus.on("connection", function (spark) {
                 responseCallback({'msg': msg});
             }
 
-            db_helper.getPerson(db_user, Person, spark.request.session.username, handleLooting);
+            db_helper.getPerson(db_user, Person, answerCommand.u, handleLooting);
         } catch (err) {
             responseCallback({
                 'msg': "Server error."
@@ -211,10 +211,9 @@ primus.on("connection", function (spark) {
             console.log(err);
         }
     });
-    //mapCommand doesn't have arguments
     spark.on('map', function (mapCommand, responseCallback) {
         try {
-            db_helper.getPerson(db_user, Person, spark.request.session.username, function (person) {
+            db_helper.getPerson(db_user, Person, mapCommand.u, function (person) {
                 var location = person.currentLocation;
                 responseCallback({'msg': "success", 'map': person.playfield, 'location': location});
             });
@@ -260,7 +259,6 @@ primus.on("connection", function (spark) {
                 }
                 if (user != null) {
                     if (data.p === user.password) {
-                        spark.request.session.username = data.u;
                         responseCallback({'login_answer': 'success'});
                     }
                     else {
@@ -276,7 +274,6 @@ primus.on("connection", function (spark) {
                             responseCallback({'login_answer': 'error'});
                             return console.error(err);
                         }
-                        spark.request.session.username = data.u;
                         responseCallback({'login_answer': 'success'});
                     });
                 }

@@ -14,10 +14,7 @@ function updateHeight(person) {
 }
 
 function updateLocation() {
-    primus.send('map', {}, function (server_response) {
-
-        //console.log(server_response.map);
-        //console.log(server_response.location);
+    primus.send('map', {'u': $.cookie("name")}, function (server_response) {
         var location = server_response.location;
         if (location == undefined) {
             location = {x: -1, y: -1};
@@ -119,6 +116,7 @@ $(function () {
             else if (get_person_answer === 'success') {
                 //window.person = data.person;
                 setUpUserInfo(data.person);
+                updateLocation();
                 window.is_sleeping = false;
                 //console.log(window.person);
                 var data_name = "<b>Hej, " + $.cookie("name") + "!</b>";

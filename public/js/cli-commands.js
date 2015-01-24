@@ -9,7 +9,7 @@ var Commands = [
             if (args.length == 1) {
                 var arg = args[0].toUpperCase();
                 if (arg === "N" || arg === "E" || arg === "S" || arg === "W") {
-                    msg = {success: true, msg: {move: arg}}
+                    msg = {success: true, msg: {move: arg, 'u': $.cookie("name")}}
                 }
             }
             return msg;
@@ -39,7 +39,7 @@ var Commands = [
                         return msg
                     }
                 });
-                msg = {success: true, msg: {answer: parsedArgs}}
+                msg = {success: true, msg: {answer: parsedArgs, 'u': $.cookie("name")}}
             }
             return msg;
         },
@@ -120,7 +120,7 @@ var Commands = [
         alias: "l",
         msg: "",
         args_handler: function () {
-            return {success: true, msg: ""}
+            return {success: true, msg: {'u': $.cookie("name")}}
         },
         response_handler: function () {
             updateLocation();
