@@ -131,4 +131,3 @@ $(function () {
         window.open('/', "_self")
     }
 });
-

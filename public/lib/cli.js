@@ -1,3 +1,5 @@
+var primus = Primus.connect();
+
 (function (root, $, _) {
     Josh.Example = (function (root, $, _) {
 

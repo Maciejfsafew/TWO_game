@@ -26,6 +26,14 @@ exports.get_all_players = function(callback) {
     });
 };
 
+function stat_value(property) {
+    if (property instanceof Array) {
+        return numerical(property.length)
+    } else {
+        return property;
+    }
+}
+
 exports.get_highscores = function(callback) {
     var config = exports.get_config();
     exports.get_all_players(function(players) {
@@ -35,7 +43,7 @@ exports.get_highscores = function(callback) {
             var player_score = 0;
             for (var prop in weights) {
                 if(prop in player) {
-                    player_score += weights[prop] * player[prop];
+                    player_score += weights[prop] * player[stat_value(prop)];
                 } else {
                     console.warn("Player property: " + prop + " requested in game_config not found!");
                 }

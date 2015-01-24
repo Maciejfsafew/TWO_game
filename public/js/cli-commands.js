@@ -111,5 +111,14 @@ var Commands = [
         args_handler: function (args) {
             return {success: true, msg: ""} //Args handler validates only arguments
         }
+    },
+    {
+        name: "highscores",
+        alias: "hs",
+        msg: "",
+        args_handler: function (args) {
+            window.open('/highscores', "_self");
+            return {success: true, msg: ""}
+        }
     }
 ]
