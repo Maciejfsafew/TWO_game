@@ -84,14 +84,6 @@ primus.on("connection", function (spark) {
             return msg;
         }
 
-        function handleNewQuiz(moved) {
-            var msg = '';
-            if (Quiz.isChestFieldAndNotLooted(moved.field)) {
-                msg = "<br/>There's a quiz chest! You can loot it with 'loot' command."
-            }
-            return msg;
-        }
-
         try {
             db_helper.getPerson(db_user, Person, spark.request.session.username, function (person) {
                 var moved = map.movePerson(person, moveCommand.move);
@@ -99,8 +91,7 @@ primus.on("connection", function (spark) {
                 msg += handleOldQuiz(person);
                 if (moved.status === true) {
                     person.currentLocation = moved.location;
-                    msg += "Moved " + person.name + " to: {x:" + person.currentLocation.x + ", y:" + person.currentLocation.y + "} " + map.getFieldDescription(moved.field)
-                    msg += handleNewQuiz(moved);
+                    msg += "Moved " + person.name + " to: {x:" + person.currentLocation.x + ", y:" + person.currentLocation.y + "} " + map.getFieldDescription(moved.field);
                     var quest_message = quest_helper.getQuest(person);
                     if (quest_message) {
                         //console.log(quest_message);
