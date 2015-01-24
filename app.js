@@ -99,7 +99,7 @@ primus.on("connection", function (spark) {
                 msg += handleOldQuiz(person);
                 if (moved.status === true) {
                     person.currentLocation = moved.location;
-                    msg += "Moved " + person.name + " to: {x:" + person.currentLocation.x + ", y:" + person.currentLocation.y + "}";
+                    msg += "Moved " + person.name + " to: {x:" + person.currentLocation.x + ", y:" + person.currentLocation.y + "} " + map.getFieldDescription(moved.field)
                     msg += handleNewQuiz(moved);
                     var quest_message = quest_helper.getQuest(person);
                     if (quest_message) {
