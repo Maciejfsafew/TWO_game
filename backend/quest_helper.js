@@ -4,9 +4,6 @@ var questDefinitions = require("./questDefinitions.json");
 exports.getQuest = function (person) {
     var location = person.currentLocation;
     var field = person.playfield[location.x][location.y];
-    if(field && field.type === FieldType.MONSTER) {
-        person.attackedMonsters += 1;
-    }
 
     if(field && field.type === FieldType.QUEST){
         if(field.finished) {
@@ -14,7 +11,6 @@ exports.getQuest = function (person) {
         }
 
         if(field.activated == false) {
-            //console.log("HERE");
             field.questNr = Math.floor(Math.random() * questDefinitions.length);
             var new_quiz = questDefinitions[field.questNr];
             //console.log(new_quiz);

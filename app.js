@@ -115,6 +115,7 @@ primus.on("connection", function (spark) {
                             else {
                                 moved.field.type = FieldType.PATH;
                                 person.addExperience(monster);
+                                person.attackedMonsters += 1;
                             }
                         }
                     }
