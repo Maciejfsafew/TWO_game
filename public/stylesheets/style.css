@@ -72,7 +72,6 @@ progress#experience.exp_progress {
     font-size: 300%;
     text-align: center;
     display: none
-
 }
 
 table.highscore, table.highscore th, table.highscore td {
@@ -81,4 +80,10 @@ table.highscore, table.highscore th, table.highscore td {
 
 td .highscore {
     display: none;
+}
+
+#monster-view {
+  width: 350px;
+  height: 350px;
+  border: 1px solid #00007f;
 }
