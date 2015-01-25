@@ -1,4 +1,5 @@
 var FieldType = require("./fieldTypes")
+var Path = require("./path")
 var questDefinitions = require("./questDefinitions.json");
 
 exports.getQuest = function (person) {
@@ -37,6 +38,7 @@ exports.getQuest = function (person) {
                     person[entry[0]] += entry[1];
                     //console.log(person);
                 });
+                person.playfield[location.x][location.y] = new Path();
                 person.completedQuests += 1;
                 return questDefinitions[field.questNr].success;
             } else {
