@@ -96,6 +96,7 @@ function setUpUserInfo(person) {
     $("#currDexterity").html(person.dexterity);
     var experience = document.getElementById("experience");
     experience.value = person.experience;
+    experience.max = person.expPerLevel;
     $("#currExperience").html(experience.value + '/' + experience.max);
 }
 
