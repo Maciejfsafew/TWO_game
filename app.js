@@ -22,9 +22,11 @@ var session = expressSession({
 var db_user = require('./backend/db_user');
 var Person = require("./backend/person");
 var Items = require("./backend/items");
+var Store = require("./backend/store_helper");
 var battle = require("./backend/battle");
 var map = require("./backend/map");
 var playfield = map.readFieldDefinition("public/assets/test.field");
+var FieldType = require("./backend/fieldTypes");
 var db_helper = require('./backend/db_helper');
 var Quiz = require('./backend/quiz/quiz')();
 var quest_helper = require('./backend/quest_helper');
@@ -71,6 +73,11 @@ app.get('/highscores', function (req, res) {
     });
 });
 
+app.get('/win', function (req, res) {
+    res.render('win.html.ejs', {
+        'title': "Smoug is defeated"
+    });
+});
 
 primus.on("connection", function (spark) {
     //{ move: 'N/S/W/E' }
@@ -87,7 +94,7 @@ primus.on("connection", function (spark) {
         }
 
         try {
-            db_helper.getPerson(db_user, Person, spark.request.session.username, function (person) {
+            db_helper.getPerson(db_user, Person, moveCommand.u, function (person) {
                 var moved = map.movePerson(person, moveCommand.move);
                 var msg = "";
                 msg += handleOldQuiz(person);
@@ -98,9 +105,9 @@ primus.on("connection", function (spark) {
                     if (moved.field != null) {
                         var type = moved.field.type;
                         var monster = moved.field.monster;
-                        if (type != null && type === FieldType.MONSTER && monster != null) {
-                            //update stats before action
-                            Items.updateStats(person);
+                        Items.updateStats(person);
+                        if (type != null && (type === FieldType.MONSTER || type === FieldType.BOSS) && monster != null) {
+                            //update monster stats before action
                             Items.updateStats(monster);
                             var battle_result = battle(person, monster, true, null, "");
                             var whoWin = (battle_result.result ? person.name : monster.name) + ' win!!!';
@@ -112,6 +119,11 @@ primus.on("connection", function (spark) {
                             }
                             else {
                                 moved.field.type = FieldType.PATH;
+                                person.addExperience(monster);
+                                person.attackedMonsters += 1;
+                                person.gold += monster.gold;
+                                if (monster.items.length != 0)
+                                    person.items.push(monster.items);
                             }
                         }
                     }
@@ -130,7 +142,8 @@ primus.on("connection", function (spark) {
                             'msg': msg,
                             'location': person.currentLocation,
                             'person': person,
-                            'is_dead': is_dead
+                            'is_dead': is_dead,
+                            'boss': (type != null && type === FieldType.BOSS)
                         });
                     }
                 });
@@ -142,9 +155,30 @@ primus.on("connection", function (spark) {
             console.log(err);
         }
     });
+
+    spark.on('updateHighscores', function (data, fn) {
+        try {
+            db_helper.getPerson(db_user, Person, data.u, function (person) {
+                person.highscoreName = data.name;
+                person.highscoreEnabled = true;
+
+                db_helper.updatePerson(db_user, person, function (update_result) {
+                    fn({
+                        'msg': 'ok'
+                    });
+                });
+            });
+        } catch (err) {
+            responseCallback({
+                'msg': "Server error."
+            });
+            console.log(err);
+        }
+    });
+
     spark.on('answer', function (answerCommand, responseCallback) {
         try {
-            db_helper.getPerson(db_user, Person, spark.request.session.username, function (person) {
+            db_helper.getPerson(db_user, Person, answerCommand.u, function (person) {
                 var quiz = spark.request.session.activeQuiz;
                 var msg = "";
                 if (quiz) {
@@ -203,7 +237,7 @@ primus.on("connection", function (spark) {
                 responseCallback({'msg': msg});
             }
 
-            db_helper.getPerson(db_user, Person, spark.request.session.username, handleLooting);
+            db_helper.getPerson(db_user, Person, answerCommand.u, handleLooting);
         } catch (err) {
             responseCallback({
                 'msg': "Server error."
@@ -211,10 +245,9 @@ primus.on("connection", function (spark) {
             console.log(err);
         }
     });
-    //mapCommand doesn't have arguments
     spark.on('map', function (mapCommand, responseCallback) {
         try {
-            db_helper.getPerson(db_user, Person, spark.request.session.username, function (person) {
+            db_helper.getPerson(db_user, Person, mapCommand.u, function (person) {
                 var location = person.currentLocation;
                 responseCallback({'msg': "success", 'map': person.playfield, 'location': location});
             });
@@ -229,15 +262,85 @@ primus.on("connection", function (spark) {
     spark.on('bag', function (bagCommand, responseCallback) {
         try {
             var msg = "";
-            var person = spark.request.session.person;
-            if (person.items < 1 || typeof person.items == 'undefined') {
-                msg = "Your bag is empty.";
-            } else {
-                msg = "Your bag contains:\n" + Items.showBag(person);
-            }
-            responseCallback({'msg': msg});
+            db_helper.getPerson(db_user, Person, bagCommand.u, function (person) {
+                if (person.items < 1 || typeof person.items == 'undefined') {
+                    msg = "Your bag is empty.";
+                } else {
+                    msg = "Your bag contains:<br>" + Items.showBag(person);
+                }
+                responseCallback({'msg': msg});
+            });
+
         } catch (err) {
-            //TODO: add response to the client
+            console.log(err);
+        }
+    });
+
+    spark.on('buy', function (buyCommand, responseCallback) {
+        try {
+            db_helper.getPerson(db_user, Person, buyCommand.u, function (person) {
+                var msg = "";
+                var location = person.currentLocation;
+                var field = person.playfield[location.x][location.y];
+                if (field && field.type === FieldType.STORE) {
+                    if (buyCommand.buy == 0) {
+                        msg = "You have: " + person.gold;
+                        msg += "<br>Items to buy:<br>" + Store.showStore();
+                    } else if (buyCommand.buy > 0 && buyCommand.buy < 6) {
+                        msg = Store.buy(person, buyCommand.buy);
+                        db_helper.updatePerson(db_user, person, function (update_result) {
+                            if (update_result.update_person_answer == "success") {
+                                responseCallback({
+                                    'msg': msg
+                                });
+                            }
+                        });
+                    }
+                } else {
+                    msg = "You must be in STORE to use this command.";
+                }
+                responseCallback({'msg': msg});
+            });
+        } catch (err) {
+            responseCallback({
+                'msg': "Server error."
+            });
+            console.log(err);
+        }
+    });
+
+    spark.on('sell', function (sellCommand, responseCallback) {
+        try {
+            db_helper.getPerson(db_user, Person, sellCommand.u, function (person) {
+                var msg = "";
+                var idx = sellCommand.sell - 1;
+                var location = person.currentLocation;
+                var field = person.playfield[location.x][location.y];
+                if (field && field.type === FieldType.STORE) {
+                    if (idx < person.items.length) {
+                        //delete item from bag and add gold to person
+                        person.gold += person.items[idx].price / 2;
+                        person.items.splice(idx, 1);
+                        msg = "You sell the item!";
+                        db_helper.updatePerson(db_user, person, function (update_result) {
+                            if (update_result.update_person_answer == "success") {
+                                responseCallback({
+                                    'msg': msg
+                                });
+                            }
+                        });
+                    } else {
+                        msg = "Bad item id!";
+                    }
+                } else {
+                    msg = "You must be in STORE to use this command.";
+                }
+                responseCallback({'msg': msg});
+            });
+        } catch (err) {
+            responseCallback({
+                'msg': "Server error."
+            });
             console.log(err);
         }
     });
@@ -260,7 +363,6 @@ primus.on("connection", function (spark) {
                 }
                 if (user != null) {
                     if (data.p === user.password) {
-                        spark.request.session.username = data.u;
                         responseCallback({'login_answer': 'success'});
                     }
                     else {
@@ -276,7 +378,6 @@ primus.on("connection", function (spark) {
                             responseCallback({'login_answer': 'error'});
                             return console.error(err);
                         }
-                        spark.request.session.username = data.u;
                         responseCallback({'login_answer': 'success'});
                     });
                 }

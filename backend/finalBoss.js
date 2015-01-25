@@ -1,7 +1,7 @@
 var FieldType = require("./fieldTypes")
 
 function FinalBoss() {
-    this.type = FieldType.FINAL_BOSS;
+    this.type = FieldType.BOSS;
 }
 
 FinalBoss.prototype.toString = function() {

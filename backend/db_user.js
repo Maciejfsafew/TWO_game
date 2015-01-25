@@ -15,6 +15,8 @@ var userSchema = mongoose.Schema({
     hp: Number,
     maxhp: Number,
     level: Number,
+    highscoreEnabled: Boolean,
+    highscoreName: String,
     experience: Number,
     items: Array,
     gold: Number,

@@ -30,10 +30,15 @@ function addExperienceToCharacter(character, expToAdd) {
 
 function levelUpCharacter(character) {
     character.level++;
+    character.expPerLevel = getExperiencePerLevel(character.level);
     character.maxhp += 20;
     character.hp = character.maxhp;
     character.strength += 2;
     character.dexterity += 2;
+}
+
+function getExperiencePerLevel(level) {
+    return experiencePerLevel[level - 1];
 }
 
 function levelDownCharacter(character) {
@@ -46,6 +51,7 @@ function levelDownCharacter(character) {
         experience = experiencePerLevel[character.level - 2];
     }
     character.experience = experience;
+    character.expPerLevel = getExperiencePerLevel(character.level);
     character.maxhp -= 20;
     character.hp = character.maxhp;
     character.strength -= 2;
@@ -54,3 +60,4 @@ function levelDownCharacter(character) {
 
 exports.addExperience = addExperience;
 exports.levelDownCharacter = levelDownCharacter;
+exports.getExperiencePerLevel = getExperiencePerLevel;

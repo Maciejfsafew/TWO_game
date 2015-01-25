@@ -1,12 +1,10 @@
 var FieldType = require("./fieldTypes")
+var Path = require("./path")
 var questDefinitions = require("./questDefinitions.json");
 
 exports.getQuest = function (person) {
     var location = person.currentLocation;
     var field = person.playfield[location.x][location.y];
-    if(field && field.type === FieldType.MONSTER) {
-        person.attackedMonsters += 1;
-    }
 
     if(field && field.type === FieldType.QUEST){
         if(field.finished) {
@@ -14,7 +12,6 @@ exports.getQuest = function (person) {
         }
 
         if(field.activated == false) {
-            //console.log("HERE");
             field.questNr = Math.floor(Math.random() * questDefinitions.length);
             var new_quiz = questDefinitions[field.questNr];
             //console.log(new_quiz);
@@ -41,6 +38,7 @@ exports.getQuest = function (person) {
                     person[entry[0]] += entry[1];
                     //console.log(person);
                 });
+                person.playfield[location.x][location.y] = new Path();
                 person.completedQuests += 1;
                 return questDefinitions[field.questNr].success;
             } else {

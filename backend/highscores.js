@@ -40,7 +40,6 @@ exports.get_highscores = function(callback) {
         var weights = config["playerscore"];
         var high_scores = [];
         players.forEach(function (player) {
-            console.log(player);
             var player_score = 0;
             for (var prop in weights) {
                 if(prop in player) {
@@ -49,10 +48,13 @@ exports.get_highscores = function(callback) {
                     console.warn("Player property: " + prop + " requested in game_config not found!");
                 }
             }
-            high_scores.push({
-                name: player.username,
-                score: player_score
-            });
+            if (player.highscoreEnabled) {
+
+                high_scores.push({
+                    name: player.name,
+                    score: player_score
+                });
+            }
         });
         callback(high_scores);
     });

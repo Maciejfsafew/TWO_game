@@ -13,13 +13,19 @@ function updateHeight(person) {
     $("#currHp").html(health.value + '/' + health.max);
 }
 
-function updateLocation() {
-    primus.send('map', {}, function (server_response) {
+function updateHighscores(form) {
+    var name = form[0].value;
+    console.log(name);
 
-        //console.log(server_response.map);
-        //console.log(server_response.location);
+    primus.send('updateHighscores', {'u': $.cookie("name"), 'name': name}, function (server_response) {
+        window.open('/highscores', "_self");
+    });
+}
+
+function updateLocation() {
+    primus.send('map', {'u': $.cookie("name")}, function (server_response) {
         var location = server_response.location;
-        if(location == undefined) {
+        if (location == undefined) {
             location = {x: -1, y: -1};
         }
         var map_panel = document.getElementById('map-view');
@@ -72,11 +78,14 @@ function updateLocation() {
                     case 6:
                         img.src = images + 'quest_image.jpg';
                         break;
+                    case 7:
+                        img.src = images + 'store_image.jpg';
+                        break;
                 }
-                img.width = 30;
-                img.height = 30;
+                img.width = 25;
+                img.height = 25;
                 if (col == score.length - location.x && row == location.y) {
-                    img.style.border = "2px solid blue";
+                    img.style.border = "2px solid yellow";
                 } else {
                     img.style.border = "2px solid lightblue"
                 }
@@ -90,13 +99,13 @@ function updateLocation() {
 function setUpUserInfo(person) {
     updateHeight(person);
     $("#level").html(person.level);
-    var strength = document.getElementById("strength");
     $("#currStrength").html(person.strength);
-    var dexterity = document.getElementById("dexterity");
     $("#currDexterity").html(person.dexterity);
     var experience = document.getElementById("experience");
     experience.value = person.experience;
+    experience.max = person.expPerLevel;
     $("#currExperience").html(experience.value + '/' + experience.max);
+    $("#currGold").html(person.gold);
 }
 
 function logout() {
@@ -119,6 +128,7 @@ $(function () {
             else if (get_person_answer === 'success') {
                 //window.person = data.person;
                 setUpUserInfo(data.person);
+                updateLocation();
                 window.is_sleeping = false;
                 //console.log(window.person);
                 var data_name = "<b>Hej, " + $.cookie("name") + "!</b>";

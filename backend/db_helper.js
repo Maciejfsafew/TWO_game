@@ -6,6 +6,8 @@ exports.updatePerson = function (db_user, person, responseCallback) {
         }
         if (user != null) {
             user.strength = person.strength;
+            user.highscoreName = person.highscoreName;
+            user.highscoreEnabled= person.highscoreEnabled;
             user.dexterity = person.dexterity;
             user.hp = person.hp;
             user.maxhp = person.maxhp;
@@ -40,7 +42,6 @@ exports.sleepPersonStart = function (db_user, person_name, responseCallback) {
         }
         if (user != null) {
             user.sleep_start = new Date();
-            user.hp = 5;
             user.save(function (err, us) {
                 if (err) {
                     responseCallback({'sleep_person_start_answer': 'error', 'msg': ''});
@@ -113,6 +114,9 @@ exports.us2per = function (Person, user) {
     person.hp = user.hp;
     person.maxhp = user.maxhp;
     person.level = user.level;
+    person.highscoreName = user.highscoreName;
+    person.highscoreEnabled= user.highscoreEnabled;
+    person.expPerLevel = person.countExpPerLevel();
     person.experience = user.experience;
     person.items = user.items;
     person.currentLocation = user.currentLocation;
@@ -133,6 +137,8 @@ exports.per2us = function (db_user, data, person) {
         hp: person.hp,
         maxhp: person.maxhp,
         level: person.level,
+        highscoreName: person.highscoreName,
+        highscoreEnabled: person.highscoreEnabled,
         experience: person.experience,
         items: person.items,
         currentLocation: person.currentLocation,

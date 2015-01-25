@@ -40,8 +40,10 @@ exports.generateItem = function () {
 
 exports.showBag = function (hero){
     var result = "";
+    var idx = 1;
     hero.items.forEach(function(it){
-        result += ".:: "+ it.name +" ::.\n"+it.description+"\n+"+it.value +" " +it.attribute+"\n";
+        result += idx +". .:: "+ it.name +" ::.<br>&nbsp&nbsp&nbsp"+ it.description+"<br>&nbsp&nbsp&nbsp+"+ it.value +" "+ it.attribute +"<br>&nbsp&nbsp&nbspSell Price: "+ it.price/2+"<br>";
+        idx++;
     });
     return result;
 }
@@ -49,9 +51,14 @@ exports.showBag = function (hero){
 //as parameter give hero or monster to add stats from items
 exports.updateStats = function (hero){
     if(!hero.description){
-        hero.strength = 2;
-        hero.dexterity = 2;
+        hero.strength = 2*hero.level;
+        hero.dexterity = 2*hero.level;
         hero.hp = 100;
+        if(hero.level > 1){
+            for(i = 2; i <= hero.level; i++){
+                hero.hp += 20;
+            }
+        }
         hero.maxhp = hero.hp;
     }
     hero.items.forEach(function (it){

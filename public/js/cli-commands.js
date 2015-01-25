@@ -9,7 +9,7 @@ var Commands = [
             if (args.length == 1) {
                 var arg = args[0].toUpperCase();
                 if (arg === "N" || arg === "E" || arg === "S" || arg === "W") {
-                    msg = {success: true, msg: {move: arg}}
+                    msg = {success: true, msg: {move: arg, 'u': $.cookie("name")}}
                 }
             }
             return msg;
@@ -19,6 +19,8 @@ var Commands = [
             //window.person.currentLocation = server_response.location;
             setUpUserInfo(server_response.person);
             updateLocation();
+            if(!server_response.is_dead && server_response.boss)
+                window.open('/win', "_self");
             if (server_response.is_dead)
                 window.alert("Unfortunately, you died. Try again from start!");
         }
@@ -39,7 +41,7 @@ var Commands = [
                         return msg
                     }
                 });
-                msg = {success: true, msg: {answer: parsedArgs}}
+                msg = {success: true, msg: {answer: parsedArgs, 'u': $.cookie("name")}}
             }
             return msg;
         },
@@ -112,7 +114,42 @@ var Commands = [
         alias: "b",
         msg: "",
         args_handler: function (args) {
-            return {success: true, msg: ""} //Args handler validates only arguments
+            return {success: true, msg: {'u': $.cookie("name")}} //Args handler validates only arguments
+        }
+    },
+    {
+        name: "buy",
+        msg: "",
+        alias: "buy",
+        args_handler: function (args) {
+            var msg = {
+                success: false,
+                msg: "Bad argument! Use: 'buy' - to show list of items in store or 'buy [id]' - to buy item with [id]"
+            };
+            if (args.length == 1) {
+                var arg = args[0];
+                if (arg > 0 && arg <= 6) {
+                    msg = {success: true, msg: {buy: arg, 'u': $.cookie("name")}}
+                }
+            } else if (args.length == 0) {
+                msg = {success: true, msg: {buy: 0, 'u': $.cookie("name")}}
+            }
+            return msg;
+        }
+    },
+    {
+        name: "sell",
+        msg: "",
+        alias: "sell",
+        args_handler: function (args) {
+            var msg = {success: false, msg: "Bad argument! Use 'sell [id]' - to sell item with [id] from bag"};
+            if (args.length == 1) {
+                var arg = args[0];
+                if (arg > 0) {
+                    msg = {success: true, msg: {sell: arg, 'u': $.cookie("name")}}
+                }
+            }
+            return msg;
         }
     },
     {
@@ -129,7 +166,7 @@ var Commands = [
         alias: "l",
         msg: "",
         args_handler: function () {
-            return {success: true, msg: ""}
+            return {success: true, msg: {'u': $.cookie("name")}}
         },
         response_handler: function () {
             updateLocation();
