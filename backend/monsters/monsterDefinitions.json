@@ -13,7 +13,7 @@
   {
     "name": "Rogue",
     "description": "Fast but small hp pool.",
-    "level": 2,
+    "level": 1,
     "strength": 2,
     "dexterity": 10,
     "hp": 30,

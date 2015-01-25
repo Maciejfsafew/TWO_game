@@ -25,10 +25,6 @@ exports.generateMonster = function (hero, probability, isSmaug) {
         if (monstersFilteredByLevel.length === 0) {
             monstersFilteredByLevel = monsterDefinitions
         }
-        return new Monster(monstersFilteredByLevel[Math.floor(Math.random() * monstersFilteredByLevel.length)]);
+        return new Monster(monstersFilteredByLevel[Math.floor(Math.random() * Math.min(monstersFilteredByLevel.length, monsterDefinitions.length - 1 ))]);
     }
 };
-
-//function containsMonster(field) {
-//    return field && (field.type === FieldType.MONSTER) && field.monster; // field should probably be able do contain a monster object
-//}

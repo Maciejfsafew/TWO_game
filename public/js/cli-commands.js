@@ -20,7 +20,7 @@ var Commands = [
             setUpUserInfo(server_response.person);
             updateLocation();
             if(!server_response.is_dead && server_response.boss)
-                openWinWindow(server_response.person);
+                window.open('/win', "_self");
             if (server_response.is_dead)
                 window.alert("Unfortunately, you died. Try again from start!");
         }
