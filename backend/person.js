@@ -32,6 +32,9 @@ var Person = function Person(name, playfield) {
         this.items = [];
         this.gold = 0;
         this.hp = this.maxhp;
+        this.attackedMonsters = 0;
+        this.completedQueezes = 0;
+        this.completedQuests = 0;
         //window.alert("Unfortunately, you died. Try again from start!");
     };
     this.playfield = playfield;
