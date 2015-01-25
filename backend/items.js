@@ -51,9 +51,14 @@ exports.showBag = function (hero){
 //as parameter give hero or monster to add stats from items
 exports.updateStats = function (hero){
     if(!hero.description){
-        hero.strength = 2;
-        hero.dexterity = 2;
+        hero.strength = 2*hero.level;
+        hero.dexterity = 2*hero.level;
         hero.hp = 100;
+        if(hero.level > 1){
+            for(i = 2; i <= hero.level; i++){
+                hero.hp += 20;
+            }
+        }
         hero.maxhp = hero.hp;
     }
     hero.items.forEach(function (it){
