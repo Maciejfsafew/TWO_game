@@ -122,6 +122,8 @@ primus.on("connection", function (spark) {
                                 person.addExperience(monster);
                                 person.attackedMonsters += 1;
                                 person.gold += monster.gold;
+                                if (monster.items.length != 0)
+                                    person.items.push(monster.items);
                             }
                         }
                     }
@@ -156,16 +158,16 @@ primus.on("connection", function (spark) {
 
     spark.on('updateHighscores', function (data, fn) {
         try {
-        db_helper.getPerson(db_user, Person, data.u, function (person) {
-            person.highscoreName = data.name;
-            person.highscoreEnabled = true;
+            db_helper.getPerson(db_user, Person, data.u, function (person) {
+                person.highscoreName = data.name;
+                person.highscoreEnabled = true;
 
-            db_helper.updatePerson(db_user, person, function (update_result) {
-                fn({
-                    'msg': 'ok'
+                db_helper.updatePerson(db_user, person, function (update_result) {
+                    fn({
+                        'msg': 'ok'
+                    });
                 });
             });
-        });
         } catch (err) {
             responseCallback({
                 'msg': "Server error."

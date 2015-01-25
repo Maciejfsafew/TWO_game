@@ -15,10 +15,12 @@ function updateHeight(person) {
 
 function openWinWindow(person) {
     var popup = function popitup(url) {
-        var x = screen.width/2 - 700/2;
-        var y = screen.height/2 - 485/2;
-        window.open(url,'name','height=600,width=1000,left='+x+',top='+y);
-        if (window.focus) {newwindow.focus()}
+        var x = screen.width / 2 - 700 / 2;
+        var y = screen.height / 2 - 485 / 2;
+        window.open(url, 'name', 'height=600,width=1000,left=' + x + ',top=' + y);
+        if (window.focus) {
+            newwindow.focus()
+        }
         return false;
     };
     popup('win');
@@ -110,14 +112,13 @@ function updateLocation() {
 function setUpUserInfo(person) {
     updateHeight(person);
     $("#level").html(person.level);
-    var strength = document.getElementById("strength");
     $("#currStrength").html(person.strength);
-    var dexterity = document.getElementById("dexterity");
     $("#currDexterity").html(person.dexterity);
     var experience = document.getElementById("experience");
     experience.value = person.experience;
     experience.max = person.expPerLevel;
     $("#currExperience").html(experience.value + '/' + experience.max);
+    $("#currGold").html(person.gold);
 }
 
 function logout() {
