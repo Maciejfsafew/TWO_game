@@ -153,6 +153,15 @@ var Commands = [
         }
     },
     {
+        name: "highscores",
+        alias: "hs",
+        msg: "",
+        args_handler: function (args) {
+            window.open('/highscores', "_self");
+            return {success: true, msg: ""}
+        }
+    },
+    {
         name: "loot",
         alias: "l",
         msg: "",

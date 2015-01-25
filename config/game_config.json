@@ -1,6 +1,15 @@
 {
     "playerscore" : {
         "level" : 10,
-        "experience": 2
+        "time": -1,
+        "experience": 5,
+        "items": 10,
+        "gold": 6,
+        "attackedMonsters": 3,
+        "completedQueezes": 3,
+        "completedQuests": 3,
+        "strength": 3,
+        "dexterity": 3
+
     }
 }

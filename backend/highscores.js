@@ -26,6 +26,14 @@ exports.get_all_players = function(callback) {
     });
 };
 
+function stat_value(property) {
+    if (property instanceof Array) {
+        return stat_value(property.length)
+    } else {
+        return property;
+    }
+}
+
 exports.get_highscores = function(callback) {
     var config = exports.get_config();
     exports.get_all_players(function(players) {
@@ -34,8 +42,8 @@ exports.get_highscores = function(callback) {
         players.forEach(function (player) {
             var player_score = 0;
             for (var prop in weights) {
-                if (prop in player) {
-                    player_score += weights[prop] * player[prop];
+                if(prop in player) {
+                    player_score += weights[prop] * stat_value(player[prop]);
                 } else {
                     console.warn("Player property: " + prop + " requested in game_config not found!");
                 }
@@ -43,7 +51,7 @@ exports.get_highscores = function(callback) {
             if (player.highscoreEnabled) {
 
                 high_scores.push({
-                    name: player.highscoreName,
+                    name: player.name,
                     score: player_score
                 });
             }
