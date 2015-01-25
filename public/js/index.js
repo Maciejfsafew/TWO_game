@@ -13,6 +13,26 @@ function updateHeight(person) {
     $("#currHp").html(health.value + '/' + health.max);
 }
 
+function openWinWindow(person) {
+    var popup = function popitup(url) {
+        var x = screen.width/2 - 700/2;
+        var y = screen.height/2 - 485/2;
+        window.open(url,'name','height=600,width=1000,left='+x+',top='+y);
+        if (window.focus) {newwindow.focus()}
+        return false;
+    };
+    popup('win');
+}
+
+function updateHighscores(form) {
+    var name = form[0].value;
+    console.log(name);
+
+    primus.send('updateHighscores', {'u': $.cookie("name"), 'name': name}, function (server_response) {
+        window.open('/highscores', "_self");
+    });
+}
+
 function updateLocation() {
     primus.send('map', {'u': $.cookie("name")}, function (server_response) {
         var location = server_response.location;

@@ -73,6 +73,11 @@ app.get('/highscores', function (req, res) {
     });
 });
 
+app.get('/win', function (req, res) {
+    res.render('win.html.ejs', {
+        'title': "Smoug is defeated"
+    });
+});
 
 primus.on("connection", function (spark) {
     //{ move: 'N/S/W/E' }
@@ -101,7 +106,7 @@ primus.on("connection", function (spark) {
                         var type = moved.field.type;
                         var monster = moved.field.monster;
                         Items.updateStats(person);
-                        if (type != null && type === FieldType.MONSTER && monster != null) {
+                        if (type != null && (type === FieldType.MONSTER || type === FieldType.BOSS) && monster != null) {
                             //update monster stats before action
                             Items.updateStats(monster);
                             var battle_result = battle(person, monster, true, null, "");
@@ -134,7 +139,8 @@ primus.on("connection", function (spark) {
                             'msg': msg,
                             'location': person.currentLocation,
                             'person': person,
-                            'is_dead': is_dead
+                            'is_dead': is_dead,
+                            'boss': (type != null && type === FieldType.BOSS)
                         });
                     }
                 });
@@ -146,6 +152,27 @@ primus.on("connection", function (spark) {
             console.log(err);
         }
     });
+
+    spark.on('updateHighscores', function (data, fn) {
+        try {
+        db_helper.getPerson(db_user, Person, data.u, function (person) {
+            person.highscoreName = data.name;
+            person.highscoreEnabled = true;
+
+            db_helper.updatePerson(db_user, person, function (update_result) {
+                fn({
+                    'msg': 'ok'
+                });
+            });
+        });
+        } catch (err) {
+            responseCallback({
+                'msg': "Server error."
+            });
+            console.log(err);
+        }
+    });
+
     spark.on('answer', function (answerCommand, responseCallback) {
         try {
             db_helper.getPerson(db_user, Person, answerCommand.u, function (person) {

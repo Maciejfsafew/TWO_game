@@ -111,8 +111,12 @@ exports.movePerson = function (person, direction) {
         var newField = person.playfield[newLocation.x][newLocation.y];
 
         if (newField.type == FieldType.MONSTER) {
-            newField.monster = generateMonster(person, 1);
+            newField.monster = generateMonster(person, 1, false);
         }
+        if (newField.type == FieldType.BOSS) {
+            newField.monster = generateMonster(person, 1, true);
+        }
+
         if (newField.type != FieldType.FORBIDDEN) {
             return {field: newField, location: newLocation, status: status};
         }
@@ -134,7 +138,7 @@ exports.getFieldDescription = function (field) {
         return "There's a quiz chest! You can loot it with 'loot' command.";
     } else if (field.type == FieldType.MONSTER) {
         return "On this field is really scary monster - " + getMonsterDescription(field.monster);
-    } else if (field.type == FieldType.FINAL_BOSS) {
+    } else if (field.type == FieldType.BOSS) {
         return "The journey is over. This field is occupied by Smaug.";
     } else if (field.type == FieldType.START) {
         return "There is a mysterious cottage on the filed. It's owner may ask you for favour.";
