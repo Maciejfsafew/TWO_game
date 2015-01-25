@@ -112,6 +112,7 @@ exports.us2per = function (Person, user) {
     person.hp = user.hp;
     person.maxhp = user.maxhp;
     person.level = user.level;
+    person.expPerLevel = person.countExpPerLevel();
     person.experience = user.experience;
     person.items = user.items;
     person.currentLocation = user.currentLocation;
