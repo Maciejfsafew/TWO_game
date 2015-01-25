@@ -1,31 +1,39 @@
-var imgDir = "../resources/monsters"
+var imgDir = "/public/resources/monsters"
 var defaultMonster = "default.png"
-var monsterArray = [
+var monsterArray = {
   'Tank' : 'tank.png',
   'Rogue': 'rogue.png',
   'Troll': 'troll.png'
-]
+};
 
-var element = $('#monster-view');
 
-var showMonsterImg = function(parameters) {
-  // TODO uzupelnic jak bedzie API do potworow
-  primus.send('monster-api', parameters, function (response) {
-    var nameElement = element.children('#monster-name');
-    var imgElement = element.children('#monster-picture');
-    var descElement = element.children('#monster-description');
-    var statsElement = element.children('#monster-stats');
+var showMonsterImg = function(element) {
+  primus.send('map', {'u': $.cookie("name")}, function (response) {
+    var location = response.location;
+    var field = response.map[location.x][location.y];
+    if (field.monster) {
+      var monster = field.monster;
 
-    var monster = imgDir + '/' + monsterArray[response.name];
-    imgElement.attr('src', monster);
-    nameElement.html(response.name + '(lvl ' + response/.level + ')');
-    descElement.html('<i>' + response.description + '</i>');
-    statsElement.html('HP: ' + response.hp + '/' + response.maxhp + ' Str: ' + response.strength + ' Dex: ' + response.dexterity);
+      var nameElement = element.find('#monster-name');
+      var imgElement = element.find('#monster-picture');
+      var descElement = element.find('#monster-description');
+      var statsElement = element.find('#monster-stats');
 
-    element.show();
+      console.log(JSON.stringify(monster));
+      var monsterImg = imgDir + '/' + monsterArray[monster.name];
+      imgElement.attr('src', monsterImg);
+      nameElement.html(monster.name + ' (lvl ' + monster.level + ')');
+      descElement.html(monster.description );
+      statsElement.html('HP: ' + monster.hp + '/' + monster.maxhp + ' Str: ' + monster.strength + ' Dex: ' + monster.dexterity);
+
+      element.css("visibility", "visible");
+    } else {
+      hideMonsterImg(element);
+    }
   });
 }
 
-varHideMonsterImg = function() {
-  element.hide();
+
+var hideMonsterImg = function(element) {
+  element.css("visibility", "hidden");
 }

@@ -15,12 +15,19 @@ var userSchema = mongoose.Schema({
     hp: Number,
     maxhp: Number,
     level: Number,
+    highscoreEnabled: Boolean,
+    highscoreName: String,
     experience: Number,
     items: Array,
-    currentField: Number,
     gold: Number,
+    sleep_start: Date,
     currentLocation: mongoose.Schema.Types.Mixed,
-    playfield: mongoose.Schema.Types.Mixed
+    playfield: mongoose.Schema.Types.Mixed,
+
+    // Fields used for quests
+    attackedMonsters: Number,
+    completedQueezes: Number,
+    completedQuests: Number
 });
 
 var User = mongoose.model('User', userSchema);

@@ -1,3 +1,5 @@
+var primus = Primus.connect();
+
 (function (root, $, _) {
     Josh.Example = (function (root, $, _) {
 
@@ -34,16 +36,20 @@
 
                     //If command valid
                     if (status.success === true) {
-                        if (!window.is_sleeping || name === 'wakeup')
+                        if (!window.is_sleeping || name === 'wakeup') {
+                            var element = $('#monster-view');
                             primus.send(name, status.msg, function (response) {
                                 var responseMsg = response.msg;
+                                showMonsterImg(element);
                                 shellCallback(msg + (responseMsg != undefined ? responseMsg : ''));
                                 if (response_handler !== undefined) {
                                     response_handler(response);
                                 }
                             });
-                        else
+                          }
+                        else {
                             shellCallback("You cannot do anything, because you are sleeping. Type 'wakeup' to wake up.");
+                          }
                         //If command invalid e.g. typo in command:
                     } else {
                         shellCallback(msg + status.msg);

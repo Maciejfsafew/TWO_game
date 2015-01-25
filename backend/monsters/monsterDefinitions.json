@@ -13,7 +13,7 @@
   {
     "name": "Rogue",
     "description": "Fast but small hp pool.",
-    "level": 2,
+    "level": 1,
     "strength": 2,
     "dexterity": 10,
     "hp": 30,
@@ -31,5 +31,16 @@
     "maxhp": 130,
     "items": [],
     "gold": 40
+  },
+  {
+    "name": "Smaug",
+    "description": "Powerfull dragon",
+    "level": 7,
+    "strength": 8,
+    "dexterity": 8,
+    "hp": 130,
+    "maxhp": 130,
+    "items": [],
+    "gold": 400
   }
 ]

@@ -9,13 +9,21 @@ var Commands = [
             if (args.length == 1) {
                 var arg = args[0].toUpperCase();
                 if (arg === "N" || arg === "E" || arg === "S" || arg === "W") {
-                    msg = {success: true, msg: {move: arg}}
+                    msg = {success: true, msg: {move: arg, 'u': $.cookie("name")}}
                 }
             }
+            
             return msg;
         },
         response_handler: function (server_response) {
-            window.person.currentLocation = server_response.location;
+            // TODO: replace, client haven't window.person object
+            //window.person.currentLocation = server_response.location;
+            setUpUserInfo(server_response.person);
+            updateLocation();
+            if(!server_response.is_dead && server_response.boss)
+                window.open('/win', "_self");
+            if (server_response.is_dead)
+                window.alert("Unfortunately, you died. Try again from start!");
         }
     },
     {
@@ -34,23 +42,13 @@ var Commands = [
                         return msg
                     }
                 });
-                msg = {success: true, msg: {answer: parsedArgs}}
+                msg = {success: true, msg: {answer: parsedArgs, 'u': $.cookie("name")}}
             }
             return msg;
         },
         response_handler: function (server_response) {
             console.log(server_response);
-        }
-    },
-    {
-        name: "map",
-        msg: "",
-        alias: "map",
-        args_handler: function (args) {
-            return {success: true, msg: ""} //Args handler validates only arguments
-        },
-        response_handler: function (server_response) {
-            console.log(server_response);
+            updateLocation();
         }
     },
     {
@@ -62,20 +60,29 @@ var Commands = [
         },
         response_handler: function (server_response) {
             window.is_sleeping = true;
-            window.myInterval = setInterval(function () {
-                if (window.person.hp + 5 <= window.person.maxhp) {
-                    window.person.hp += 5;
-                    primus.send('update_person', {'person': window.person}, function (data) {
-                        var update_person_answer = data.update_person_answer;
-                        if (update_person_answer === 'error') {
-                            window.alert('Sleep error');
-                        }
-                        else if (update_person_answer === 'success') {
-                            updateHeight();
-                        }
-                    });
+            primus.send('sleep_person_start', {'person_name': $.cookie("name")}, function (data) {
+                var sleep_person_start_answer = data.sleep_person_start_answer;
+                console.log(sleep_person_start_answer);
+                if (sleep_person_start_answer === 'error') {
+                    window.alert('Sleep error');
                 }
-            }, 5000);
+                else if (sleep_person_start_answer === 'success') {
+                    window.myInterval = setInterval(function () {
+                        primus.send('add_health', {'person_name': $.cookie("name")}, function (data) {
+                            var add_health_answer = data.add_health_answer;
+                            if (add_health_answer === 'error') {
+                                window.alert('Sleep error');
+                            }
+                            else if (add_health_answer === 'success') {
+                                updateHeight(data.person);
+                            }
+                            else if (add_health_answer === 'max') {
+                                //ignore
+                            }
+                        });
+                    }, 5000);
+                }
+            });
         }
     },
     {
@@ -108,7 +115,62 @@ var Commands = [
         alias: "b",
         msg: "",
         args_handler: function (args) {
-            return {success: true, msg: ""} //Args handler validates only arguments
+            return {success: true, msg: {'u': $.cookie("name")}} //Args handler validates only arguments
+        }
+    },
+    {
+        name: "buy",
+        msg: "",
+        alias: "buy",
+        args_handler: function (args) {
+            var msg = {
+                success: false,
+                msg: "Bad argument! Use: 'buy' - to show list of items in store or 'buy [id]' - to buy item with [id]"
+            };
+            if (args.length == 1) {
+                var arg = args[0];
+                if (arg > 0 && arg <= 6) {
+                    msg = {success: true, msg: {buy: arg, 'u': $.cookie("name")}}
+                }
+            } else if (args.length == 0) {
+                msg = {success: true, msg: {buy: 0, 'u': $.cookie("name")}}
+            }
+            return msg;
+        }
+    },
+    {
+        name: "sell",
+        msg: "",
+        alias: "sell",
+        args_handler: function (args) {
+            var msg = {success: false, msg: "Bad argument! Use 'sell [id]' - to sell item with [id] from bag"};
+            if (args.length == 1) {
+                var arg = args[0];
+                if (arg > 0) {
+                    msg = {success: true, msg: {sell: arg, 'u': $.cookie("name")}}
+                }
+            }
+            return msg;
+        }
+    },
+    {
+        name: "highscores",
+        alias: "hs",
+        msg: "",
+        args_handler: function (args) {
+            window.open('/highscores', "_self");
+            return {success: true, msg: ""}
+        }
+    },
+    {
+        name: "loot",
+        alias: "l",
+        msg: "",
+        args_handler: function () {
+            return {success: true, msg: {'u': $.cookie("name")}}
+        },
+        response_handler: function () {
+            updateLocation();
         }
     }
 ]

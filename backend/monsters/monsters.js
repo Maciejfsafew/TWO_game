@@ -12,23 +12,19 @@ function Monster(monsterConfiguration) {
     this.gold = monsterConfiguration.gold;
 }
 var monsterDefinitions = require("./monsterDefinitions.json");
-exports.generateMonster = function (hero, probability) {
+exports.generateMonster = function (hero, probability, isSmaug) {
     //hero - Must contain currentField property. Probability is of monster generation.
-    if (!containsMonster(hero.currentField)) {
-        if (Math.random() <= probability) {
-            var monstersFilteredByLevel = monsterDefinitions.filter(function (monster) {
-                return monster.level <= hero.level;
-            });
-            if (monstersFilteredByLevel.length === 0) {
-                monstersFilteredByLevel = monsterDefinitions
-            }
-            return new Monster(monstersFilteredByLevel[Math.floor(Math.random() * monstersFilteredByLevel.length)]);
-        }
+    if(isSmaug)
+    {
+        return new Monster(monsterDefinitions[monsterDefinitions.length - 1]);
     }
-    return null;
+    if (Math.random() <= probability) {
+        var monstersFilteredByLevel = monsterDefinitions.filter(function (monster) {
+            return monster.level <= hero.level && monster.name != "Smaug";
+        });
+        if (monstersFilteredByLevel.length === 0) {
+            monstersFilteredByLevel = monsterDefinitions
+        }
+        return new Monster(monstersFilteredByLevel[Math.floor(Math.random() * Math.min(monstersFilteredByLevel.length, monsterDefinitions.length - 1 ))]);
+    }
 };
-
-
-function containsMonster(field) {
-    return field && (field.type === FieldType.MONSTER) && field.monster; // field should probably be able do contain a monster object
-}

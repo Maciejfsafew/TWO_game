@@ -1,6 +1,6 @@
 #shell-panel {
     /*height: 800px;  */
-    height: 500px;
+    /*height: 70%;*/
     width: 95%;
     background-color: #002f05;
     color: #00fe00;
@@ -13,12 +13,19 @@
     text-shadow: 0px 0px 1px #00fe00;
 }
 
+#hs_body {
+    background-color: #002f05;
+    font-family: 'Source Code Pro';
+    color: #00fe00;
+    text-shadow: 0px 0px 1px #00fe00;
+}
+
 #shell-cli .prompt {
 }
 
 td.left-margin-class {
     width: 100px;
-    text-align:right;
+    text-align: right;
 }
 
 /*progress {*/
@@ -29,32 +36,32 @@ td.left-margin-class {
 /*}*/
 
 progress#health.health_progress::-webkit-progress-value {
-background: #00007f;
+    background: #4c4cff;
 }
 
 progress#health.health_progress {
-    color: #00007f;
+    color: #4c4cff;
     font-size: .6em;
     line-height: 1.5em;
     text-indent: .5em;
     width: 15em;
     height: 1.8em;
-    border: 1px solid #00007f;
+    border: 1px solid #4c4cff;
     background: #ffffff;
 }
 
 progress#experience.exp_progress::-webkit-progress-value {
-    background: #4A7023;
+    background: #ff3232;
 }
 
 progress#experience.exp_progress {
-    color: #4A7023;
+    color: #ff3232;
     font-size: .6em;
     line-height: 1.5em;
     text-indent: .5em;
     width: 15em;
     height: 1.8em;
-    border: 1px solid #4A7023;
+    border: 1px solid #ff3232;
     background: #ffffff;
 }
 
@@ -63,7 +70,7 @@ progress#experience.exp_progress {
     /*color: #12A312;*/
     /*color: #002f05;*/
     text-align: center;
-    text-shadow: /*-1px -1px 1px #00fe00,*/ /*1px -1px 1px #00fe00,*/ /*1px 1px 1px #00fe00,*/ /*-1px 1px 1px #00fe00,*/ 0px 0px 2px #00fe00;
+    text-shadow: 0px 0px 2px #00fe00;
     font-size: 200%;
 
 }
@@ -72,18 +79,18 @@ progress#experience.exp_progress {
     font-size: 300%;
     text-align: center;
     display: none
+
 }
 
-table.highscore, table.highscore th, table.highscore td {
+table.highscore, table.highscore th, table.highscore td.highscore {
     border: 1px dotted #002f05;
 }
 
-td .highscore {
+td.highscore {
     display: none;
 }
 
 #monster-view {
-  width: 350px;
-  height: 350px;
-  border: 1px solid #00007f;
+  width: 400px;
+  border: 4px solid #254117;
 }

@@ -22,10 +22,11 @@
     <link rel="stylesheet" type="text/css" href="/public/stylesheets/style.css">
 </head>
 
-<body id="body_elements" style="display: none;">
-<table>
+<body id="body_elements" style="display: none; overflow:hidden; margin:0;" bgcolor="#002F05">
+<table class="text_color">
     <tr>
-        <td id="name">test</td>
+        <td width="85%"></td>
+        <td id="name" >test</td>
         <td id="logout">
             <button onclick="logout()">Logout</button>
         </td>
@@ -35,46 +36,67 @@
         <button onclick="highscores()">Highscores</button>
     </tr>
 </table>
-<table>
-    <tr>
-        <td>Strength:</td>
-        <td id="currStrength"></td>
-        <td class="left-margin-class">Dexterity:</td>
-        <td id="currDexterity"></td>
-        <td class="left-margin-class">Health:</td>
-        <td>
-            <progress id="health" class="health_progress"></progress>
+<table width="100%">
+    <td width="70%">
+        <table class="text_color" align="center">
+            <tr>
+                <td class="left-margin-class">Strength:</td>
+                <td align="left" id="currStrength"></td>
+                <td class="left-margin-class">Dexterity:</td>
+                <td id="currDexterity"></td>
+                <td class="left-margin-class">Health:</td>
+                <td>
+                    <progress id="health" class="health_progress"></progress>
+                </td>
+                <td id="currHp"></td>
+                <td class="left-margin-class">Level:</td>
+                <td id="level"></td>
+                <td class="left-margin-class">Experience:</td>
+                <td>
+                    <progress id="experience" class="exp_progress"></progress>
+                </td>
+                <td id="currExperience"></td>
+                <td class="left-margin-class">Gold:</td>
+                <td align="left" id="currGold"></td>
+            </tr>
+        </table>
+        <div class="wrapper">
+			<table width="100%">
+		    <tr>
+				<td width="90%" rowspan="2">
+        	    	<div id="shell-panel" tabindex="0">
+        	    	    <div>Welcome to TWO MUD!<br>
+        	    	    </div>
+        	    	    <div id="shell-view"></div>
+        	    	</div>
+				</td>
+        <td width="30%" align="center">
+          <table id="map-view">
+            <tr>
+            </tr>
+          </table>
         </td>
-        <td id="currHp"></td>
-        <td class="left-margin-class">Level:</td>
-        <td id="level"></td>
-        <td class="left-margin-class">Experience:</td>
-        <td>
-            <progress id="experience" max="100" class="exp_progress"></progress>
-        </td>
-        <td id="currExperience"></td>
-    </tr>
+
+        </tr>
+          <tr>
+            <td width="10%" align="left" valign="top">
+              <div id="monster-view" align="left" style="visibility: hidden">
+                <center><b><div id="monster-name">monster name</div></b></center>
+                <center><i><div id="monster-description">description</div></i></center>
+                <center><img src="/public/resources/monsters/default.png" id="monster-picture" /></center>
+                <center><div id="monster-stats">stats</div></center>
+              </td>
+          </tr>
+		  </table>
+        </div>
+    </td>
 </table>
-<div class="wrapper">
-  <table width="100%">
-    <tr>
-      <td width="90%">
-        <div id="shell-panel" tabindex="0">
-            <div>Welcome to TWO MUD!<br>
-            </div>
-            <div id="shell-view"></div>
-        </div>
-      </td>
-      <td width="10%" align="left" valign="top">
-        <div id="monster-view" align="left" style="visibility:hidden">
-          <div id="monster-name"/>
-          <div id="monster-description"/>
-          <img src="/public/resources/monsters/default.png" id="monster-picture"/>
-          <div id="monster-stats"/>
-        </div>
-      </td>
-    </tr>
-  </table>
-</div>
+<script language="javascript">
+    function autoResizeDiv() {
+        document.getElementById('shell-panel').style.height = (window.innerHeight - 150) + 'px';
+    }
+    window.onresize = autoResizeDiv;
+    autoResizeDiv();
+</script>
 </body>
 </html>

@@ -10,6 +10,7 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.2/underscore-min.js"></script>
     <script src="/public/lib/primus.js"></script>
+    <script src="/public/js/index.js"></script>
     <script src="/public/lib/josh.js/killring.js"></script>
     <script src="/public/lib/josh.js/history.js"></script>
     <script src="/public/lib/josh.js/readline.js"></script>
@@ -18,33 +19,14 @@
     <script src="/public/js/cli-commands.js"></script>
     <script src="/public/lib/cli.js"></script>
     <script src="/public/lib/jquerytypewriter.js"></script>
-    <script src="/public/js/draw_highscores.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $('th').typewrite({
-                'delay': 100,
-            });
-
-            $('#high-scores-title').typewrite({
-                'delay': 100
-            });
-});
-
-    </script>
     <link rel="stylesheet" type="text/css" href="/public/stylesheets/style.css">
 </head>
 
-<body id="hs_body">
-<div class="wrapper" id="hs-panel">
-        <div id="high-scores-title" class="highscore">HIGH SCORES<br></div>
-        <table id="high-scores-table" class="highscore" width="100%">
-        <tr>
-                <th width="50%">PLAYER</th>
-                <th width="50%">SCORE</th>
-        </tr>
-        </table>
-</div>
-
-<div id="return_msg" > Press SPACE to return  </div>
+<body id="body_elements" background="/public/images/killed_dragon_image.jpg" style="background-repeat: no-repeat; background-size: 100%;">
+<form name="fianl" action="" method="get">
+    Smoug has been defeated, please enter your name: <BR>
+    <INPUT TYPE="text" NAME="inputbox" VALUE=""><P>
+        <INPUT TYPE="button" NAME="button1" Value="Save" onClick="updateHighscores(this.form)">
+</FORM>
 </body>
 </html>
