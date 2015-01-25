@@ -51,7 +51,7 @@ exports.get_highscores = function(callback) {
             if (player.highscoreEnabled) {
 
                 high_scores.push({
-                    name: player.name,
+                    name: player.highscoreName,
                     score: player_score
                 });
             }
