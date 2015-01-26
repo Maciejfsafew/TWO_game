@@ -12,6 +12,7 @@ var Commands = [
                     msg = {success: true, msg: {move: arg, 'u': $.cookie("name")}}
                 }
             }
+            
             return msg;
         },
         response_handler: function (server_response) {

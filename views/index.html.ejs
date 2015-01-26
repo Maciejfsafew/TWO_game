@@ -11,6 +11,7 @@
     <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.2/underscore-min.js"></script>
     <script src="/public/lib/primus.js"></script>
     <script src="/public/js/index.js"></script>
+    <script src="/public/js/monster-view.js"></script>
     <script src="/public/lib/josh.js/killring.js"></script>
     <script src="/public/lib/josh.js/history.js"></script>
     <script src="/public/lib/josh.js/readline.js"></script>
@@ -32,6 +33,7 @@
     </tr>
     <tr>
         <td id="highscores"></td>
+        <button onclick="highscores()">Highscores</button>
     </tr>
 </table>
 <table width="100%">
@@ -59,18 +61,34 @@
             </tr>
         </table>
         <div class="wrapper">
-            <div id="shell-panel" tabindex="0">
-                <div>Welcome to TWO MUD!<br>
-                </div>
-                <div id="shell-view"></div>
-            </div>
-        </div>
-    </td>
-    <td width="30%" align="center">
-        <table id="map-view">
+			<table width="100%">
+		    <tr>
+				<td width="90%" rowspan="2">
+        	    	<div id="shell-panel" tabindex="0">
+        	    	    <div>Welcome to TWO MUD!<br>
+        	    	    </div>
+        	    	    <div id="shell-view"></div>
+        	    	</div>
+				</td>
+        <td width="30%" align="center">
+          <table id="map-view">
             <tr>
             </tr>
-        </table>
+          </table>
+        </td>
+
+        </tr>
+          <tr>
+            <td width="10%" align="left" valign="top">
+              <div id="monster-view" align="left" style="visibility: hidden">
+                <center><b><div id="monster-name">monster name</div></b></center>
+                <center><i><div id="monster-description">description</div></i></center>
+                <center><img src="/public/resources/monsters/default.png" id="monster-picture" /></center>
+                <center><div id="monster-stats">stats</div></center>
+              </td>
+          </tr>
+		  </table>
+        </div>
     </td>
 </table>
 <script language="javascript">
